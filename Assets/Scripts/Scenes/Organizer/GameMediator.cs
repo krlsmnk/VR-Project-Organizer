@@ -18,6 +18,11 @@ namespace CAVS.ProjectOrganizer.Scenes.Organizer
     {
 
         /// <summary>
+        /// File path/name we used to load this scene.
+        /// </summary>
+        private string sceneLoaded = "test.vpo";
+        
+        /// <summary>
         /// All items currentely being interacted with inside of the scene.
         /// </summary>
         List<ItemBehaviour> items;
@@ -25,8 +30,25 @@ namespace CAVS.ProjectOrganizer.Scenes.Organizer
         // Use this for initialization
         void Start()
         {
+            BuildSceneFromProject(Project.Space.LoadFromFile(sceneLoaded));
+        }
+
+        /// <summary>
+        /// Called when the scene is unloaded (changing scenes, quiting applications, etc)
+        /// </summary>
+        void OnDestroy()
+        {
+            Save(sceneLoaded);
+        }
+
+        private void BuildSceneFromProject(Project.Space project)
+        {
             items = new List<ItemBehaviour>();
-			items.Add (new TextItem("Example", "This is an example node").BuildItem());
+            
+            foreach(Item item in project.GetItems())
+            {
+                items.Add(item.Build(Vector3.up, Vector3.zero));
+            }
         }
 
         void CreateAndAddItem(Item item)
@@ -36,7 +58,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Organizer
 
         void Save(string name)
         {
-
+            Debug.Log(string.Format("saving: {0}", name));
         }
 
     }

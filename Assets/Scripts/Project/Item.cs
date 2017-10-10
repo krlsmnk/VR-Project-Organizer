@@ -39,7 +39,7 @@ namespace CAVS.ProjectOrganizer.Project
 		/// Builds a graphical representation of the object inside of the scene
 		/// </summary>
 		/// <returns>The item.</returns>
-		public ItemBehaviour BuildItem (Vector3 position, Vector3 rotation) {
+		public ItemBehaviour Build (Vector3 position, Vector3 rotation) {
 			GameObject node = GameObject.Instantiate (getGameobjectReference());
 			node.transform.name = this.GetTitle ();
 			node.transform.position = position;
