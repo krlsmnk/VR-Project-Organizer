@@ -9,14 +9,7 @@ namespace CAVS.ProjectOrganizer.Project
     public abstract class Item
     {
 
-		private static GameObject nodeGameobjectReference;
-		private static GameObject getGameobjectReference()
-		{
-			if (nodeGameobjectReference == null) {
-				nodeGameobjectReference = Resources.Load<GameObject> ("Node");
-			}
-			return nodeGameobjectReference;
-		}
+		protected abstract GameObject getGameobjectReference ();
 
         private readonly string title;
 

@@ -44,10 +44,11 @@ namespace CAVS.ProjectOrganizer.Scenes.Organizer
         private void BuildSceneFromProject(Project.Space project)
         {
             items = new List<ItemBehaviour>();
-            
+			Dictionary<Item, Vector3> positions = project.GetItemPositions();
+
             foreach(Item item in project.GetItems())
             {
-                items.Add(item.Build(Vector3.up, Vector3.zero));
+				items.Add(item.Build(positions[item], Vector3.zero));
             }
         }
 

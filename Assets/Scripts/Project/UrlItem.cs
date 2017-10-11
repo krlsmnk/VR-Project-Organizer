@@ -10,10 +10,11 @@ namespace CAVS.ProjectOrganizer.Project
 	{
 
 		private static GameObject nodeGameobjectReference;
-		private static GameObject getGameobjectReference()
+		protected override GameObject getGameobjectReference()
 		{
-			if (nodeGameobjectReference == null) {
-				nodeGameobjectReference = Resources.Load<GameObject> ("Node");
+			if (nodeGameobjectReference == null)
+			{
+				nodeGameobjectReference = Resources.Load<GameObject> ("Url Node");
 			}
 			return nodeGameobjectReference;
 		}
@@ -37,7 +38,9 @@ namespace CAVS.ProjectOrganizer.Project
 		/// <returns>The item just built.</returns>
 		protected override ItemBehaviour BuildItem (GameObject node) 
 		{
-			return node.AddComponent<ItemBehaviour>();
+			UrlItemBehavior urlBehavior = node.AddComponent<UrlItemBehavior>();
+			urlBehavior.SetImage (this.GetUrl());
+			return urlBehavior;
 		}
 
 	}

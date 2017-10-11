@@ -9,6 +9,16 @@ namespace CAVS.ProjectOrganizer.Project
     public class TextItem : Item
     {
 
+		private static GameObject nodeGameobjectReference;
+		protected override GameObject getGameobjectReference()
+		{
+			if (nodeGameobjectReference == null)
+			{
+				nodeGameobjectReference = Resources.Load<GameObject> ("Text Node");
+			}
+			return nodeGameobjectReference;
+		}
+
         private string content;
 
         public TextItem(string title, string content) : base(title)
