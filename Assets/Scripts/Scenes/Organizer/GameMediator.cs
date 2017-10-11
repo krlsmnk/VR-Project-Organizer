@@ -17,6 +17,12 @@ namespace CAVS.ProjectOrganizer.Scenes.Organizer
     public class GameMediator : MonoBehaviour
     {
 
+		/// <summary>
+		/// The material that will be applied to all line renders
+		/// </summary>
+		[SerializeField]
+		private Material lineRendererMaterial;
+
         /// <summary>
         /// File path/name we used to load this scene.
         /// </summary>
@@ -27,9 +33,12 @@ namespace CAVS.ProjectOrganizer.Scenes.Organizer
         /// </summary>
         List<ItemBehaviour> items;
 
+		Dictionary<LineRenderer, ItemBehaviour[]> linesToItems;
+
         // Use this for initialization
         void Start()
         {
+			linesToItems = new Dictionary<LineRenderer, ItemBehaviour[]> ();
             BuildSceneFromProject(Project.Space.LoadFromFile(sceneLoaded));
         }
 
@@ -41,23 +50,95 @@ namespace CAVS.ProjectOrganizer.Scenes.Organizer
             Save(sceneLoaded);
         }
 
+		/// <summary>
+		/// Loads in all items and builds lines between them
+		/// </summary>
+		/// <param name="project">Project.</param>
         private void BuildSceneFromProject(Project.Space project)
         {
             items = new List<ItemBehaviour>();
 			Dictionary<Item, Vector3> positions = project.GetItemPositions();
 
+			// Build items and lines appropriatly
             foreach(Item item in project.GetItems())
             {
-				items.Add(item.Build(positions[item], Vector3.zero));
+				ItemBehaviour itemBehavior = item.Build (positions [item], Vector3.zero);
+				items.Add(itemBehavior);
+
+				// Create line to rest of items.
+				foreach (ItemBehaviour lineTo in items)
+				{
+					linesToItems.Add (
+						BuildLineBetweenNodes (itemBehavior, lineTo),
+						new ItemBehaviour[]{itemBehavior, lineTo }
+					);
+				}
             }
-        }
-
-        void CreateAndAddItem(Item item)
-        {
 
         }
 
-        void Save(string name)
+		private LineRenderer BuildLineBetweenNodes(ItemBehaviour node, ItemBehaviour otherNode)
+		{
+			GameObject lineObject = new GameObject ("line");
+			LineRenderer line = lineObject.AddComponent<LineRenderer> ();
+
+			line.positionCount = 10;
+			line.SetPositions (BuildVerticesFromItems(node, otherNode, 10));
+
+			line.material = lineRendererMaterial;
+
+			line.widthCurve = new AnimationCurve (new Keyframe[]{
+				new Keyframe(0, 1),
+				new Keyframe(0.25f, .5f),
+				new Keyframe(0.5f, 0),
+				new Keyframe(0.75f, .5f),
+				new Keyframe(1, 1)
+			});
+
+			line.startWidth = 0.1f;
+			line.endWidth = 0.1f;
+
+			return line;
+		}
+
+		private void UpdateItemPositions()
+		{
+			if (linesToItems.Count <= 0) {
+				return;
+			}
+
+			foreach(KeyValuePair<LineRenderer, ItemBehaviour[]> entry in linesToItems)
+			{
+				entry.Key.SetPositions (BuildVerticesFromItems(entry.Value[0], entry.Value[1], 10));
+				float dist = Vector3.Distance (entry.Value [0].transform.position, entry.Value [1].transform.position);
+				float pos = Mathf.Clamp (.25f*dist, 0, .25f);
+				entry.Key.widthCurve = new AnimationCurve (new Keyframe[]{
+					new Keyframe(0, .5f),
+					new Keyframe(0.25f-pos, .15f),
+					new Keyframe(0.5f, 0),
+					new Keyframe(0.75f+pos, .15f),
+					new Keyframe(1, .5f)
+				});
+			}
+		}
+
+		private Vector3[] BuildVerticesFromItems(ItemBehaviour item, ItemBehaviour other, int vertCount)
+		{
+			Vector3[] verts = new Vector3[vertCount];
+			Vector3 dir = other.transform.position - item.transform.position;
+			for (int i = 0; i < vertCount-1; i++) {
+				verts [i] = item.transform.position + (dir * (1f/(float)vertCount) * i);
+			}
+			verts [vertCount - 1] = other.transform.position;
+			return verts;
+		}
+
+		void Update()
+		{
+			UpdateItemPositions ();
+		}
+
+        private void Save(string name)
         {
             Debug.Log(string.Format("saving: {0}", name));
         }
