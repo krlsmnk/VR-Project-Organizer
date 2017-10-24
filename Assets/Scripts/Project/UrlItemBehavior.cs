@@ -16,13 +16,17 @@ namespace CAVS.ProjectOrganizer.Project
 		private IEnumerator LoadImage(string url)
 		{
 
+            if (!Directory.Exists("cache"))
+            {
+                Directory.CreateDirectory("cache");
+            }
+            
             // Get Md5 hash...
             string hashName = "something hashed";
             
             // Try Loading from memory...
             string[] chunks = url.Split('.');
-            string extension = chunks[chunks.Length];
-
+            string extension = chunks[chunks.Length-1];
 
             // Make a request then to download the source
 			WWW www = new WWW(url);
@@ -30,8 +34,12 @@ namespace CAVS.ProjectOrganizer.Project
 			Renderer renderer = GetComponent<Renderer>();
 			renderer.material.mainTexture = www.texture;
 
+            string filePath = Path.Combine( Path.Combine(Directory.GetCurrentDirectory(), "cache"), hashName + "." + extension);
+
+            Debug.Log(filePath);
+
             // Cache the image on the machine.
-            File.WriteAllBytes(hashName + "." + extension, www.bytes);
+            File.WriteAllBytes(filePath, www.bytes);
 
 		}
 
