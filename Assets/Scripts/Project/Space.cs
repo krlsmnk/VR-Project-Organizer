@@ -56,12 +56,17 @@ namespace CAVS.ProjectOrganizer.Project
 				"Regression Example",
 				"https://cdn-images-1.medium.com/max/600/1*iuqVEjdtEMY8oIu3cGwC1g.png"
 			));
+			p.itemsInProject.Add (new UrlItem (
+				"Bayes Graph",
+				"http://www.cs.cornell.edu/courses/cs4780/2015fa/web/projects/03NaiveBayes/nb.png"
+			));
 
             // Set it's position
 			p.itemPostitionsInSpace.Add(p.itemsInProject[0], new Vector3(0, 5, 0));
 			p.itemPostitionsInSpace.Add(p.itemsInProject[1], new Vector3(-2, 3, 0));
 			p.itemPostitionsInSpace.Add(p.itemsInProject[2], new Vector3(2, 3, 0));
 			p.itemPostitionsInSpace.Add(p.itemsInProject[3], new Vector3(0, 1, 0));
+			p.itemPostitionsInSpace.Add(p.itemsInProject[4], new Vector3(0, 3, -1));
 
 			// Add some tags that a item can have in the project
 			p.tags.Add("Learning");
