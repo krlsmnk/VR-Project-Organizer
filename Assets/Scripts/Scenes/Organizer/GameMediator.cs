@@ -82,7 +82,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Organizer
 			GameObject lineObject = new GameObject ("line");
 			LineRenderer line = lineObject.AddComponent<LineRenderer> ();
 
-			//line.positionCount = 10;
+			line.SetVertexCount(10);
 			line.SetPositions (BuildVerticesFromItems(node, otherNode, 10));
 
 			line.material = lineRendererMaterial;
