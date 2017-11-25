@@ -6,7 +6,7 @@ using UnityEngine.UI;
 namespace CAVS.ProjectOrganizer.Project
 {
 
-	public class UrlItem : Item
+	public class PictureItem : Item
 	{
 
 		private static GameObject nodeGameobjectReference;
@@ -14,14 +14,14 @@ namespace CAVS.ProjectOrganizer.Project
 		{
 			if (nodeGameobjectReference == null)
 			{
-				nodeGameobjectReference = Resources.Load<GameObject> ("Url Node");
+				nodeGameobjectReference = Resources.Load<GameObject> ("Picture Node");
 			}
 			return nodeGameobjectReference;
 		}
 
 		private string url;
 
-		public UrlItem(string title, string url) : base(title)
+		public PictureItem(string title, string url) : base(title)
 		{
 			this.url = url;
 		}
@@ -38,7 +38,7 @@ namespace CAVS.ProjectOrganizer.Project
 		/// <returns>The item just built.</returns>
 		protected override ItemBehaviour BuildItem (GameObject node) 
 		{
-			UrlItemBehavior urlBehavior = node.AddComponent<UrlItemBehavior>();
+			PictureItemBehavior urlBehavior = node.AddComponent<PictureItemBehavior>();
 			urlBehavior.SetImage (this.GetUrl());
 			return urlBehavior;
 		}

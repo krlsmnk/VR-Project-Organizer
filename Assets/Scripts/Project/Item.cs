@@ -36,11 +36,17 @@ namespace CAVS.ProjectOrganizer.Project
 			GameObject node = GameObject.Instantiate (getGameobjectReference());
 			node.transform.name = this.GetTitle ();
 			node.transform.position = position;
+
+			// The canvas could actually be added on at this step, instead of finding a reference..
 			node.transform.Find ("Canvas").Find("Text").GetComponent<Text>().text = this.GetTitle ();
+
 			return BuildItem (node);
 		}
 
 		protected abstract ItemBehaviour BuildItem (GameObject node);
+
+
+
 
     }
 
