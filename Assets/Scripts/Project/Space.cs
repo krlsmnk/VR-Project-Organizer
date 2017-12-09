@@ -55,6 +55,7 @@ namespace CAVS.ProjectOrganizer.Project
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
+
         public static Space LoadFromFile(string path)
         {
             Space p = new Space();
