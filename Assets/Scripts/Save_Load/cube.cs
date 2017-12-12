@@ -1,15 +1,29 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 public class cube : MonoBehaviour {
 
     public float xPos, yPos, zPos;
     public float moveSpeed = 10f;
 
+    public void save()
+    {
+        SaveLoadData.savePostion(this);
+    }
+
+    public void load(){
+        float[] loadedData = SaveLoadData.loadPosition();
+
+
+        transform.position = new Vector3(loadedData[0],loadedData[1], loadedData[2]);
+    }
+
 	// Use this for initialization
 	void Start () {
-
 
 	}
 	
@@ -19,21 +33,21 @@ public class cube : MonoBehaviour {
 
         // if up arrow pressed move cube up
         if(Input.GetKey(KeyCode.UpArrow)){
-            transform.Translate(Vector3.up * moveSpeed * Time.deltaTime);
+            transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
         }
         // If down arrow pressed move cube down
         if(Input.GetKey(KeyCode.DownArrow)){
-            transform.Translate(Vector3.down * moveSpeed * Time.deltaTime);
+            transform.Translate(Vector3.back * moveSpeed * Time.deltaTime);
         }
         // If right arrow pressed move cube forward
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
+            transform.Translate(Vector3.right * moveSpeed * Time.deltaTime);
         }
         // If left arrow pressed move cube backward
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            transform.Translate(Vector3.back * moveSpeed * Time.deltaTime);
+            transform.Translate(Vector3.left * moveSpeed * Time.deltaTime);
         }
 
         // Get x,y, and z position of transform
@@ -44,4 +58,26 @@ public class cube : MonoBehaviour {
         print(xPos + "," + yPos + "," + zPos + ",");
 		
 	}
+
+
+
+}
+
+    [Serializable]
+    public class CubePosition
+    {
+        public float[] stats;
+
+        public CubePosition(cube Cube)
+        {
+            stats = new float[3];
+
+            stats[0] = Cube.xPos;
+            stats[1] = Cube.yPos;
+            stats[2] = Cube.zPos;
+
+
+
+
+        }
 }
