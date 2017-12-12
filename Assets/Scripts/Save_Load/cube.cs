@@ -24,7 +24,7 @@ public class cube : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
+        load();
 	}
 	
 	// Update is called once per frame
@@ -59,6 +59,9 @@ public class cube : MonoBehaviour {
 		
 	}
 
+    void OnApplicationQuit() {
+        save();
+    }
 
 
 }
