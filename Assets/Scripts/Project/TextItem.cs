@@ -26,6 +26,11 @@ namespace CAVS.ProjectOrganizer.Project
             this.content = content;
         }
 
+		public TextItem(string title, string content, Dictionary<string, string> values) : base(title, values)
+        {
+            this.content = content;
+        }
+
         public string GetContent()
         {
             return this.content;

@@ -13,10 +13,19 @@ namespace CAVS.ProjectOrganizer.Project
 
         private readonly string title;
 
+		Dictionary<string, string> values;
+
         public Item(string title)
         {
+			this.values = new Dictionary<string, string> ();
             this.title = title;
         }
+
+		public Item(string title, Dictionary<string, string> values)
+		{
+			this.values = values;
+			this.title = title;
+		}
 
 		/// <summary>
 		/// Gets the title, something to represent the node
@@ -36,6 +45,7 @@ namespace CAVS.ProjectOrganizer.Project
 			GameObject node = GameObject.Instantiate (getGameobjectReference());
 			node.transform.name = this.GetTitle ();
 			node.transform.position = position;
+			node.transform.rotation = Quaternion.Euler(rotation);
 
 			// The canvas could actually be added on at this step, instead of finding a reference..
 			node.transform.Find ("Canvas").Find("Text").GetComponent<Text>().text = this.GetTitle ();
