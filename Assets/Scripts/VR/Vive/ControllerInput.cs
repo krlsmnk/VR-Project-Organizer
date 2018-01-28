@@ -2,119 +2,58 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Comes from: 
-// https://www.raywenderlich.com/149239/htc-vive-tutorial-unity
-namespace CAVS.ProjectOrganizer.VR.Vive
-{
+///<summary>
+///Detects collision between controllers, and at the end of the timer, creates a node
+///</summary>
 
-    public class ControllerInput : MonoBehaviour
+public class ControllerInput : MonoBehaviour {
+
+
+
+    //I'm aware this may not be the best way to do things. Please give feedback on how I might improve.
+
+    public GameObject node; //node to be instantiated
+    public GameObject left_controller;
+    public GameObject right_controller;
+
+    public float Timer_Limit; //Amount of time until node is created
+    public float Distance_Limit; //Proximity between controllers
+    private float Timer;
+
+    //OnCollision not working
+    void Update()
     {
-
-        /// <summary>
-        /// The object we're colliding with when we're not holding anything
-        /// </summary>
-        private GameObject collidingObject;
-        
-        /// <summary>
-        /// What we're currently holding
-        /// </summary>
-        private GameObject objectInHand; 
-
-        /// <summary>
-        /// The steam controller itself
-        /// </summary>
-        private SteamVR_TrackedObject trackedObj;
-
-        private SteamVR_Controller.Device Controller
+        //Judge controller distance
+        if (Vector3.Distance(left_controller.transform.position, right_controller.transform.position) < Distance_Limit)
         {
-            get { return SteamVR_Controller.Input((int)trackedObj.index); }
-        }
-
-        void Awake()
-        {
-            trackedObj = GetComponent<SteamVR_TrackedObject>();
-        }
-
-        public void OnTriggerEnter(Collider other)
-        {
-            SetCollidingObject(other);
-        }
-
-        public void OnTriggerStay(Collider other)
-        {
-            SetCollidingObject(other);
-        }
-
-        public void OnTriggerExit(Collider other)
-        {
-            if (!collidingObject)
-            {
-                return;
+            Timer += Time.deltaTime;
+            
+            if (Timer>= (Timer/2)){
+                VRTK.VRTK_ControllerHaptics.TriggerHapticPulse(VRTK.VRTK_ControllerReference.GetControllerReference(left_controller) , 0.5f);   //Vibrate controllers at half strength (0 < x < 1)
+                VRTK.VRTK_ControllerHaptics.TriggerHapticPulse(VRTK.VRTK_ControllerReference.GetControllerReference(right_controller), 0.5f);
             }
-
-            collidingObject = null;
-        }
-
-        private void GrabObject()
-        {
-            objectInHand = collidingObject;
-            collidingObject = null;
-            var joint = AddFixedJoint();
-            joint.connectedBody = objectInHand.GetComponent<Rigidbody>();
-        }
-
-        private void ReleaseObject()
-        {
-            if (GetComponent<FixedJoint>())
+            if (Timer >= Timer_Limit)
             {
-                GetComponent<FixedJoint>().connectedBody = null;
-                Destroy(GetComponent<FixedJoint>());
-                objectInHand.GetComponent<Rigidbody>().velocity = Controller.velocity;
-                objectInHand.GetComponent<Rigidbody>().angularVelocity = Controller.angularVelocity;
+                //------------------NODE CREATION---------------------------//
+
+                node.transform.position = (left_controller.transform.position + right_controller.transform.position)/2; //midpoint between the two controllers
+
+                //node created in front of controllers, in the same direction
+                node.transform.Translate(Vector3.forward, left_controller.transform);
+                node.transform.eulerAngles = new Vector3(0, left_controller.transform.eulerAngles.y, 0);
+
+                Instantiate(node);
+
+                Timer = -5; //5 second "cooldown"
             }
-            objectInHand = null;
         }
-
-        private FixedJoint AddFixedJoint()
+        else
         {
-            FixedJoint fx = gameObject.AddComponent<FixedJoint>();
-            fx.breakForce = 20000;
-            fx.breakTorque = 20000;
-            return fx;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="col"></param>
-        private void SetCollidingObject(Collider col)
-        {
-            if (collidingObject || !col.GetComponent<Rigidbody>())
-            {
-                return;
-            }
-            collidingObject = col.gameObject;
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-            if (Controller.GetHairTriggerDown())
-            {
-                if (collidingObject)
-                {
-                    GrabObject();
-                }
-            }
-
-            if (Controller.GetHairTriggerUp())
-            {
-                if (objectInHand)
-                {
-                    ReleaseObject();
-                }
-            }
+            Timer = 0;  //reset timer when pulled apart
+            VRTK.VRTK_ControllerHaptics.CancelHapticPulse(VRTK.VRTK_ControllerReference.GetControllerReference(left_controller));   //Cancel vibration when pulled apart
+            VRTK.VRTK_ControllerHaptics.CancelHapticPulse(VRTK.VRTK_ControllerReference.GetControllerReference(right_controller));
         }
     }
+
 
 }
