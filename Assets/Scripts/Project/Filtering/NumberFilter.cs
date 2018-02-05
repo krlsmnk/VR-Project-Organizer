@@ -73,6 +73,17 @@ namespace CAVS.ProjectOrganizer.Project.Filtering
             return false;
         }
 
+        // public override string ToString()
+        // {
+        //     string operatorSymbol = "";
+        //     switch (this.op)
+        //     {
+        //         case Operator.EqualTo:
+        //             operatorSymbol = "";
+        //     }
+        //     return string.Format("Filtering {0} by numbers {1} {2}", fieldToFilterOn);
+        // }
+
     }
 
 }

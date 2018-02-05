@@ -12,11 +12,11 @@ namespace CAVS.ProjectOrganizer.Scenes.Testing.FilteringTesting
     public class GameMediator : MonoBehaviour
     {
 
-        Item[] allItems;
+        protected Item[] allItems;
 
-        List<Filter> appliedFilters;
+        protected List<Filter> appliedFilters;
 
-        GameObject currentPalace;
+        private GameObject currentPalace;
 
         // Use this for initialization
         void Start()
@@ -24,11 +24,13 @@ namespace CAVS.ProjectOrganizer.Scenes.Testing.FilteringTesting
             appliedFilters = new List<Filter>();
             allItems = ProjectFactory.buildItemsFromCSV("CarData.csv");
             Filter[] filters = new Filter[]{
-                new NumberFilter("Year", NumberFilter.Operator.GreaterThan, 1999),
-                new NumberFilter("Year", NumberFilter.Operator.LessThan, 2007)
+                new NumberFilter("Year",  NumberFilter.Operator.GreaterThan, 1999),
+                new NumberFilter("Year",  NumberFilter.Operator.LessThan, 2007),
+                new StringFilter("Model", StringFilter.Operator.Equal, "ES")
             };
             new ItemSpiral(allItems, filters[0]).BuildPreview(new Vector3(2, 2, 2));
             new ItemSpiral(allItems, filters[1]).BuildPreview(new Vector3(-2, 2, 2));
+            new ItemSpiral(allItems, filters[2]).BuildPreview(Vector3.zero);
         }
 
 
@@ -38,13 +40,11 @@ namespace CAVS.ProjectOrganizer.Scenes.Testing.FilteringTesting
         /// <param name="other">The other Collider involved in this collision.</param>
         void OnTriggerEnter(Collider other)
         {
-            Debug.Log("Triggered");
             SprialPreviewBehavior preview = other.gameObject.GetComponent<SprialPreviewBehavior>();
             if (preview != null)
             {
-                Debug.Log("With Preview");
                 appliedFilters.Add(preview.GetFilter());
-                updatePalace();
+                displayPalace();
             }
         }
 
@@ -58,11 +58,11 @@ namespace CAVS.ProjectOrganizer.Scenes.Testing.FilteringTesting
             if (preview != null)
             {
                 appliedFilters.Remove(preview.GetFilter());
-                updatePalace();
+                displayPalace();
             }
         }
 
-        private void updatePalace()
+        protected virtual void displayPalace()
         {
             if (currentPalace != null)
             {

@@ -51,6 +51,14 @@ namespace CAVS.ProjectOrganizer.Project
             return null;
         }
 
+        /// <summary>
+        /// Builds a graphical representation of the object inside of the scene
+        /// </summary>
+        /// <returns>The item.</returns>
+        public ItemBehaviour Build()
+        {
+            return this.Build(Vector3.zero, Vector3.zero);
+        }
 
         /// <summary>
         /// Builds a graphical representation of the object inside of the scene
@@ -70,9 +78,6 @@ namespace CAVS.ProjectOrganizer.Project
         }
 
         protected abstract ItemBehaviour BuildItem(GameObject node);
-
-
-
 
     }
 
