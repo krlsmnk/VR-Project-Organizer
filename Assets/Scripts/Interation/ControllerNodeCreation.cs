@@ -6,9 +6,9 @@ using UnityEngine;
 namespace CAVS.ProjectOrganizer.Interation
 {
 
-    ///<summary>
-    ///Detects collision between controllers, and at the end of the timer, creates a node
-    ///</summary>
+    /// <summary>
+    /// Detects collision between controllers, and at the end of the timer, creates a node
+    /// </summary>
     public class ControllerNodeCreation : MonoBehaviour
     {
 
@@ -38,10 +38,16 @@ namespace CAVS.ProjectOrganizer.Interation
 
         private float timer;
 
-        //OnCollision not working
+        /// <summary>
+        /// How long we want to wait until we can create the next item
+        /// </summary>
+        [SerializeField, Range(1, 10)]
+        private float coolDown;
+
+        // OnCollision not working
         void Update()
         {
-            //Judge controller distance
+            // Judge controller distance
             if (Vector3.Distance(leftController.transform.position, rightController.transform.position) < distanceLimit)
             {
                 timer += Time.deltaTime;
@@ -56,18 +62,19 @@ namespace CAVS.ProjectOrganizer.Interation
                     //------------------NODE CREATION---------------------------//
                     nodeToCreate.transform.position = (leftController.transform.position + rightController.transform.position) / 2; //midpoint between the two controllers
 
-                    //node created in front of controllers, in the same direction
+                    // Node created in front of controllers, in the same direction
                     nodeToCreate.transform.Translate(Vector3.forward, leftController.transform);
                     nodeToCreate.transform.eulerAngles = new Vector3(0, leftController.transform.eulerAngles.y, 0);
 
                     Instantiate(nodeToCreate);
 
-                    timer = -5; //5 second "cooldown"
+                    timer = -Mathf.Abs(coolDown);
                 }
             }
             else
             {
-                timer = 0;  //reset timer when pulled apart
+                // Reset timer when pulled apart
+                timer = 0;
                 VRTK.VRTK_ControllerHaptics.CancelHapticPulse(VRTK.VRTK_ControllerReference.GetControllerReference(leftController));   //Cancel vibration when pulled apart
                 VRTK.VRTK_ControllerHaptics.CancelHapticPulse(VRTK.VRTK_ControllerReference.GetControllerReference(rightController));
             }
