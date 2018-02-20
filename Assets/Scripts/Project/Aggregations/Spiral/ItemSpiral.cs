@@ -8,6 +8,34 @@ using CAVS.ProjectOrganizer.Project.Filtering;
 namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
 {
 
+    class ItemFilterComparer : IComparer
+    {
+        Dictionary<Item, Dictionary<Filter, bool>> itemFilterMappings;
+        public ItemFilterComparer(Dictionary<Item, Dictionary<Filter, bool>> itemFilterMappings)
+        {
+            this.itemFilterMappings = itemFilterMappings;
+        }
+
+        public int Compare(System.Object x, System.Object y)
+        {
+            return filterPassCount(itemFilterMappings[(Item)y]) - filterPassCount(itemFilterMappings[(Item)x]);
+        }
+
+        private int filterPassCount(Dictionary<Filter, bool> item)
+        {
+            int aCount = 0;
+            foreach (var value in item.Values)
+            {
+                if (value)
+                {
+                    aCount++;
+                }
+            }
+            return aCount;
+        }
+
+    }
+
     public class ItemSpiral
     {
 
@@ -17,19 +45,9 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
 
         private Func<Item, Dictionary<Filter, bool>, ItemBehaviour> itemBuilder;
 
-        public ItemSpiral(Item[] itemsToDisplay, Filter filter)
-        {
-            this.itemsToDisplay = itemsToDisplay;
-            this.filter = new AggregateFilter(new Filter[] { filter });
-            this.itemBuilder = null;
-        }
+        public ItemSpiral(Item[] itemsToDisplay, Filter filter) : this(itemsToDisplay, new AggregateFilter(new Filter[] { filter }), null) { }
 
-        public ItemSpiral(Item[] itemsToDisplay, AggregateFilter filter)
-        {
-            this.itemsToDisplay = itemsToDisplay;
-            this.filter = filter;
-            this.itemBuilder = null;
-        }
+        public ItemSpiral(Item[] itemsToDisplay, AggregateFilter filter) : this(itemsToDisplay, filter, null) { }
 
         public ItemSpiral(Item[] itemsToDisplay, AggregateFilter filter, Func<Item, Dictionary<Filter, bool>, ItemBehaviour> itemBuilder)
         {
@@ -70,49 +88,38 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
         {
             GameObject palace = new GameObject("Palace");
             int itemsCreated = 0;
-            int itemOffset = 0;
-            Dictionary<Filter, bool>[] filtersPassedForItems = filter.FiltersPassed(itemsToDisplay);
-            foreach (Item item in itemsToDisplay)
+            Dictionary<Item, Dictionary<Filter, bool>> filtersPassedForItems = filter.FiltersPassed(itemsToDisplay);
+            Item[] sortedItems = sortItems(itemsToDisplay, filtersPassedForItems);
+            foreach (Item item in sortedItems)
             {
                 ItemBehaviour itemBehavior = null;
                 Vector3 position = new Vector3(Mathf.Sin(itemsCreated) * 10, itemsCreated / 5, Mathf.Cos(itemsCreated) * 10);
-                Dictionary<Filter, bool> appliedFiltersToItem = filtersPassedForItems[itemOffset + itemsCreated];
+                Dictionary<Filter, bool> appliedFiltersToItem = filtersPassedForItems[item];
                 if (itemBuilder != null)
                 {
                     itemBehavior = itemBuilder(item, appliedFiltersToItem);
-                    if (itemBehavior == null)
-                    {
-                        itemOffset++;
-                        continue;
-                    }
-                    itemBehavior.transform.position = position;
                 }
-                else
+                else if (appliedFiltersToItem.ContainsValue(true))
                 {
-                    bool anyPassed = false;
-                    foreach (KeyValuePair<Filter, bool> b in appliedFiltersToItem)
-                    {
-                        if (b.Value == true)
-                        {
-                            anyPassed = true;
-                        }
-                    }
-                    if (anyPassed)
-                    {
-                        itemBehavior = item.Build(position, Vector3.zero);
-                    }
-                    else
-                    {
-                        itemOffset++;
-                        continue;
-                    }
+                    itemBehavior = item.Build(position, Vector3.zero);
                 }
 
-                itemBehavior.transform.parent = palace.transform;
-                itemBehavior.transform.LookAt(Vector3.zero);
-                itemsCreated++;
+                if (itemBehavior != null)
+                {
+                    itemBehavior.transform.position = position;
+                    itemBehavior.transform.parent = palace.transform;
+                    itemBehavior.transform.LookAt(Vector3.zero);
+                    itemsCreated++;
+                }
             }
             return palace;
+        }
+
+        public Item[] sortItems(Item[] itemsToSort, Dictionary<Item, Dictionary<Filter, bool>> filtersApplied)
+        {
+            Item[] copy = (Item[])itemsToSort.Clone();
+            Array.Sort(copy, new ItemFilterComparer(filtersApplied));
+            return copy;
         }
 
     }

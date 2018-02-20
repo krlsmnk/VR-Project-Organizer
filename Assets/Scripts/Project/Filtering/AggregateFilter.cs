@@ -18,7 +18,7 @@ namespace CAVS.ProjectOrganizer.Project.Filtering
             this.filters = filters;
         }
 
-        
+
         public override bool FilterItem(Item item)
         {
             bool passed = true;
@@ -33,21 +33,22 @@ namespace CAVS.ProjectOrganizer.Project.Filtering
             return true;
         }
 
-        public Dictionary<Filter, bool>[] FiltersPassed(Item[] unfilteredItems)
+        public Dictionary<Item, Dictionary<Filter, bool>> FiltersPassed(Item[] unfilteredItems)
         {
             if (unfilteredItems == null)
             {
                 return null;
             }
 
-            Dictionary<Filter, bool>[] applied = new Dictionary<Filter, bool>[unfilteredItems.Length];
-            for (int itemCount = 0; itemCount < unfilteredItems.Length; itemCount++)
+            Dictionary<Item, Dictionary<Filter, bool>> applied = new Dictionary<Item, Dictionary<Filter, bool>>();
+            foreach (Item item in unfilteredItems)
             {
-                applied[itemCount] = new Dictionary<Filter, bool>();
-                for (int filterIndex = 0; filterIndex < filters.Length; filterIndex++)
+                applied.Add(item, new Dictionary<Filter, bool>());
+                foreach (Filter filter in this.filters)
                 {
-                    applied[itemCount].Add(filters[filterIndex], filters[filterIndex].FilterItem(unfilteredItems[itemCount]));
+                    applied[item].Add(filter, filter.FilterItem(item));
                 }
+
             }
             return applied;
         }
