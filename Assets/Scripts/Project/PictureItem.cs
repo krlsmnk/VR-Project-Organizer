@@ -57,6 +57,7 @@ namespace CAVS.ProjectOrganizer.Project
         protected override ItemBehaviour BuildItem(GameObject node)
         {
             PictureItemBehavior urlBehavior = node.AddComponent<PictureItemBehavior>();
+			urlBehavior.SetItem(this);
             if (this.GetImage() != null)
             {
                 urlBehavior.SetImage(this.GetImage());

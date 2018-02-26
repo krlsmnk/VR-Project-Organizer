@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using CAVS.ProjectOrganizer.Project;
+using CAVS.ProjectOrganizer.Project.Aggregations.Plot;
 
 namespace CAVS.ProjectOrganizer.Scenes.Showcase
 {
@@ -40,7 +41,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         [SerializeField]
         private InteratibleButtonBehavior previousButton;
 
-        
+
         /// <summary>
         /// All the cars we're going to display information about. (Grabbed from the database)
         /// </summary>
@@ -51,7 +52,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         /// The current 3d model in the scene which is the car that players can interact with in
         /// different ways
         /// </summary>
-        private GameObject currentCarGameObject; 
+        private GameObject currentCarGameObject;
 
 
         /// <summary>
@@ -67,21 +68,44 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         [SerializeField]
         private GameObject liftCarPlacement;
 
+
+        [SerializeField]
+        private GraphControl graphControl;
+
         void Start()
         {
             nextButton.Subscribe(this.DisplayNextCar);
             previousButton.Subscribe(this.DisplayPreviousCar);
             cars = ProjectFactory.BuildItemsFromCSV("Assets/Car_Dataset.csv", 7);
             this.DisplayNextCar();
+
+            graphControl.Initialize(this, cars);
         }
 
+        public GameObject PlotPointBuilder(Item item)
+        {
+            ItemBehaviour itemObj = item.Build();
+            itemObj.AddExamineEvent(this.OnPlotPointExamined);
+            itemObj.GetComponent<Rigidbody>().isKinematic = true;
+            return itemObj.gameObject;
+        }
+
+        private void OnPlotPointExamined(Item point, Collider collider)
+        {
+            int id = 0;
+            if (int.TryParse(point.GetValue("ID"), out id))
+            {
+                carBeingDisplayedIndex = id - 1;
+                DisplayCar(cars[carBeingDisplayedIndex]);
+            }
+        }
 
         /// <summary>
         /// Called by buttons placed in the scene
         /// </summary>
         public void OnButtonPress(string buttonName)
         {
-            if(buttonName == "Next")
+            if (buttonName == "Next")
             {
                 this.DisplayNextCar();
             }
@@ -109,15 +133,15 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             DisplayCar(cars[carBeingDisplayedIndex]);
         }
 
-        
+
         public void DisplayNextCar()
         {
             // Make sure we even have cars...
-            if(cars == null)
+            if (cars == null)
             {
                 return;
             }
-            
+
             // Increment Index
             carBeingDisplayedIndex = Mathf.Clamp(carBeingDisplayedIndex + 1, 0, this.cars.Length);
 
@@ -167,15 +191,15 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             }
 
             // Delete old car model
-            if(currentCarGameObject != null)
+            if (currentCarGameObject != null)
             {
                 Destroy(currentCarGameObject);
             }
 
             // Display Car
             currentCarGameObject = Instantiate<GameObject>(
-                LoadCarModelReference(carToDisplay, qualityToRender), 
-				Vector3.zero, 
+                LoadCarModelReference(carToDisplay, qualityToRender),
+                Vector3.zero,
                 Quaternion.identity,
                 liftCarPlacement.transform
             );
@@ -213,26 +237,27 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         /// <returns>A reference of a car to be instantiated</returns>
         private GameObject LoadCarModelReference(Item car, CarQuality quality)
         {
-			string quality1 = "highdef";  //TODO:  change how this is set later
+            string quality1 = "highdef";  //TODO:  change how this is set later
 
-			string Directory = string.Format("{0} {1}", car.GetValue("Make"), car.GetValue("Model"));
-			string Filename = string.Format("{0} {1} {2}", Directory, car.GetValue("Trim"), quality1);
-			string Path = string.Format("{0}/{1}", Directory, Filename);
+            string Directory = string.Format("{0} {1}", car.GetValue("Make"), car.GetValue("Model"));
+            string Filename = string.Format("{0} {1} {2}", Directory, car.GetValue("Trim"), quality1);
+            string Path = string.Format("{0}/{1}", Directory, Filename);
 
-			GameObject CarModel = Resources.Load<GameObject>(Path);
+            GameObject CarModel = Resources.Load<GameObject>(Path);
 
-			if (CarModel == null) {
-				Debug.Log ("Load failed");
-			}
+            if (CarModel == null)
+            {
+                Debug.Log("Load failed");
+            }
 
-			if(CarModel != null)
-			{
-				return CarModel;
-			}
-			else
-			{
-				return Resources.Load<GameObject>("Low Quality Car");
-			}
+            if (CarModel != null)
+            {
+                return CarModel;
+            }
+            else
+            {
+                return Resources.Load<GameObject>("Low Quality Car");
+            }
         }
 
     }
