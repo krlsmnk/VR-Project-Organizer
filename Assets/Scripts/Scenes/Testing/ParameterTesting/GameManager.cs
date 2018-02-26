@@ -14,7 +14,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Testing.ParameterTesting
         // Use this for initialization
         void Start()
         {
-            Item[] allItems = ProjectFactory.buildItemsFromCSV("CarData.csv");
+            Item[] allItems = ProjectFactory.BuildItemsFromCSV("CarData.csv");
 			ControllerFactory.CreateParameterView(allItems[0].GetValues());
         }
 

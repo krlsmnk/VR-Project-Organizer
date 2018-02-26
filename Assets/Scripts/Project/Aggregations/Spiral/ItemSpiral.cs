@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-
+using UnityEngine.Rendering;
 using CAVS.ProjectOrganizer.Project.Filtering;
 
 namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
@@ -72,6 +72,7 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
                 node.transform.parent = palace.transform;
                 node.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
                 node.transform.position = new Vector3(Mathf.Sin(i) * .2f, -.35f + ((float)i / 400f), Mathf.Cos(i) * .2f);
+                node.GetComponent<MeshRenderer>().shadowCastingMode = ShadowCastingMode.Off;
                 i++;
             }
             palace.GetComponent<SprialPreviewBehavior>().SetFilter(this.filter);

@@ -29,15 +29,19 @@ namespace CAVS.ProjectOrganizer.Project.Filtering
 
         public override bool FilterItem(Item item)
         {
+            if (item == null)
+            {
+                return false;
+            }
             string val = item.GetValue(this.fieldName);
             switch (op)
             {
-				case Operator.Equal:
-					return val == stringToFilterOn;
-				case Operator.NotEqual:
-					return val != stringToFilterOn;
-				default:
-					throw new System.Exception("Not Implemented");
+                case Operator.Equal:
+                    return val == stringToFilterOn;
+                case Operator.NotEqual:
+                    return val != stringToFilterOn;
+                default:
+                    throw new System.Exception("Not Implemented");
             }
         }
 

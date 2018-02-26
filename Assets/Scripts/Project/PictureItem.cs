@@ -19,11 +19,24 @@ namespace CAVS.ProjectOrganizer.Project
 			return nodeGameobjectReference;
 		}
 
+		/// <summary>
+		/// Url reference to the image we want to load as our picture. If a 
+		/// texture is instead used to build this object this field is ignored.
+		/// </summary>
 		private string url;
+
+		private Texture2D image; 
 
 		public PictureItem(string title, string url) : base(title)
 		{
+			this.image = null;
 			this.url = url;
+		}
+
+		public PictureItem(string title, Texture2D image, Dictionary<string, string> values) : base(title, values)
+		{
+			this.image = image;
+			this.url = "";
 		}
 
 		public string GetUrl()
@@ -39,7 +52,11 @@ namespace CAVS.ProjectOrganizer.Project
 		protected override ItemBehaviour BuildItem (GameObject node) 
 		{
 			PictureItemBehavior urlBehavior = node.AddComponent<PictureItemBehavior>();
-			urlBehavior.SetImage (this.GetUrl());
+			if(this.image != null){
+				urlBehavior.SetImage (this.image);
+			} else {
+				urlBehavior.SetImage (this.GetUrl());
+			}
 			return urlBehavior;
 		}
 

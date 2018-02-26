@@ -6,7 +6,7 @@ using CAVS.ProjectOrganizer.Images;
 namespace CAVS.ProjectOrganizer.Project
 {
 
-	public class PictureItemBehavior : ItemBehaviour, ImageLoaderSubscriber{
+	public class PictureItemBehavior : ItemBehaviour {
 
 		string uriLoadedFrom;
 
@@ -15,10 +15,24 @@ namespace CAVS.ProjectOrganizer.Project
 			uriLoadedFrom = "";
 		}
 
+		/// <summary>
+		/// Performs an asyncronous load on the image and then sets the results as
+		/// it's texture
+		/// </summary>
+		/// <param name="uri"></param>
 		public void SetImage(string uri)
 		{
 			uriLoadedFrom = uri;
-			ImageLoader.LoadImage (uri, this);
+			ImageLoader.LoadImage (uri, this.OnImageLoad);
+		}
+
+		/// <summary>
+		/// Immediately sets the image as it's texture
+		/// </summary>
+		/// <param name="image"></param>
+		public void SetImage(Texture2D image)
+		{
+			GetComponentInChildren<MeshRenderer>().material.mainTexture = image;
 		}
 
 		public void OnImageLoad (string requestURI, Texture2D image)
@@ -26,7 +40,7 @@ namespace CAVS.ProjectOrganizer.Project
 			if (uriLoadedFrom != requestURI) {
 				return;
 			}
-			GetComponent<Renderer>().material.mainTexture = image;
+			GetComponentInChildren<MeshRenderer>().material.mainTexture = image;
 		}
 
 	}

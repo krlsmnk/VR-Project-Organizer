@@ -47,6 +47,10 @@ namespace CAVS.ProjectOrganizer.Project.Filtering
 
         public override bool FilterItem(Item item)
         {
+            if (item == null)
+            {
+                return false;
+            }
             string val = item.GetValue(this.fieldToFilterOn);
             if (val == null)
             {

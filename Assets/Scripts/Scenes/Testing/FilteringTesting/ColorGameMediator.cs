@@ -42,7 +42,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Testing.FilteringTesting
             {
                 Destroy(palace);
             }
-            palace = new ItemSpiral(allItems, new AggregateFilter(appliedFilters.ToArray()), itemBuilder).BuildPalace();
+            palace = new ItemSpiral(allItems, new AggregateFilter(appliedFilters.ToArray())).BuildPalace();
         }
     }
 
