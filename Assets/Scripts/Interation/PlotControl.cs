@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,19 +6,18 @@ using UnityEngine.UI;
 using CAVS.ProjectOrganizer.Project.Aggregations.Plot;
 using CAVS.ProjectOrganizer.Project;
 
-namespace CAVS.ProjectOrganizer.Scenes.Showcase
+namespace CAVS.ProjectOrganizer.Interation
 {
 
     /// <summary>
     /// Meant managing the entire carshowcase scene.
     /// </summary>
-    public class GraphControl : MonoBehaviour
+    public class PlotControl : MonoBehaviour
     {
 
-        /// <summary>
-        /// The manager of the scene
-        /// </summary>
-        private SceneManagerBehavior sceneManager;
+        private Func<Item, GameObject> builder;
+
+        private Action<GameObject> newPlotCallback;
 
         private Item[] items;
 
@@ -32,13 +32,13 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         private GameObject oldPlot;
 
         [SerializeField]
-        private InteratibleButtonBehavior xButtonToggle;
+        private ButtonBehavior xButtonToggle;
 
         [SerializeField]
-        private InteratibleButtonBehavior yButtonToggle;
+        private ButtonBehavior yButtonToggle;
 
         [SerializeField]
-        private InteratibleButtonBehavior zButtonToggle;
+        private ButtonBehavior zButtonToggle;
 
         [SerializeField]
         private Text xText;
@@ -49,10 +49,16 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         [SerializeField]
         private Text zText;
 
-        public void Initialize(SceneManagerBehavior sceneManager, Item[] items)
+        public void Initialize(Action<GameObject> newPlotCallback, Item[] items)
+        {
+            this.newPlotCallback = newPlotCallback;
+            Initialize(null, items);
+        }
+
+        public void Initialize(Func<Item, GameObject> builder, Item[] items)
         {
 
-            this.sceneManager = sceneManager;
+            this.builder = builder;
             this.items = items;
 
             x = 0;
@@ -109,10 +115,18 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                 Destroy(oldPlot);
             }
 
-            Debug.Log(new Vector3(x, y, z));
+            GameObject plot;
 
-            GameObject plot = new ItemPlot(items, columnsToExamine[x], columnsToExamine[y], columnsToExamine[z])
-                .Build(Vector3.one * 4, sceneManager.PlotPointBuilder);
+            if (this.builder != null)
+            {
+                plot = new ItemPlot(items, columnsToExamine[x], columnsToExamine[y], columnsToExamine[z])
+                    .Build(Vector3.one * 4, this.builder);
+            }
+            else
+            {
+                plot = new ItemPlot(items, columnsToExamine[x], columnsToExamine[y], columnsToExamine[z])
+                    .Build(Vector3.one * 4);
+            }
 
             plot.transform.position = new Vector3(-1.5f, 1, -5);
             plot.transform.LookAt(new Vector3(0, 1, 0));
@@ -122,6 +136,10 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             zText.text = "Z: " + columnsToExamine[z];
 
             oldPlot = plot;
+            if (newPlotCallback != null)
+            {
+                newPlotCallback(oldPlot);
+            }
         }
 
     }

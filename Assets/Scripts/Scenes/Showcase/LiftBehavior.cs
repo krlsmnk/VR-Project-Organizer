@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using CAVS.ProjectOrganizer.Interation;
+
 namespace CAVS.ProjectOrganizer.Scenes.Showcase
 {
 
@@ -30,7 +32,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         private LiftState currentState;
 
         [SerializeField]
-        private InteratibleButtonBehavior liftToggleButton;
+        private ButtonBehavior liftToggleButton;
 
         void Start()
         {

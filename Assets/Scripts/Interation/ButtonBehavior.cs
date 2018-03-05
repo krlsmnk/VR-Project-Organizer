@@ -4,10 +4,10 @@ using UnityEngine;
 using System;
 using VRTK;
 
-namespace CAVS.ProjectOrganizer.Scenes.Showcase
+namespace CAVS.ProjectOrganizer.Interation
 {
 
-    public class InteratibleButtonBehavior : MonoBehaviour
+    public class ButtonBehavior : MonoBehaviour
     {
 
         private List<Action> subscribers;
@@ -28,6 +28,15 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         [SerializeField]
         private KeyCode alternativeActivationViaKey;
 
+        private float buttonHitRefractory;
+
+        private float lastButtonHit;
+
+        void Start(){
+            lastButtonHit = 0;
+            buttonHitRefractory = 0.5f;
+        }
+
         public void Subscribe(Action sub)
         {
             if (sub != null)
@@ -43,6 +52,9 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         private void CallSubscribers()
         {
+            if(Time.time < lastButtonHit + buttonHitRefractory){
+                return;
+            }
             if (subscribers != null)
             {
                 foreach (Action sub in subscribers)
@@ -53,6 +65,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                     }
                 }
             }
+            lastButtonHit = Time.time;
         }
 
         void OnTriggerEnter(Collider other)

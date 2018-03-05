@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
+using CAVS.ProjectOrganizer.Interation;
 using CAVS.ProjectOrganizer.Project;
 using CAVS.ProjectOrganizer.Project.Aggregations.Plot;
 
@@ -36,10 +38,10 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
 
         [SerializeField]
-        private InteratibleButtonBehavior nextButton;
+        private ButtonBehavior nextButton;
 
         [SerializeField]
-        private InteratibleButtonBehavior previousButton;
+        private ButtonBehavior previousButton;
 
 
         /// <summary>
@@ -70,7 +72,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
 
         [SerializeField]
-        private GraphControl graphControl;
+        private PlotControl graphControl;
 
         void Start()
         {
@@ -79,10 +81,10 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             cars = ProjectFactory.BuildItemsFromCSV("Assets/Car_Dataset.csv", 7);
             this.DisplayNextCar();
 
-            graphControl.Initialize(this, cars);
+            graphControl.Initialize(this.PlotPointBuilder, cars);
         }
 
-        public GameObject PlotPointBuilder(Item item)
+        private GameObject PlotPointBuilder(Item item)
         {
             ItemBehaviour itemObj = item.Build();
             itemObj.AddExamineEvent(this.OnPlotPointExamined);
