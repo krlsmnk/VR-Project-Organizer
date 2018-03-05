@@ -50,7 +50,7 @@ namespace CAVS.ProjectOrganizer.Project
             }
             if (onExamineCallbacks == null)
             {
-				onExamineCallbacks = new List<Action<Item, Collider>>();
+                onExamineCallbacks = new List<Action<Item, Collider>>();
             }
             onExamineCallbacks.Add(callback);
         }
@@ -61,6 +61,10 @@ namespace CAVS.ProjectOrganizer.Project
         /// <param name="other">The other Collider involved in this collision.</param>
         void OnTriggerEnter(Collider other)
         {
+            if (onExamineCallbacks == null)
+            {
+                return;
+            }
             foreach (Action<Item, Collider> callback in onExamineCallbacks)
             {
                 if (callback != null)

@@ -486,7 +486,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1826912978013634}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.38857883, y: 0.7056103, z: -7.294544}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4239223444303378}
@@ -974,6 +974,7 @@ MonoBehaviour:
   rightController: {fileID: 1288637042466948}
   timeRequiredToCreateNode: 1
   distanceLimit: 0.1
+  coolDown: 0
 --- !u!114 &114495799067804186
 MonoBehaviour:
   m_ObjectHideFlags: 1
