@@ -52,6 +52,15 @@ namespace CAVS.ProjectOrganizer.Project
         }
 
         /// <summary>
+        /// Get all values associated with the item
+        /// </summary>
+        /// <returns>all values</returns>
+        public Dictionary<string, string> GetValues()
+        {
+            return this.values;
+        }
+
+        /// <summary>
         /// Builds a graphical representation of the object inside of the scene
         /// </summary>
         /// <returns>The item.</returns>

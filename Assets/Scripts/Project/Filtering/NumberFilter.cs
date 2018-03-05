@@ -47,6 +47,10 @@ namespace CAVS.ProjectOrganizer.Project.Filtering
 
         public override bool FilterItem(Item item)
         {
+            if (item == null)
+            {
+                return false;
+            }
             string val = item.GetValue(this.fieldToFilterOn);
             if (val == null)
             {
@@ -73,16 +77,29 @@ namespace CAVS.ProjectOrganizer.Project.Filtering
             return false;
         }
 
-        // public override string ToString()
-        // {
-        //     string operatorSymbol = "";
-        //     switch (this.op)
-        //     {
-        //         case Operator.EqualTo:
-        //             operatorSymbol = "";
-        //     }
-        //     return string.Format("Filtering {0} by numbers {1} {2}", fieldToFilterOn);
-        // }
+        public override string ToString()
+        {
+            string operatorSymbol = "";
+            switch (this.op)
+            {
+                case Operator.EqualTo:
+                    operatorSymbol = "=";
+                    break;
+
+                case Operator.GreaterThan:
+                    operatorSymbol = ">";
+                    break;
+
+                case Operator.LessThan:
+                    operatorSymbol = "<";
+                    break;
+
+                default:
+                    operatorSymbol = "";
+                    break;
+            }
+            return string.Format("Filtering {0} by numbers {1} {2}", fieldToFilterOn, operatorSymbol, this.value);
+        }
 
     }
 

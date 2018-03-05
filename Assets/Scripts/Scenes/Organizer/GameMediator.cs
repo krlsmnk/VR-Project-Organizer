@@ -46,7 +46,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Organizer
 
         void buildProjectFromCSV(string path)
         {
-            Item[] items = ProjectFactory.buildItemsFromCSV(path);
+            Item[] items = ProjectFactory.BuildItemsFromCSV(path);
 			int i = 0;
             foreach (Item item in items)
             {

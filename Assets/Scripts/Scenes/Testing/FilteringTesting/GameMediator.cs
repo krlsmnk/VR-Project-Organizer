@@ -22,7 +22,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Testing.FilteringTesting
         void Start()
         {
             appliedFilters = new List<Filter>();
-            allItems = ProjectFactory.buildItemsFromCSV("CarData.csv");
+            allItems = ProjectFactory.BuildItemsFromCSV("CarData.csv", 7);
             Filter[] filters = new Filter[]{
                 new NumberFilter("Year",  NumberFilter.Operator.GreaterThan, 1999),
                 new NumberFilter("Year",  NumberFilter.Operator.LessThan, 2007),
@@ -43,6 +43,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Testing.FilteringTesting
             SprialPreviewBehavior preview = other.gameObject.GetComponent<SprialPreviewBehavior>();
             if (preview != null)
             {
+                preview.gameObject.GetComponent<MeshRenderer>().material.color = Color.green * .5f;
                 appliedFilters.Add(preview.GetFilter());
                 displayPalace();
             }
@@ -57,6 +58,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Testing.FilteringTesting
             SprialPreviewBehavior preview = other.gameObject.GetComponent<SprialPreviewBehavior>();
             if (preview != null)
             {
+                preview.gameObject.GetComponent<MeshRenderer>().material.color = new Color(54.0f / 255.0f, 172.0f / 255.0f, 1, 100.0f / 255.0f);
                 appliedFilters.Remove(preview.GetFilter());
                 displayPalace();
             }
