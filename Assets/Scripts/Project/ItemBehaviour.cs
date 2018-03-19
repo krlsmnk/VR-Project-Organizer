@@ -61,6 +61,7 @@ namespace CAVS.ProjectOrganizer.Project
         /// <param name="other">The other Collider involved in this collision.</param>
         void OnTriggerEnter(Collider other)
         {
+            ItemInteractionManager.Instance.UpdateLastNodeInteractedWith(this.item);
             if (onExamineCallbacks == null)
             {
                 return;
