@@ -29,6 +29,11 @@ namespace CAVS.ProjectOrganizer.Project.ParameterView
 
         }
 
+        public RectTransform[] GetButtons()
+        {
+            return this.buttonInstances;
+        }
+
         /// <summary>
         /// Set the parameters that get displayed for this view
         /// </summary>
@@ -46,6 +51,7 @@ namespace CAVS.ProjectOrganizer.Project.ParameterView
             foreach (KeyValuePair<string, string> param in parameters)
             {
                 RectTransform btn = Instantiate(parameterButton, paramterView);
+                btn.transform.name = param.Key;
                 btn.GetComponentInChildren<Text>().text = string.Format("{0}: {1}", param.Key, param.Value);
                 buttonInstances[i] = btn;
                 i++;
