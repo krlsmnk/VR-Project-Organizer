@@ -5,8 +5,7 @@ using CAVS.ProjectOrganizer.Project.Filtering;
 using CAVS.ProjectOrganizer.Project;
 using UnityEngine.UI;
 using System;
-
-
+using System.Globalization;
 
 public class GameManager : MonoBehaviour {
 
@@ -15,11 +14,14 @@ public class GameManager : MonoBehaviour {
 	/// this will be used to get the text values from the vending machine
 	/// </summary>
 	public GameObject currentGameObject;
+    public AudioClip badBeep;
+    public AudioClip goodBeep;
+    public AudioSource audioSource;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
+    // Use this for initialization
+    void Start () {
+        audioSource = GetComponent<AudioSource>();
+    }
 
 	// Update is called once per frame
 	void Update () {
@@ -64,22 +66,48 @@ public class GameManager : MonoBehaviour {
 		string behaviorValue = currentGameObject.GetComponent<Text>().text;
 
 		//create filter
-		Filter constructedFilter;
+		Filter constructedFilter = null;
+        float result = 0f;
+        float result2 = 0f;
+        bool ret = false;
+        bool ret2 = false;
 
 		switch (filterType)
 		{
 		case "Number Filter":
-			constructedFilter = new NumberFilter (field, ParseEnum<NumberFilter.Operator> (op), float.Parse (filterValue));
-			break;
+                //try to cast the value as a number
+                ret = float.TryParse(filterValue, NumberStyles.Any, CultureInfo.InvariantCulture, out result);
+                //if sucessful, make a filter
+                if (ret)
+                {
+                    constructedFilter = new NumberFilter(field, ParseEnum<NumberFilter.Operator>(op), result);
+                }
+                else
+                {
+                    //play sound badBeep @ object's location @ volume 7
+                    audioSource.PlayOneShot(badBeep, 7);
+                }
+			    break;
 		case "String Filter":
-			constructedFilter = new StringFilter (field, ParseEnum<StringFilter.Operator> (op), filterValue);
-			break;
+			    constructedFilter = new StringFilter (field, ParseEnum<StringFilter.Operator> (op), filterValue);
+			    break;
 		case "Range Filter (Number)":
-			constructedFilter = new RangeFilterNum (field, ParseEnum<RangeFilterNum.Operator> (op), float.Parse(min), float.Parse (max));
-			break;
+                //try to cast the ranges as number values
+                ret = float.TryParse(min, NumberStyles.Any, CultureInfo.InvariantCulture, out result);
+                ret2 = float.TryParse(max, NumberStyles.Any, CultureInfo.InvariantCulture, out result2);
+                //if both have been sucessfully converted to numbers, call the filterConstructor
+                if (ret && ret2) { 
+                    constructedFilter = new RangeFilterNum (field, ParseEnum<RangeFilterNum.Operator> (op), result, result2);
+                }
+                else
+                {
+                    //play sound badBeep @ object's location @ volume 7
+                    audioSource.PlayOneShot(badBeep, 7);
+                }
+                break;
 		case "Range Filter (String)":
-			constructedFilter = new RangeFilterString (field, ParseEnum<RangeFilterString.Operator> (op), min, max);
-			break;
+			    constructedFilter = new RangeFilterString (field, ParseEnum<RangeFilterString.Operator> (op), min, max);
+			    break;
 		default:
 			constructedFilter = null;
 			break;
@@ -89,7 +117,10 @@ public class GameManager : MonoBehaviour {
 			GameObject platform = GameObject.Find("Filter Platform");
 			GameObject currentFilter = constructedFilter.Build ();
 			currentFilter.transform.position = platform.transform.position + Vector3.up;
-		}
+
+            //play sound goodBeep @ object's location @ volume 7
+            audioSource.PlayOneShot(goodBeep, 7);
+        }
 
 	}//end of buttonPressed
 
