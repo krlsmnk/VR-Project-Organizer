@@ -38,6 +38,35 @@ namespace CAVS.ProjectOrganizer.Project
             return items;
         }
 
+        public static TextItem[] BuildItemsFromCSV(string csvPath, bool hasHeader)
+        {
+            if (hasHeader)
+            {
+                return BuildItemsFromCSV(csvPath);
+            }
+
+            string fileData = System.IO.File.ReadAllText(csvPath);
+            string[] records = fileData.Split(lineSeperater);
+
+            // Skip the first line of the csv cause those are titles of columns
+            TextItem[] items = new TextItem[records.Length];
+
+            for (int i = 0; i < records.Length; i++)
+            {
+                Dictionary<string, string> valuesOfItem = new Dictionary<string, string>();
+                string[] fields = records[i].Split(fieldSeperator);
+                for (int fieldIndex = 0; fieldIndex < fields.Length; fieldIndex++)
+                {
+                    valuesOfItem.Add(fieldIndex.ToString(), fields[fieldIndex]);
+                }
+
+                items[i] = new TextItem(fields[5], "", valuesOfItem);
+
+            }
+
+            return items;
+        }
+
         public static PictureItem[] BuildItemsFromCSV(string csvPath, int iconColumn)
         {
             string fileData = System.IO.File.ReadAllText(csvPath);

@@ -36,24 +36,15 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
 
     }
 
-    public class ItemSpiral
+    public class ItemSpiral : Graph
     {
 
-        private AggregateFilter filter;
-
-        private Item[] itemsToDisplay;
-
-        private Func<Item, Dictionary<Filter, bool>, ItemBehaviour> itemBuilder;
-
-        public ItemSpiral(Item[] itemsToDisplay, Filter filter) : this(itemsToDisplay, new AggregateFilter(new Filter[] { filter }), null) { }
-
-        public ItemSpiral(Item[] itemsToDisplay, AggregateFilter filter) : this(itemsToDisplay, filter, null) { }
-
-        public ItemSpiral(Item[] itemsToDisplay, AggregateFilter filter, Func<Item, Dictionary<Filter, bool>, ItemBehaviour> itemBuilder)
+        public ItemSpiral(Item[] itemsToDisplay, Filter[] filters): base(itemsToDisplay, filters)
         {
-            this.itemsToDisplay = itemsToDisplay;
-            this.filter = filter;
-            this.itemBuilder = itemBuilder;
+        }
+
+        public ItemSpiral(Item[] itemsToDisplay, Filter filter): base(itemsToDisplay, new Filter[]{filter})
+        {
         }
 
         private GameObject getSpiralContainerReference()
@@ -65,7 +56,8 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
         {
             GameObject palace = GameObject.Instantiate(getSpiralContainerReference(), Vector3.zero, Quaternion.identity);
             int i = 0;
-            Item[] filteredItems = filter.FilterItems(itemsToDisplay);
+            Filter f = (Filters.Count == 1 ? new AggregateFilter(Filters.ToArray()) : Filters[0]);
+            Item[] filteredItems = f.FilterItems(items);
             foreach (Item item in filteredItems)
             {
                 GameObject node = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -75,7 +67,7 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
                 node.GetComponent<MeshRenderer>().shadowCastingMode = ShadowCastingMode.Off;
                 i++;
             }
-            palace.GetComponent<SprialPreviewBehavior>().SetFilter(this.filter);
+            palace.GetComponent<SprialPreviewBehavior>().SetFilter(f);
             palace.transform.position = positionForPreview;
             return palace;
         }
@@ -89,27 +81,16 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
         {
             GameObject palace = new GameObject("Palace");
             int itemsCreated = 0;
-            Dictionary<Item, Dictionary<Filter, bool>> filtersPassedForItems = filter.FiltersPassed(itemsToDisplay);
-            Item[] sortedItems = sortItems(itemsToDisplay, filtersPassedForItems);
-            foreach (Item item in sortedItems)
+            foreach (Item item in items)
             {
-                ItemBehaviour itemBehavior = null;
                 Vector3 position = new Vector3(Mathf.Sin(itemsCreated) * 10, itemsCreated / 5, Mathf.Cos(itemsCreated) * 10);
-                Dictionary<Filter, bool> appliedFiltersToItem = filtersPassedForItems[item];
-                if (itemBuilder != null)
-                {
-                    itemBehavior = itemBuilder(item, appliedFiltersToItem);
-                }
-                else if (appliedFiltersToItem.ContainsValue(true))
-                {
-                    itemBehavior = item.Build(position, Vector3.zero);
-                }
+                GameObject itemInstances = Plot(item, position);
 
-                if (itemBehavior != null)
+                if (itemInstances != null)
                 {
-                    itemBehavior.transform.position = position;
-                    itemBehavior.transform.parent = palace.transform;
-                    itemBehavior.transform.LookAt(Vector3.zero);
+                    itemInstances.transform.position = position;
+                    itemInstances.transform.parent = palace.transform;
+                    itemInstances.transform.LookAt(Vector3.zero);
                     itemsCreated++;
                 }
             }

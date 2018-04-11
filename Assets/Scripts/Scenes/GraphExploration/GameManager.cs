@@ -1,10 +1,12 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 using VRTK;
 
 using CAVS.ProjectOrganizer.Interation;
 using CAVS.ProjectOrganizer.Project;
 using CAVS.ProjectOrganizer.Project.Aggregations.Plot;
+using CAVS.ProjectOrganizer.Project.ParameterView;
 
 namespace CAVS.ProjectOrganizer.Scenes.GraphExploration
 {
@@ -47,8 +49,11 @@ namespace CAVS.ProjectOrganizer.Scenes.GraphExploration
 
         private PlotControl plotManagerInstance;
 
+        private ParameterViewBehavior parameterViewInstance;
+
         public void Start()
         {
+            parameterViewInstance = null;
             oldPlotScale = Vector3.one;
             oldPlotPosition = new Vector3(-.5f, 1, -1);
             plotManagerInstance = Instantiate(plotManagerReference).GetComponent<PlotControl>();
@@ -146,6 +151,8 @@ namespace CAVS.ProjectOrganizer.Scenes.GraphExploration
             oldPlotScale = plot.transform.lossyScale;
         }
 
+        bool renderingParameters = false;
+
         void InitializeControllers()
         {
             if (leftController == null || rightController == null)
@@ -166,6 +173,27 @@ namespace CAVS.ProjectOrganizer.Scenes.GraphExploration
             leftController.TouchpadReleased += delegate (object o, ControllerInteractionEventArgs e)
             {
                 plotManagerInstance.gameObject.SetActive(false);
+            };
+
+            rightController.TouchpadReleased += delegate (object o, ControllerInteractionEventArgs e)
+            {
+                renderingParameters = !renderingParameters;
+                if (parameterViewInstance == null)
+                {
+                    parameterViewInstance = ControllerFactory.CreateParameterView(new Dictionary<string, string>());
+                    parameterViewInstance.transform.parent = rightController.transform;
+                    parameterViewInstance.transform.localScale = Vector3.one * 0.05f;
+                    parameterViewInstance.transform.localEulerAngles = new Vector3(30, 0, 0);
+                    parameterViewInstance.transform.localPosition = ((Vector3.forward * 3.5f) + (Vector3.up * 3.75f));
+                    ItemInteractionManager.Instance.SubscribeToLatestInteractedItem(delegate (Item item)
+                    {
+                        parameterViewInstance.SetParameters(item.GetValues());
+                    });
+                }
+                else
+                {
+                    parameterViewInstance.gameObject.SetActive(renderingParameters);
+                }
             };
         }
 
