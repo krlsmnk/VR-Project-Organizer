@@ -39,17 +39,12 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
     public class ItemSpiral : Graph
     {
 
-        private Filter[] filters;
-
-        private Item[] itemsToDisplay;
-
-        private Func<Item, Dictionary<Filter, bool>, ItemBehaviour> itemBuilder;
-
-        public ItemSpiral(Item[] itemsToDisplay, Filter[] filters)
+        public ItemSpiral(Item[] itemsToDisplay, Filter[] filters): base(itemsToDisplay, filters)
         {
-            this.itemsToDisplay = itemsToDisplay;
-            this.filters = filters;
-            this.itemBuilder = itemBuilder;
+        }
+
+        public ItemSpiral(Item[] itemsToDisplay, Filter filter): base(itemsToDisplay, new Filter[]{filter})
+        {
         }
 
         private GameObject getSpiralContainerReference()
@@ -61,8 +56,8 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
         {
             GameObject palace = GameObject.Instantiate(getSpiralContainerReference(), Vector3.zero, Quaternion.identity);
             int i = 0;
-            Filter f = (filters.Length == 1 ? new AggregateFilter(filters) : filters[0]);
-            Item[] filteredItems = f.FilterItems(itemsToDisplay);
+            Filter f = (Filters.Count == 1 ? new AggregateFilter(Filters.ToArray()) : Filters[0]);
+            Item[] filteredItems = f.FilterItems(items);
             foreach (Item item in filteredItems)
             {
                 GameObject node = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -86,27 +81,16 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
         {
             GameObject palace = new GameObject("Palace");
             int itemsCreated = 0;
-            Dictionary<Item, Dictionary<Filter, bool>> filtersPassedForItems = filter.FiltersPassed(itemsToDisplay);
-            Item[] sortedItems = sortItems(itemsToDisplay, filtersPassedForItems);
-            foreach (Item item in sortedItems)
+            foreach (Item item in items)
             {
-                ItemBehaviour itemBehavior = null;
                 Vector3 position = new Vector3(Mathf.Sin(itemsCreated) * 10, itemsCreated / 5, Mathf.Cos(itemsCreated) * 10);
-                Dictionary<Filter, bool> appliedFiltersToItem = filtersPassedForItems[item];
-                if (itemBuilder != null)
-                {
-                    itemBehavior = itemBuilder(item, appliedFiltersToItem);
-                }
-                else if (appliedFiltersToItem.ContainsValue(true))
-                {
-                    itemBehavior = item.Build(position, Vector3.zero);
-                }
+                GameObject itemInstances = Plot(item, position);
 
-                if (itemBehavior != null)
+                if (itemInstances != null)
                 {
-                    itemBehavior.transform.position = position;
-                    itemBehavior.transform.parent = palace.transform;
-                    itemBehavior.transform.LookAt(Vector3.zero);
+                    itemInstances.transform.position = position;
+                    itemInstances.transform.parent = palace.transform;
+                    itemInstances.transform.LookAt(Vector3.zero);
                     itemsCreated++;
                 }
             }

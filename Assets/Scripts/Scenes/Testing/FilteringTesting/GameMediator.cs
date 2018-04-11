@@ -70,7 +70,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Testing.FilteringTesting
             {
                 Destroy(currentPalace);
             }
-            currentPalace = new ItemSpiral(allItems, new AggregateFilter(appliedFilters.ToArray())).BuildPalace();
+            currentPalace = new ItemSpiral(allItems, appliedFilters.ToArray()).BuildPalace();
         }
 
     }
