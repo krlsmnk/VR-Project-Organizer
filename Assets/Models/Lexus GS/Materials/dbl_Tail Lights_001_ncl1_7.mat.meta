@@ -1,6 +1,11 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: 8a0d5420818f4d548a46c58e8df53710
 timeCreated: 1519676766
+=======
+guid: ea095e4bb25f4f04f808b2eff7b662fa
+timeCreated: 1522783499
+>>>>>>> Chaos
 licenseType: Free
 NativeFormatImporter:
   mainObjectFileID: 2100000

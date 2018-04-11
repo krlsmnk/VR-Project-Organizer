@@ -41,7 +41,12 @@ namespace CAVS.ProjectOrganizer.Project.Filtering
             return filterdItems.ToArray();
         }
 
+		public GameObject Build(){
+			return GameObject.Instantiate(Resources.Load<GameObject> ("Cube Container"));
+		}//end of build
 
-    }
+    }//end of class
+
+
 
 }

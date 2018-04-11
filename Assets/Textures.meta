@@ -1,8 +1,13 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: 8ad1298e2eca01c4e91e6243629b9283
 folderAsset: yes
 timeCreated: 1505183104
 licenseType: Free
+=======
+guid: 8a927af4c2b65184cbd1c8541cdf0f01
+folderAsset: yes
+>>>>>>> Chaos
 DefaultImporter:
   externalObjects: {}
   userData: 
