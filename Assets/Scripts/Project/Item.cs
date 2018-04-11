@@ -36,7 +36,6 @@ namespace CAVS.ProjectOrganizer.Project
             return title;
         }
 
-
         /// <summary>
         /// Attempts to retrieve value of the field passed in.
         /// </summary>

@@ -36,23 +36,19 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
 
     }
 
-    public class ItemSpiral
+    public class ItemSpiral : Graph
     {
 
-        private AggregateFilter filter;
+        private Filter[] filters;
 
         private Item[] itemsToDisplay;
 
         private Func<Item, Dictionary<Filter, bool>, ItemBehaviour> itemBuilder;
 
-        public ItemSpiral(Item[] itemsToDisplay, Filter filter) : this(itemsToDisplay, new AggregateFilter(new Filter[] { filter }), null) { }
-
-        public ItemSpiral(Item[] itemsToDisplay, AggregateFilter filter) : this(itemsToDisplay, filter, null) { }
-
-        public ItemSpiral(Item[] itemsToDisplay, AggregateFilter filter, Func<Item, Dictionary<Filter, bool>, ItemBehaviour> itemBuilder)
+        public ItemSpiral(Item[] itemsToDisplay, Filter[] filters)
         {
             this.itemsToDisplay = itemsToDisplay;
-            this.filter = filter;
+            this.filters = filters;
             this.itemBuilder = itemBuilder;
         }
 
@@ -65,7 +61,8 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
         {
             GameObject palace = GameObject.Instantiate(getSpiralContainerReference(), Vector3.zero, Quaternion.identity);
             int i = 0;
-            Item[] filteredItems = filter.FilterItems(itemsToDisplay);
+            Filter f = (filters.Length == 1 ? new AggregateFilter(filters) : filters[0]);
+            Item[] filteredItems = f.FilterItems(itemsToDisplay);
             foreach (Item item in filteredItems)
             {
                 GameObject node = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -75,7 +72,7 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
                 node.GetComponent<MeshRenderer>().shadowCastingMode = ShadowCastingMode.Off;
                 i++;
             }
-            palace.GetComponent<SprialPreviewBehavior>().SetFilter(this.filter);
+            palace.GetComponent<SprialPreviewBehavior>().SetFilter(f);
             palace.transform.position = positionForPreview;
             return palace;
         }
