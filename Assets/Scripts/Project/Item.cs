@@ -17,7 +17,7 @@ namespace CAVS.ProjectOrganizer.Project
 
         public Item(string title)
         {
-            this.values = new Dictionary<string, string>();
+            values = new Dictionary<string, string>();
             this.title = title;
         }
 
@@ -25,6 +25,52 @@ namespace CAVS.ProjectOrganizer.Project
         {
             this.values = values;
             this.title = title;
+        }
+
+        /// <summary>
+        /// Merges two item properties together and returns an entirely new 
+        /// item. If two items contain the same property name but different
+        /// values, then we create two properties in the resulting merge
+        /// being '<originalPropertyName>.A' and '<originalPropertyName>.B'
+        /// 
+        /// Mostly operates as a FULL OUTER JOIN in SQL
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public Item Merge(Item other)
+        {
+            if (other == null)
+            {
+                return this;
+            }
+
+            Dictionary<string, string> resultingValues = new Dictionary<string, string>();
+            List<string> conflicts = new List<string>();
+            foreach (var keypair in values)
+            {
+                string otherValue = other.GetValue(keypair.Key);
+                if (otherValue == null || otherValue == keypair.Value)
+                {
+                    resultingValues.Add(keypair.Key, keypair.Value);
+                }
+                else
+                {
+                    conflicts.Add(keypair.Key);
+                    resultingValues.Add(string.Format("{0}.A", keypair.Key), keypair.Value);
+                    resultingValues.Add(string.Format("{0}.B", keypair.Key), otherValue);
+                }
+            }
+
+            foreach (var keypair in other.values)
+            {
+                if (resultingValues.ContainsKey(keypair.Key) || conflicts.Contains(keypair.Key))
+                {
+                    continue;
+                }
+                resultingValues.Add(keypair.Key, keypair.Value);
+            }
+
+            return new TextItem(string.Format("{0}.{1}", this.title, other.title), "merge", resultingValues);
         }
 
         /// <summary>
@@ -86,6 +132,16 @@ namespace CAVS.ProjectOrganizer.Project
         }
 
         protected abstract ItemBehaviour BuildItem(GameObject node);
+
+        public override string ToString()
+        {
+            string result = "Item(";
+            foreach(var keypair in values)
+            {
+                result = string.Format("{0}\n  {1}: {2}", result, keypair.Key, keypair.Value);
+            }
+            return result + "\n)";
+        }
 
     }
 

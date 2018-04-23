@@ -47,6 +47,10 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
         {
         }
 
+        public ItemSpiral(Item[] itemsToDisplay) : base(itemsToDisplay, new Filter[0])
+        {
+        }
+
         private GameObject getSpiralContainerReference()
         {
             return Resources.Load<GameObject>("Spiral Container");

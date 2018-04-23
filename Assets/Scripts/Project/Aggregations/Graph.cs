@@ -47,6 +47,11 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations
                 resultingObject = filterAndGrapher.Value == null ? DefaultFilterGrapher(filterAndGrapher.Key.FilterItem(item), resultingObject) : filterAndGrapher.Value(filterAndGrapher.Key.FilterItem(item), resultingObject);
             }
 
+            if(filterGraphing.Count == 0)
+            {
+                resultingObject = DefaultFilterGrapher(true, resultingObject);
+            }
+
             if (ObjectIsEmpty(resultingObject))
             {
                 GameObject.Destroy(resultingObject);
