@@ -16,6 +16,9 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
     public class SceneManagerBehavior : MonoBehaviour
     {
 
+        [SerializeField]
+        private Pedistal pedistal;
+
         /// <summary>
         /// The screens we're going to render the current car to
         /// </summary>
@@ -82,6 +85,24 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             this.DisplayNextCar();
 
             graphControl.Initialize(this.PlotPointBuilder, cars);
+            if(pedistal != null)
+            {
+                pedistal.Subscribe(OnPedistalSelection);
+            }
+        }
+
+        private void OnPedistalSelection(string selection)
+        {
+            // ID: 1  - Lexus CT 200h - 4dr Hatchback highdef
+            // ID: 44 - Lexus GS GS 300 - Sedan highdef
+            // ID: 68 - Lexus GS GS 350 - Sedan highdef (Made up)
+            // ID: 4  - Lexus CT 200h Premium - 4dr Hatchback (Made up)
+            int j;
+            if (int.TryParse(selection, out j))
+            {
+                carBeingDisplayedIndex = Mathf.Clamp(j, 0, this.cars.Length);
+                DisplayCar(cars[carBeingDisplayedIndex]);
+            }
         }
 
         private GameObject PlotPointBuilder(Item item)
@@ -233,28 +254,26 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         /// <summary>
         /// Loads a reference to a car model from the Resources folder to be instantiated and displayed in the scene
-        /// 
-        /// TODO: ACTUALLY IMPLEMENT THIS
         /// </summary>
         /// <returns>A reference of a car to be instantiated</returns>
         private GameObject LoadCarModelReference(Item car, CarQuality quality)
         {
-            string quality1 = "highdef";  //TODO:  change how this is set later
-
-            string Directory = string.Format("{0} {1}", car.GetValue("Make"), car.GetValue("Model"));
-            string Filename = string.Format("{0} {1} {2}", Directory, car.GetValue("Trim"), quality1);
-            string Path = string.Format("{0}/{1}", Directory, Filename);
-
-            GameObject CarModel = Resources.Load<GameObject>(Path);
-
-            if (CarModel == null)
+            string qualityPath = "";
+            switch(quality)
             {
-                Debug.Log("Load failed");
+                default:
+                    qualityPath = "highdef";
+                    break;
             }
 
-            if (CarModel != null)
+            string directory = string.Format("{0} {1}", car.GetValue("Make"), car.GetValue("Model"));
+            string filename = string.Format("{0} {1} {2}", directory, car.GetValue("Trim"), qualityPath);
+
+            GameObject carModel = Resources.Load<GameObject>(string.Format("{0}/{1}", directory, filename));
+
+            if (carModel != null)
             {
-                return CarModel;
+                return carModel;
             }
             else
             {

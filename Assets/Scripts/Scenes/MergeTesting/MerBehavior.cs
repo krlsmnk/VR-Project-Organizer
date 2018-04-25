@@ -15,14 +15,8 @@ public class MerBehavior : MonoBehaviour
     {
         insideMe = new List<GameObject>();
         callbacks = new List<Action<List<GameObject>>>();
-        Debug.Log("awoke...");
-
     }
 
-    void Start()
-    {
-        Debug.Log("started...");
-    }
 
     public void SubscibeToInside(Action<List<GameObject>> cb)
     {
@@ -43,7 +37,6 @@ public class MerBehavior : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("trigger");
         if (other == null || other.gameObject == null || insideMe.Contains(other.gameObject))
         {
             return;
