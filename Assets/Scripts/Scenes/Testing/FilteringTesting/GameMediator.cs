@@ -28,9 +28,9 @@ namespace CAVS.ProjectOrganizer.Scenes.Testing.FilteringTesting
                 //new NumberFilter("Year",  NumberFilter.Operator.LessThan, 2007),
                 //new StringFilter("Model", StringFilter.Operator.Equal, "ES")
             };
-            new ItemSpiral(allItems, filters[0]).BuildPreview(new Vector3(2, 2, 2));
-            new ItemSpiral(allItems, filters[1]).BuildPreview(new Vector3(-2, 2, 2));
-            new ItemSpiral(allItems, filters[2]).BuildPreview(Vector3.zero);
+            new ItemSpiral(allItems, filters[0]).BuildPreview(new Vector3(-2, 0, -4));
+            //new ItemSpiral(allItems, filters[1]).BuildPreview(new Vector3(-2, 0, -4.2));
+            //new ItemSpiral(allItems, filters[2]).BuildPreview(-2, 0, -4.4);
         }
 
 
