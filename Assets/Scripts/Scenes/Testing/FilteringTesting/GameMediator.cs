@@ -25,8 +25,8 @@ namespace CAVS.ProjectOrganizer.Scenes.Testing.FilteringTesting
             allItems = ProjectFactory.BuildItemsFromCSV("CarData.csv", 7);
             Filter[] filters = new Filter[]{
                 new NumberFilter("Year",  NumberFilter.Operator.GreaterThan, 1999),
-                new NumberFilter("Year",  NumberFilter.Operator.LessThan, 2007),
-                new StringFilter("Model", StringFilter.Operator.Equal, "ES")
+                //new NumberFilter("Year",  NumberFilter.Operator.LessThan, 2007),
+                //new StringFilter("Model", StringFilter.Operator.Equal, "ES")
             };
             new ItemSpiral(allItems, filters[0]).BuildPreview(new Vector3(2, 2, 2));
             new ItemSpiral(allItems, filters[1]).BuildPreview(new Vector3(-2, 2, 2));
