@@ -6,12 +6,26 @@ using CAVS.ProjectOrganizer.Project.Filtering;
 namespace CAVS.ProjectOrganizer.Project.Aggregations
 {
 
+    /// <summary>
+    /// Graphs consits of plots.
+    /// 
+    /// First we built the item we're going to plot
+    ///     itemBuilder
+    /// 
+    /// Then we change how that plot looks based on the filters it passes
+    ///     filterGraphing
+    /// </summary>
     public abstract class Graph
     {
 
         protected Item[] items;
 
-        protected Dictionary<Filter, Func<bool, GameObject, GameObject>> filterGraphing;
+        protected Dictionary<Filter, Action<bool, GameObject>> filterGraphing;
+
+        /// <summary>
+        /// Function called to get our original item
+        /// </summary>
+        private Func<GameObject> itemBuilder;
 
         protected List<Filter> Filters
         {
@@ -26,10 +40,11 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations
             }
         }
 
-        public Graph(Item[] items, Dictionary<Filter, Func<bool, GameObject, GameObject>> filtersWithGraphing)
+        public Graph(Item[] items, Dictionary<Filter, Action<bool, GameObject>> filterGraphing, Func<GameObject> itemBuilder)
         {
             this.items = items;
-            this.filterGraphing = filtersWithGraphing;
+            this.filterGraphing = filterGraphing;
+            this.itemBuilder = itemBuilder;
         }
 
         public Graph(Item[] items, Filter[] filters)
@@ -40,30 +55,34 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations
 
         protected GameObject Plot(Item item, Vector3 position)
         {
-            GameObject resultingObject = new GameObject();
+            GameObject resultingObject = itemBuilder != null? itemBuilder() : DefaultItemBuilder();
 
             foreach (var filterAndGrapher in filterGraphing)
             {
-                resultingObject = filterAndGrapher.Value == null ? DefaultFilterGrapher(filterAndGrapher.Key.FilterItem(item), resultingObject) : filterAndGrapher.Value(filterAndGrapher.Key.FilterItem(item), resultingObject);
+                if (filterAndGrapher.Value == null) {
+                    DefaultFilterGrapher(filterAndGrapher.Key.FilterItem(item), resultingObject);
+                } else {
+                    filterAndGrapher.Value(filterAndGrapher.Key.FilterItem(item), resultingObject);
+                }
             }
 
             if(filterGraphing.Count == 0)
             {
-                resultingObject = DefaultFilterGrapher(true, resultingObject);
+                DefaultFilterGrapher(true, resultingObject);
             }
 
             if (ObjectIsEmpty(resultingObject))
             {
-                GameObject.Destroy(resultingObject);
+                UnityEngine.Object.Destroy(resultingObject);
                 return null;
             }
 
             return resultingObject;
         }
 
-        private Dictionary<Filter, Func<bool, GameObject, GameObject>> BuildNullMapping(Filter[] filters)
+        private Dictionary<Filter, Action<bool, GameObject>> BuildNullMapping(Filter[] filters)
         {
-            var mappings = new Dictionary<Filter, Func<bool, GameObject, GameObject>>();
+            var mappings = new Dictionary<Filter, Action<bool, GameObject>>();
             foreach (var filter in filters)
             {
                 mappings.Add(filter, null);
@@ -76,15 +95,22 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations
             return obj == null ? true : obj.GetComponents<Component>().Length == 1 && obj.transform.childCount == 0;
         }
 
-        private GameObject DefaultFilterGrapher(bool passed, GameObject gameobject)
+        private void DefaultFilterGrapher(bool passed, GameObject gameobject)
         {
-            if (passed && gameobject.transform.childCount == 0)
+            if(gameobject == null)
             {
-                var child = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                child.transform.parent = gameobject.transform;
-                child.transform.localPosition = Vector3.zero;
+                return;
             }
-            return gameobject;
+
+            if (!passed)
+            {
+                gameobject.transform.localScale *= .8f;
+            }
+        }
+
+        private GameObject DefaultItemBuilder()
+        {
+            return GameObject.CreatePrimitive(PrimitiveType.Sphere);
         }
 
     }

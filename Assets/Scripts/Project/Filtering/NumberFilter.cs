@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 
 namespace CAVS.ProjectOrganizer.Project.Filtering
 {
 
-    public class NumberFilter : Filter
+    public class NumberFilter : Filter, IEquatable<NumberFilter>
     {
 
         public enum Operator
@@ -99,6 +98,23 @@ namespace CAVS.ProjectOrganizer.Project.Filtering
                     break;
             }
             return string.Format("Filtering {0} by numbers {1} {2}", fieldToFilterOn, operatorSymbol, this.value);
+        }
+
+        public bool Equals(NumberFilter other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return this.op.Equals(other.op) &&
+                this.value.Equals(other.value) &&
+                this.fieldToFilterOn.Equals(other.fieldToFilterOn);
         }
 
     }

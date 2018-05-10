@@ -39,6 +39,10 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
     public class ItemSpiral : Graph
     {
 
+        public ItemSpiral(Item[] items, Dictionary<Filter, Action<bool, GameObject>> filterGraphing, Func<GameObject> itemBuilder) : base(items, filterGraphing, itemBuilder)
+        {
+        }
+
         public ItemSpiral(Item[] itemsToDisplay, Filter[] filters): base(itemsToDisplay, filters)
         {
         }
@@ -101,7 +105,13 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
             return palace;
         }
 
-        public Item[] sortItems(Item[] itemsToSort, Dictionary<Item, Dictionary<Filter, bool>> filtersApplied)
+        /// <summary>
+        /// UP FOR POTENTIAL DELETION
+        /// </summary>
+        /// <param name="itemsToSort"></param>
+        /// <param name="filtersApplied"></param>
+        /// <returns></returns>
+        public Item[] SortItems(Item[] itemsToSort, Dictionary<Item, Dictionary<Filter, bool>> filtersApplied)
         {
             Item[] copy = (Item[])itemsToSort.Clone();
             Array.Sort(copy, new ItemFilterComparer(filtersApplied));

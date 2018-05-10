@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 
 namespace CAVS.ProjectOrganizer.Project.Filtering
 {
 
-    public class StringFilter : Filter
+    public class StringFilter : Filter, IEquatable<StringFilter>
     {
 
         public enum Operator
@@ -43,6 +41,23 @@ namespace CAVS.ProjectOrganizer.Project.Filtering
                 default:
                     throw new System.Exception("Not Implemented");
             }
+        }
+
+        public bool Equals(StringFilter other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return this.op.Equals(other.op) &&
+                this.fieldName.Equals(other.fieldName) &&
+                this.stringToFilterOn.Equals(other.stringToFilterOn);
         }
 
     }
