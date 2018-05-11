@@ -26,10 +26,18 @@ namespace CAVS.ProjectOrganizer.Scenes.Testing.PlottingTesting
                 new StringFilter("Model", StringFilter.Operator.Equal, "ES")
             };
 
-            GameObject spiralNoFilters = new ItemSpiral(allItems).BuildPalace();
+            GameObject spiralNoFilters = new ItemSpiralBuilder()
+                .AddItems(allItems)
+                .Build()
+                .BuildPalace();
+
             spiralNoFilters.transform.localScale = new Vector3(1.1f, 1, 1.1f);
 
-            GameObject spiralWithFilters = new ItemSpiral(allItems, filters).BuildPalace();
+            GameObject spiralWithFilters = new ItemSpiralBuilder()
+                .AddItems(allItems)
+                .AddFilters(filters)
+                .Build()
+                .BuildPalace();
         }
 
         void Update()

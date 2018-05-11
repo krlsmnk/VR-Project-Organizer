@@ -18,10 +18,10 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
 
         public int Compare(System.Object x, System.Object y)
         {
-            return filterPassCount(itemFilterMappings[(Item)y]) - filterPassCount(itemFilterMappings[(Item)x]);
+            return FilterPassCount(itemFilterMappings[(Item)y]) - FilterPassCount(itemFilterMappings[(Item)x]);
         }
 
-        private int filterPassCount(Dictionary<Filter, bool> item)
+        private int FilterPassCount(Dictionary<Filter, bool> item)
         {
             int aCount = 0;
             foreach (var value in item.Values)
@@ -43,26 +43,14 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
         {
         }
 
-        public ItemSpiral(Item[] itemsToDisplay, Filter[] filters): base(itemsToDisplay, filters)
-        {
-        }
-
-        public ItemSpiral(Item[] itemsToDisplay, Filter filter): base(itemsToDisplay, new Filter[]{filter})
-        {
-        }
-
-        public ItemSpiral(Item[] itemsToDisplay) : base(itemsToDisplay, new Filter[0])
-        {
-        }
-
-        private GameObject getSpiralContainerReference()
+        private GameObject GetSpiralContainerReference()
         {
             return Resources.Load<GameObject>("Spiral Container");
         }
 
         public GameObject BuildPreview(Vector3 positionForPreview)
         {
-            GameObject palace = GameObject.Instantiate(getSpiralContainerReference(), Vector3.zero, Quaternion.identity);
+            GameObject palace = GameObject.Instantiate(GetSpiralContainerReference(), Vector3.zero, Quaternion.identity);
             int i = 0;
             Filter f = (Filters.Count == 1 ? new AggregateFilter(Filters.ToArray()) : Filters[0]);
             Item[] filteredItems = f.FilterItems(items);

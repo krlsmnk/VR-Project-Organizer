@@ -104,7 +104,7 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations
 
             if (!passed)
             {
-                gameobject.transform.localScale *= .8f;
+                UnityEngine.Object.DestroyImmediate(gameobject);
             }
         }
 
