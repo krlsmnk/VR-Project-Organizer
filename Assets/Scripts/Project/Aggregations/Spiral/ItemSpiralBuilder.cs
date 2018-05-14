@@ -102,6 +102,12 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
             return this;
         }
 
+        public ItemSpiralBuilder SetItemBuilder(Func<GameObject> itemBuilder)
+        {
+            this.itemBuilder = itemBuilder;
+            return this;
+        }
+
     }
 
 }

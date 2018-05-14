@@ -47,8 +47,18 @@ namespace CAVS.ProjectOrganizer.Scenes.Testing.PlottingTesting
                 {
                     if (point != null && !passed)
                     {
+                        if (point.GetComponent<MeshRenderer>().material.color == Color.green)
+                        {
+                            point.GetComponent<MeshRenderer>().material.color = Color.white;
+                        }
                         point.transform.localScale = Vector3.one * .5f;
                     }
+                })
+                .SetItemBuilder(delegate()
+                {
+                    var obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                    obj.GetComponent<MeshRenderer>().material.color = Color.green;
+                    return obj;
                 })
                 .Build()
                 .BuildPalace();
