@@ -73,17 +73,17 @@ namespace CAVS.ProjectOrganizer.Scenes.MergeTesting
                     hasB = true;
                 }
             }
-            ItemSpiral spiral = null;
+            ItemSpiralBuilder spiral = null;
             if (hasA && !hasB)
             {
-                spiral = new ItemSpiral(setA);
+                spiral = new ItemSpiralBuilder().AddItems(setA);
             } else if (!hasA && hasB)
             {
-                spiral = new ItemSpiral(setB);
+                spiral = new ItemSpiralBuilder().AddItems(setB);
             }
             else if (hasA && hasB)
             {
-                spiral = new ItemSpiral(ProjectFactory.InnerJoin(setA, setB, "name"));
+                spiral = new ItemSpiralBuilder().AddItems(ProjectFactory.InnerJoin(setA, setB, "name"));
             }
 
             if(oldPalace != null)
@@ -93,7 +93,7 @@ namespace CAVS.ProjectOrganizer.Scenes.MergeTesting
 
             if (spiral != null)
             {
-                oldPalace = spiral.BuildPalace();
+                oldPalace = spiral.Build().BuildPalace();
             }
         }
 

@@ -24,6 +24,7 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
         {
             itemBuilder = null;
             filterGraphing = new Dictionary<Filter, Action<bool, GameObject>>();
+            items = new HashSet<Item>();
         }
 
         public ItemSpiral Build()
@@ -92,6 +93,12 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
             {
                 items.Add(item);
             }
+            return this;
+        }
+
+        public ItemSpiralBuilder ClearFilters()
+        {
+            filterGraphing.Clear();
             return this;
         }
 

@@ -83,7 +83,11 @@ namespace CAVS.ProjectOrganizer.Scenes.Testing.ParameterTesting
             {
                 filterCreated = new StringFilter(key, StringFilter.Operator.Equal, value);
             }
-            new ItemSpiral(allItems, filterCreated).BuildPreview(Vector3.one * 2);
+            new ItemSpiralBuilder()
+                .AddItems(allItems)
+                .AddFilter(filterCreated)
+                .Build()
+                .BuildPreview(Vector3.one * 2);
         }
 
         ButtonBehavior currentelySelected;

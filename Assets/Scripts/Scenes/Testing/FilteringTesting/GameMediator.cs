@@ -27,9 +27,10 @@ namespace CAVS.ProjectOrganizer.Scenes.Testing.FilteringTesting
                 new NumberFilter("Year",  NumberFilter.Operator.LessThan, 2007),
                 new StringFilter("Model", StringFilter.Operator.Equal, "ES")
             };
-            new ItemSpiral(allItems, filters[0]).BuildPreview(new Vector3(2, 2, 2));
-            new ItemSpiral(allItems, filters[1]).BuildPreview(new Vector3(-2, 2, 2));
-            new ItemSpiral(allItems, filters[2]).BuildPreview(Vector3.zero);
+            var builder = new ItemSpiralBuilder().AddItems(allItems);
+            builder.AddFilter(filters[0]).Build().BuildPreview(new Vector3(2, 2, 2));
+            builder.ClearFilters().AddFilter(filters[1]).Build().BuildPreview(new Vector3(-2, 2, 2));
+            builder.ClearFilters().AddFilter(filters[2]).Build().BuildPreview(Vector3.zero);
         }
 
 
@@ -69,7 +70,11 @@ namespace CAVS.ProjectOrganizer.Scenes.Testing.FilteringTesting
             {
                 Destroy(currentPalace);
             }
-            currentPalace = new ItemSpiral(allItems, appliedFilters.ToArray()).BuildPalace();
+            currentPalace = new ItemSpiralBuilder()
+                .AddItems(allItems)
+                .AddFilters( appliedFilters.ToArray())
+                .Build()
+                .BuildPalace();
         }
 
     }

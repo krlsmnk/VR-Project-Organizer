@@ -42,7 +42,11 @@ namespace CAVS.ProjectOrganizer.Scenes.Testing.FilteringTesting
             {
                 Destroy(palace);
             }
-            palace = new ItemSpiral(allItems, appliedFilters.ToArray()).BuildPalace();
+            palace = new ItemSpiralBuilder()
+                .AddItems(allItems)
+                .AddFilters(appliedFilters.ToArray())
+                .Build()
+                .BuildPalace();
         }
     }
 
