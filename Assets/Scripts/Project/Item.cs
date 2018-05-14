@@ -13,11 +13,11 @@ namespace CAVS.ProjectOrganizer.Project
 
         private readonly string title;
 
-        Dictionary<string, string> values;
+		Dictionary<string, string> values;
 
         public Item(string title)
         {
-            this.values = new Dictionary<string, string>();
+			this.values = new Dictionary<string, string>(System.StringComparer.InvariantCultureIgnoreCase);
             this.title = title;
         }
 

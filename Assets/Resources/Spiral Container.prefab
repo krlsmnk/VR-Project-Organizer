@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 23857988516052008}
   - component: {fileID: 114307497264493740}
   - component: {fileID: 54558456082140442}
-  - component: {fileID: 114722906004896884}
+  - component: {fileID: 114739582246690228}
   m_Layer: 0
   m_Name: Spiral Container
   m_TagString: Untagged
@@ -38,9 +38,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1126734505259644}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.06, y: -0.03, z: -2.65}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
+  m_LocalRotation: {x: -0, y: 0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.0002843605, y: 0.033226915, z: -0.0025594477}
+  m_LocalScale: {x: 0.13747565, y: 0.013391426, z: 0.13747567}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -58,7 +58,6 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: 490fc6a3b1caf7f49807f8a803735f84, type: 2}
   m_StaticBatchInfo:
@@ -86,7 +85,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1126734505259644}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!54 &54558456082140442
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -100,7 +99,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!65 &65391302847143020
 BoxCollider:
@@ -109,7 +108,7 @@ BoxCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1126734505259644}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -120,7 +119,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1126734505259644}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a3abaf4521bf2344ea21ed3020b98eb2, type: 3}
   m_Name: 
@@ -129,9 +128,9 @@ MonoBehaviour:
   touchHighlightColor: {r: 0, g: 0.622, b: 0, a: 0.366}
   allowedTouchControllers: 0
   ignoredColliders: []
-  isGrabbable: 1
-  holdButtonToGrab: 1
-  stayGrabbedOnTeleport: 1
+  isGrabbable: 0
+  holdButtonToGrab: 0
+  stayGrabbedOnTeleport: 0
   validDrop: 1
   grabOverrideButton: 0
   allowedGrabControllers: 0
@@ -144,7 +143,7 @@ MonoBehaviour:
   useOverrideButton: 0
   allowedUseControllers: 0
   usingState: 0
---- !u!114 &114722906004896884
+--- !u!114 &114739582246690228
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -152,6 +151,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1126734505259644}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e409e1c7964e3d74a8b761672d33ef7e, type: 3}
+  m_Script: {fileID: 11500000, guid: 7cfab0dc0096c9940b553919c6f046d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

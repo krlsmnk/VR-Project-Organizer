@@ -40,14 +40,18 @@ namespace CAVS.ProjectOrganizer.Scenes.Testing.FilteringTesting
         /// <param name="other">The other Collider involved in this collision.</param>
         void OnTriggerEnter(Collider other)
         {
-            SprialPreviewBehavior preview = other.gameObject.GetComponent<SprialPreviewBehavior>();
-            if (preview != null)
-            {
-                preview.gameObject.GetComponent<MeshRenderer>().material.color = Color.green * .5f;
-                appliedFilters.Add(preview.GetFilter());
-                displayPalace();
-            }
-        }
+			if (!other.gameObject.name.Contains("Cube"))
+				return;
+			
+				SprialPreviewBehavior preview = other.gameObject.GetComponent<SprialPreviewBehavior>();
+	            if (preview != null)
+	            {
+	                preview.gameObject.GetComponent<MeshRenderer>().material.color = Color.green * .5f;
+	                appliedFilters.Add(preview.GetFilter());
+	                displayPalace();
+	            }
+		}
+
 
         /// <summary>
         /// OnTriggerExit is called when the Collider other has stopped touching the trigger.

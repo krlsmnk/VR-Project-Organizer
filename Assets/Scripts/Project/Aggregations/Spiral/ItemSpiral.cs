@@ -49,14 +49,17 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
 
         private GameObject getSpiralContainerReference()
         {
-            return Resources.Load<GameObject>("Spiral Container");
+            return Resources.Load<GameObject>("Cube Container");
         }
 
         public GameObject BuildPreview(Vector3 positionForPreview)
         {
             GameObject palace = GameObject.Instantiate(getSpiralContainerReference(), Vector3.zero, Quaternion.identity);
+
             int i = 0;
             Filter f = (Filters.Count == 1 ? new AggregateFilter(Filters.ToArray()) : Filters[0]);
+
+			
             Item[] filteredItems = f.FilterItems(items);
             /* KRLSMNK
              * Make preview spheres / hitboxes
@@ -70,7 +73,7 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
                 i++;
             }
             */
-            palace.GetComponent<SprialPreviewBehavior>().SetFilter(f);
+			if(f!= null) palace.GetComponent<SprialPreviewBehavior>().SetFilter(f);
             palace.transform.position = positionForPreview;
             return palace;
         }
