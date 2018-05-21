@@ -137,7 +137,7 @@ namespace CAVS.ProjectOrganizer
             {
                 Debug.Log(constructedFilter.ToString());
                 GameObject platform = GameObject.Find("Filter Platform");
-                GameObject currentFilter = constructedFilter.Build();
+                GameObject currentFilter = constructedFilter.Build(BehaviorNameToPlotModifierAction(behavior, behaviorValue));
                 currentFilter.transform.position = platform.transform.position + Vector3.up;
 
                 //play sound goodBeep @ object's location @ volume 7
@@ -145,6 +145,50 @@ namespace CAVS.ProjectOrganizer
             }
 
         }//end of makeFilterOperands
+
+        private Action<bool, GameObject> BehaviorNameToPlotModifierAction(string behaviorName, string unsantizedValue)
+        {
+            float santizedValue = .6f;
+            try {
+                santizedValue = float.Parse(unsantizedValue);
+            } catch(Exception e){
+                Debug.Log(string.Format("Error parsing behavior value: {0}", e.Message));
+            } 
+            switch(behaviorName)
+            {
+                case "Change Size":
+                    return delegate(bool passed, GameObject point)
+                    {
+                        if (point != null && !passed)
+                        {
+                            point.transform.localScale *= santizedValue;
+                        }
+                    };
+
+                case "Change Color":
+                    return delegate(bool passed, GameObject point)
+                    {
+                        if (point != null && !passed)
+                        {
+                            var curColor = point.transform.GetComponent<MeshRenderer>().material.color;
+                            curColor.r = Mathf.Clamp01(curColor.r + santizedValue);
+                        }
+                    };
+
+                case "Become More Transparent":
+                    return delegate(bool passed, GameObject point)
+                    {
+                        if (point != null && !passed)
+                        {
+                            var curColor = point.transform.GetComponent<MeshRenderer>().material.color;
+                            curColor.a = Mathf.Clamp01(curColor.a - santizedValue);
+                        }
+                    };
+
+                default:
+                    return null;
+            }
+        }
 
         public static T ParseEnum<T>(string value)
         {

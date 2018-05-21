@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 using CAVS.ProjectOrganizer.Project;
@@ -15,12 +16,15 @@ namespace CAVS.ProjectOrganizer.Scenes.Testing.FilteringTesting
 
         protected List<Filter> appliedFilters;
 
+        protected List<Action<bool, GameObject>> appliedModifiers;
+
         private GameObject currentPalace;
 
         // Use this for initialization
         void Start()
         {
             appliedFilters = new List<Filter>();
+            appliedModifiers = new List<Action<bool, GameObject>>();
             allItems = ProjectFactory.BuildItemsFromCSV("CarData.csv", 7);
             Filter[] filters = new Filter[]{
                 new NumberFilter("Year",  NumberFilter.Operator.GreaterThan, 1999),
@@ -49,7 +53,8 @@ namespace CAVS.ProjectOrganizer.Scenes.Testing.FilteringTesting
 	            {
 	                preview.gameObject.GetComponent<MeshRenderer>().material.color = Color.green * .5f;
 	                appliedFilters.Add(preview.GetFilter());
-	                displayPalace();
+                    appliedModifiers.Add(preview.GetPlotModifier());
+	                DisplayPalace();
 	            }
 		}
 
@@ -64,20 +69,28 @@ namespace CAVS.ProjectOrganizer.Scenes.Testing.FilteringTesting
             if (preview != null)
             {
                 preview.gameObject.GetComponent<MeshRenderer>().material.color = new Color(54.0f / 255.0f, 172.0f / 255.0f, 1, 100.0f / 255.0f);
-                appliedFilters.Remove(preview.GetFilter());
-                displayPalace();
+                int indexToRemove = appliedFilters.IndexOf(preview.GetFilter());
+                appliedFilters.RemoveAt(indexToRemove);
+                appliedModifiers.RemoveAt(indexToRemove);
+                DisplayPalace();
             }
         }
 
-        protected virtual void displayPalace()
+        protected virtual void DisplayPalace()
         {
             if (currentPalace != null)
             {
                 Destroy(currentPalace);
             }
-            currentPalace = new ItemSpiralBuilder()
-                .AddItems(allItems)
-                .AddFilters( appliedFilters.ToArray())
+
+            var builder = new ItemSpiralBuilder().AddItems(allItems);
+            
+            for (int i = 0; i < appliedFilters.Count; i++)
+            {
+                builder.AddFilter(appliedFilters[i], appliedModifiers[i]);
+            }
+
+            currentPalace = builder
                 .Build()
                 .BuildPalace();
         }
