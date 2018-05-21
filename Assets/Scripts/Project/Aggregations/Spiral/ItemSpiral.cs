@@ -45,7 +45,7 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
 
         private GameObject GetSpiralContainerReference()
         {
-            return Resources.Load<GameObject>("Spiral Container");
+            return Resources.Load<GameObject>("Cube Container");
         }
 
         public GameObject BuildPreview(Vector3 positionForPreview)
@@ -53,7 +53,11 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
             GameObject palace = GameObject.Instantiate(GetSpiralContainerReference(), Vector3.zero, Quaternion.identity);
             int i = 0;
             Filter f = (Filters.Count == 1 ? new AggregateFilter(Filters.ToArray()) : Filters[0]);
+
+			
             Item[] filteredItems = f.FilterItems(items);
+            /* KRLSMNK
+             * Make preview spheres / hitboxes
             foreach (Item item in filteredItems)
             {
                 GameObject node = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -63,7 +67,8 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
                 node.GetComponent<MeshRenderer>().shadowCastingMode = ShadowCastingMode.Off;
                 i++;
             }
-            palace.GetComponent<SprialPreviewBehavior>().SetFilter(f);
+            */
+			if(f!= null) palace.GetComponent<SprialPreviewBehavior>().SetFilter(f);
             palace.transform.position = positionForPreview;
             return palace;
         }

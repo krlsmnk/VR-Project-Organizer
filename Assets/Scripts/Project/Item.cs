@@ -13,17 +13,21 @@ namespace CAVS.ProjectOrganizer.Project
 
         private readonly string title;
 
-        Dictionary<string, string> values;
+		Dictionary<string, string> values;
 
         public Item(string title)
         {
-            values = new Dictionary<string, string>();
+			this.values = new Dictionary<string, string>(System.StringComparer.InvariantCultureIgnoreCase);
             this.title = title;
         }
 
         public Item(string title, Dictionary<string, string> values)
         {
-            this.values = values;
+            this.values = new Dictionary<string, string>(System.StringComparer.InvariantCultureIgnoreCase);
+            foreach(var keyValPair in values)
+            {
+                this.values.Add(keyValPair.Key.ToLower(), keyValPair.Value);
+            }
             this.title = title;
         }
 
@@ -89,9 +93,9 @@ namespace CAVS.ProjectOrganizer.Project
         /// <returns>value if found, else null</returns>
         public string GetValue(string field)
         {
-            if (values.ContainsKey(field))
+            if (values.ContainsKey(field.ToLower()))
             {
-                return values[field];
+                return values[field.ToLower()];
             }
             return null;
         }

@@ -24,13 +24,14 @@ namespace CAVS.ProjectOrganizer.Scenes.Testing.FilteringTesting
             allItems = ProjectFactory.BuildItemsFromCSV("CarData.csv", 7);
             Filter[] filters = new Filter[]{
                 new NumberFilter("Year",  NumberFilter.Operator.GreaterThan, 1999),
-                new NumberFilter("Year",  NumberFilter.Operator.LessThan, 2007),
-                new StringFilter("Model", StringFilter.Operator.Equal, "ES")
+                //new NumberFilter("Year",  NumberFilter.Operator.LessThan, 2007),
+                //new StringFilter("Model", StringFilter.Operator.Equal, "ES")
             };
-            var builder = new ItemSpiralBuilder().AddItems(allItems);
-            builder.AddFilter(filters[0]).Build().BuildPreview(new Vector3(2, 2, 2));
-            builder.ClearFilters().AddFilter(filters[1]).Build().BuildPreview(new Vector3(-2, 2, 2));
-            builder.ClearFilters().AddFilter(filters[2]).Build().BuildPreview(Vector3.zero);
+            var builder = new ItemSpiralBuilder()
+                .AddItems(allItems)
+                .AddFilter(filters[0])
+                .Build()
+                .BuildPreview(new Vector3(-2, 0, -4));
         }
 
 
@@ -40,14 +41,18 @@ namespace CAVS.ProjectOrganizer.Scenes.Testing.FilteringTesting
         /// <param name="other">The other Collider involved in this collision.</param>
         void OnTriggerEnter(Collider other)
         {
-            SprialPreviewBehavior preview = other.gameObject.GetComponent<SprialPreviewBehavior>();
-            if (preview != null)
-            {
-                preview.gameObject.GetComponent<MeshRenderer>().material.color = Color.green * .5f;
-                appliedFilters.Add(preview.GetFilter());
-                displayPalace();
-            }
-        }
+			if (!other.gameObject.name.Contains("Cube"))
+				return;
+			
+				SprialPreviewBehavior preview = other.gameObject.GetComponent<SprialPreviewBehavior>();
+	            if (preview != null)
+	            {
+	                preview.gameObject.GetComponent<MeshRenderer>().material.color = Color.green * .5f;
+	                appliedFilters.Add(preview.GetFilter());
+	                displayPalace();
+	            }
+		}
+
 
         /// <summary>
         /// OnTriggerExit is called when the Collider other has stopped touching the trigger.

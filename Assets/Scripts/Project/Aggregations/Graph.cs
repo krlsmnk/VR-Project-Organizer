@@ -104,7 +104,7 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations
 
             if (!passed)
             {
-                UnityEngine.Object.DestroyImmediate(gameobject);
+                UnityEngine.Object.Destroy(gameobject);
             }
         }
 

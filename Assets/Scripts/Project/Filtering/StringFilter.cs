@@ -32,12 +32,16 @@ namespace CAVS.ProjectOrganizer.Project.Filtering
                 return false;
             }
             string val = item.GetValue(this.fieldName);
+            if (val == null)
+            {
+                return false;
+            }
             switch (op)
             {
                 case Operator.Equal:
-                    return val == stringToFilterOn;
+                    return val.ToLower().Equals(stringToFilterOn.ToLower());
                 case Operator.NotEqual:
-                    return val != stringToFilterOn;
+                    return !val.ToLower().Equals(stringToFilterOn.ToLower());
                 default:
                     throw new System.Exception("Not Implemented");
             }
@@ -58,6 +62,11 @@ namespace CAVS.ProjectOrganizer.Project.Filtering
             return this.op.Equals(other.op) &&
                 this.fieldName.Equals(other.fieldName) &&
                 this.stringToFilterOn.Equals(other.stringToFilterOn);
+        }
+
+        public override string ToString()
+        {
+            return String.Format("String Filter( item[{0}] {1} {2} )", this.fieldName, this.op, this.stringToFilterOn);
         }
 
     }

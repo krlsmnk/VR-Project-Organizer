@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CAVS.ProjectOrganizer.Project.Aggregations.Spiral;
 
 namespace CAVS.ProjectOrganizer.Project.Filtering
 {
@@ -42,7 +43,9 @@ namespace CAVS.ProjectOrganizer.Project.Filtering
         }
 
 		public GameObject Build(){
-			return GameObject.Instantiate(Resources.Load<GameObject> ("Cube Container"));
+            GameObject thisFilter = GameObject.Instantiate(Resources.Load<GameObject> ("Cube Container"));
+            thisFilter.gameObject.GetComponent<SprialPreviewBehavior>().SetFilter(this);
+            return thisFilter;
 		}//end of build
 
     }//end of class
