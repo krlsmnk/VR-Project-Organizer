@@ -129,7 +129,9 @@ public class GameManager : MonoBehaviour {
         if (constructedFilter != null)
         {
             GameObject platform = GameObject.Find("Filter Platform");
-            GameObject currentFilter = constructedFilter.Build();
+            //GameObject currentFilter = constructedFilter.Build();
+			GameObject currentFilter = constructedFilter.Build(filterName);
+
             currentFilter.transform.position = platform.transform.position + Vector3.up;
 
             //play sound goodBeep @ object's location @ volume 7

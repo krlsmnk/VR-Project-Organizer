@@ -216,6 +216,10 @@ ModelImporter:
     2300110: tire_MeshPart1
     2300112: windows
     2300114: xenons
+    2300116: tire
+    2300118: tire01
+    2300120: tire02
+    2300122: tire03
     3300000: carpaint
     3300002: ChamferBo0
     3300004: ChamferBox
@@ -274,6 +278,10 @@ ModelImporter:
     3300110: tire_MeshPart1
     3300112: windows
     3300114: xenons
+    3300116: tire
+    3300118: tire01
+    3300120: tire02
+    3300122: tire03
     4300000: ChamferBox
     4300002: ChamferBo0
     4300004: doors
@@ -332,6 +340,10 @@ ModelImporter:
     4300110: tailighhts
     4300112: Object10
     4300114: Object020
+    4300116: tire01
+    4300118: tire
+    4300120: tire03
+    4300122: tire02
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -375,6 +387,8 @@ ModelImporter:
     optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88

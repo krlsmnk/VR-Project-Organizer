@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using CAVS.ProjectOrganizer.Project.Aggregations.Spiral;
+using UnityEngine.UI;
+
 
 namespace CAVS.ProjectOrganizer.Project.Filtering
 {
@@ -10,7 +12,7 @@ namespace CAVS.ProjectOrganizer.Project.Filtering
     /// A filter prunes lists of items to make navigation of the informational 
     /// space more managable 
     /// </summary>
-    public abstract class Filter
+	public abstract class Filter
     {
 
         /// <summary>
@@ -47,6 +49,24 @@ namespace CAVS.ProjectOrganizer.Project.Filtering
             thisFilter.gameObject.GetComponent<SprialPreviewBehavior>().SetFilter(this);
             return thisFilter;
 		}//end of build
+
+		public GameObject Build(string filterName){
+			GameObject thisFilter = GameObject.Instantiate(Resources.Load<GameObject> ("Cube Container"));
+			thisFilter.gameObject.GetComponent<SprialPreviewBehavior>().SetFilter(this);
+
+			//add tooltip to filter
+			GameObject tooltip = GameObject.Instantiate(Resources.Load<GameObject> ("ObjectTooltip"));
+			tooltip.gameObject.transform.parent = thisFilter.transform;
+
+			//set text with name of filter
+			Text tmpText = tooltip.GetComponent<Text>();
+			tmpText.text = filterName;
+
+
+			return thisFilter;
+		}//end of build
+
+
 
     }//end of class
 
