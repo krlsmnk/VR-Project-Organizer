@@ -31,11 +31,12 @@ namespace CAVS.ProjectOrganizer.Scenes.Testing.FilteringTesting
                 //new NumberFilter("Year",  NumberFilter.Operator.LessThan, 2007),
                 //new StringFilter("Model", StringFilter.Operator.Equal, "ES")
             };
+
             var builder = new ItemSpiralBuilder()
                 .AddItems(allItems)
                 .AddFilter(filters[0])
                 .Build()
-                .BuildPreview(new Vector3(-2, 0, -4));
+                .BuildPreview(transform.position + (Vector3.up*2));
         }
 
 

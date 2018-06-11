@@ -26,6 +26,12 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         private RawImage[] carImageScreens;
 
         /// <summary>
+        /// Table top for displaying mini cars
+        /// </summary>
+        [SerializeField]
+        private MiniCarSelectionBehavior tableTop;
+
+        /// <summary>
         /// All text displays that will list the car's name currently being displayed
         /// </summary>
         [SerializeField]
@@ -42,6 +48,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         [SerializeField]
         private ButtonBehavior nextButton;
+
 
         [SerializeField]
         private ButtonBehavior previousButton;
@@ -83,12 +90,9 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             previousButton.Subscribe(this.DisplayPreviousCar);
             cars = ProjectFactory.BuildItemsFromCSV("Assets/Car_Dataset.csv", 7);
             this.DisplayNextCar();
-
-            graphControl.Initialize(this.PlotPointBuilder, cars);
-            if(pedistal != null)
-            {
-                pedistal.Subscribe(OnPedistalSelection);
-            }
+            tableTop.SetCars(cars);
+            pedistal.Subscribe(OnPedistalSelection);
+            // graphControl.Initialize(this.PlotPointBuilder, cars);
         }
 
         private void OnPedistalSelection(string selection)
@@ -100,9 +104,9 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             int j;
             if (int.TryParse(selection, out j))
             {
-                carBeingDisplayedIndex = Mathf.Clamp(j, 0, this.cars.Length);
+                carBeingDisplayedIndex = Mathf.Clamp(j - 1, 0, cars.Length);
                 DisplayCar(cars[carBeingDisplayedIndex]);
-            }
+            } else
         }
 
         private GameObject PlotPointBuilder(Item item)
@@ -219,16 +223,9 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                 Destroy(currentCarGameObject);
             }
 
-            // Display Car
-            currentCarGameObject = Instantiate<GameObject>(
-                LoadCarModelReference(carToDisplay, qualityToRender),
-                Vector3.zero,
-                Quaternion.identity,
-                liftCarPlacement.transform
-            );
-
+            currentCarGameObject = CarFactory.MakeCar(carToDisplay, qualityToRender, Vector3.zero, Quaternion.identity);
+            currentCarGameObject.transform.parent = liftCarPlacement.transform;
             currentCarGameObject.transform.localPosition = Vector3.zero;
-
         }
 
 
@@ -250,36 +247,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             this.qualityToRender = newQuality;
             DisplayCar(cars[carBeingDisplayedIndex]);
         }
-
-
-        /// <summary>
-        /// Loads a reference to a car model from the Resources folder to be instantiated and displayed in the scene
-        /// </summary>
-        /// <returns>A reference of a car to be instantiated</returns>
-        private GameObject LoadCarModelReference(Item car, CarQuality quality)
-        {
-            string qualityPath = "";
-            switch(quality)
-            {
-                default:
-                    qualityPath = "highdef";
-                    break;
-            }
-
-            string directory = string.Format("{0} {1}", car.GetValue("Make"), car.GetValue("Model"));
-            string filename = string.Format("{0} {1} {2}", directory, car.GetValue("Trim"), qualityPath);
-
-            GameObject carModel = Resources.Load<GameObject>(string.Format("{0}/{1}", directory, filename));
-
-            if (carModel != null)
-            {
-                return carModel;
-            }
-            else
-            {
-                return Resources.Load<GameObject>("Low Quality Car");
-            }
-        }
+       
 
     }
 

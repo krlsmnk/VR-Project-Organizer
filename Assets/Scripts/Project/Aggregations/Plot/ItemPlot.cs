@@ -7,10 +7,8 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Plot
     /// <summary>
     /// A 3D plot of Items
     /// </summary>
-    public class ItemPlot
+    public class ItemPlot: Graph
     {
-
-        Item[] items;
 
         string x;
 
@@ -18,9 +16,8 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Plot
 
         string z;
 
-        public ItemPlot(Item[] items, string x, string y, string z)
+        public ItemPlot(Item[] items, string x, string y, string z) : base (items, null)
         {
-            this.items = items;
             this.x = x;
             this.y = y;
             this.z = z;
@@ -33,25 +30,16 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Plot
 
         public GameObject Build(Vector3 scale, Func<Item, GameObject> itemBuilder)
         {
-            Vector2 xRange = GetItemsRangeForProperty(this.items, this.x);
-            Vector2 yRange = GetItemsRangeForProperty(this.items, this.y);
-            Vector2 zRange = GetItemsRangeForProperty(this.items, this.z);
+            Vector2 xRange = GetItemsRangeForProperty(items, x);
+            Vector2 yRange = GetItemsRangeForProperty(items, y);
+            Vector2 zRange = GetItemsRangeForProperty(items, z);
 
-            GameObject plot = new GameObject(string.Format("Plot ({0}, {1}, {2})", this.x, this.y, this.z));
+            GameObject plot = new GameObject(string.Format("Plot ({0}, {1}, {2})", x, y, z));
 
-            foreach (Item item in this.items)
+            foreach (Item item in items)
             {
-                GameObject point = null;
-                if (itemBuilder != null)
-                {
-					point = itemBuilder(item);
-				}
-                else
-                {
-					point = item.Build().gameObject;
-					point.GetComponent<Rigidbody>().isKinematic = true;
-				}
-                point.transform.position = GetPositionGivenRanges(item, xRange, yRange, zRange, scale);
+                Vector3 position = GetPositionGivenRanges(item, xRange, yRange, zRange, scale);
+                GameObject point = Plot(item, position);
                 point.transform.localScale = scale / 40f;
                 point.transform.parent = plot.transform;
             }

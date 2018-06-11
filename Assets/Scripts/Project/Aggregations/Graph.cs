@@ -18,6 +18,17 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations
     public abstract class Graph
     {
 
+        private static GameObject nodeReference;
+
+        private static GameObject GetNodeReference()
+        {
+            if(nodeReference == null)
+            {
+                nodeReference = Resources.Load<GameObject>("Node");
+            }
+            return nodeReference;
+        }
+
         protected Item[] items;
 
         protected Dictionary<Filter, Action<bool, GameObject>> filterGraphing;
@@ -50,7 +61,7 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations
         public Graph(Item[] items, Filter[] filters)
         {
             this.items = items;
-            this.filterGraphing = BuildNullMapping(filters);
+            filterGraphing = BuildNullMapping(filters);
         }
 
         protected GameObject Plot(Item item, Vector3 position)
@@ -110,7 +121,7 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations
 
         private GameObject DefaultItemBuilder()
         {
-            return GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            return UnityEngine.Object.Instantiate(GetNodeReference());
         }
 
     }

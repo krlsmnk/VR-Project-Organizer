@@ -2,21 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BigOrangeButton : MonoBehaviour {
+namespace CAVS.ProjectOrganizer.Scenes.VendingMachine
+{
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    public class BigOrangeButton : MonoBehaviour
+    {
 
-        if (Input.GetKeyDown(KeyCode.LeftAlt))
+        // Use this for initialization
+        void Start()
         {
-            //GameObject.FindObjectOfType<GameManager>().makeFilterButtonPressed();
-            GameObject.FindObjectOfType<GameManager>().MakeFilterOperands("TestFilter", "Number Filter", "1999", "Year", "GreaterThan", "1999", "3001", "Change Shape", "Cylinder");
+
         }
 
-	}
+        // Update is called once per frame
+        void Update()
+        {
+
+            if (Input.GetKeyDown(KeyCode.LeftAlt))
+            {
+                //GameObject.FindObjectOfType<GameManager>().makeFilterButtonPressed();
+                GameObject.FindObjectOfType<GameManager>().MakeFilterOperands("TestFilter", "Number Filter", "1999", "Year", "GreaterThan", "1999", "3001", "Change Shape", "Cylinder");
+            }
+
+        }
+    }
+
 }

@@ -117,10 +117,10 @@ namespace CAVS.ProjectOrganizer.Interation
 
             GameObject plot;
 
-            if (this.builder != null)
+            if (builder != null)
             {
                 plot = new ItemPlot(items, columnsToExamine[x], columnsToExamine[y], columnsToExamine[z])
-                    .Build(Vector3.one * 4, this.builder);
+                    .Build(Vector3.one * 4, builder);
             }
             else
             {

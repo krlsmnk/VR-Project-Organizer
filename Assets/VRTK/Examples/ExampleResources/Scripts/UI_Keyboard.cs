@@ -28,9 +28,6 @@ namespace VRTK.Examples
 
         public void Enter()
         {
-			Debug.Log("Enter()");
-            VRTK_Logger.Info("You've typed [" + input.text + "]");
-            //get current text
             string currentText = input.text;
             bool setValue = false;
             //get reference to vending machine active field
@@ -58,25 +55,12 @@ namespace VRTK.Examples
                 //clear the keyboard
                 input.text = "";
             }
-            else
-            {
-                //TODO:
-                //play bad beep
-
-            }
         }
 
         void Start()
         {
             input = GetComponentInChildren<InputField>();
-            if (targetInputs != null )
-            {
-                foreach (InputField curField in targetInputs)
-                {
-                    Debug.Log("targetName: " + curField.name);
-                }
-            }
-            else
+            if (targetInputs == null)
             {
                 Debug.Log("Targets NOT found");
             }
