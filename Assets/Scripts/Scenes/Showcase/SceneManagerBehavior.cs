@@ -7,6 +7,8 @@ using CAVS.ProjectOrganizer.Interation;
 using CAVS.ProjectOrganizer.Project;
 using CAVS.ProjectOrganizer.Project.Aggregations.Plot;
 
+using Firebase.Database;
+
 namespace CAVS.ProjectOrganizer.Scenes.Showcase
 {
 
@@ -84,8 +86,12 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         [SerializeField]
         private PlotControl graphControl;
 
+        private DatabaseReference sceneReference;
+
         void Start()
         {
+            sceneReference = Netowrking.NetworkingManager.Instance.CreateSceneEntry("showcase");
+
             nextButton.Subscribe(this.DisplayNextCar);
             previousButton.Subscribe(this.DisplayPreviousCar);
             cars = ProjectFactory.BuildItemsFromCSV("Assets/Car_Dataset.csv", 7);
@@ -106,7 +112,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             {
                 carBeingDisplayedIndex = Mathf.Clamp(j - 1, 0, cars.Length);
                 DisplayCar(cars[carBeingDisplayedIndex]);
-            } else
+            }
         }
 
         private GameObject PlotPointBuilder(Item item)
@@ -183,6 +189,8 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         /// <param name="carToDisplay">Car to display info about</param>
         private void DisplayCar(PictureItem carToDisplay)
         {
+            sceneReference.Child("selectedCar").SetRawJsonValueAsync(carToDisplay.ToJson());
+
             // Update All The Screens
             if (carImageScreens != null)
             {
@@ -212,7 +220,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             // Add extra information about car..
             foreach (KeyValuePair<string, string> entry in carToDisplay.GetValues())
             {
-                GameObject uiEntry = Instantiate<GameObject>(extraInfoContentEntry, extraInfoContent.transform);
+                GameObject uiEntry = Instantiate(extraInfoContentEntry, extraInfoContent.transform);
                 uiEntry.transform.Find("DataName").GetComponent<Text>().text = entry.Key;
                 uiEntry.transform.Find("Value").GetComponent<Text>().text = entry.Value;
             }
@@ -247,7 +255,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             this.qualityToRender = newQuality;
             DisplayCar(cars[carBeingDisplayedIndex]);
         }
-       
+
 
     }
 

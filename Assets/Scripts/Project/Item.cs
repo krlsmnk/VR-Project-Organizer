@@ -1,7 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 
 namespace CAVS.ProjectOrganizer.Project
 {
@@ -145,6 +145,39 @@ namespace CAVS.ProjectOrganizer.Project
                 result = string.Format("{0}\n  {1}: {2}", result, keypair.Key, keypair.Value);
             }
             return result + "\n)";
+        }
+
+        // Invalid key: cargo capacity (cu ft). Keys must not contain '/', '.', '#', '$', '[', or ']'
+        string[] charsToRemove = new string[] { "/", ".", "#", "$", "[", "]", "\n"};
+
+        private string SanitizeKey(string key)
+        {
+            string santized = key;
+            foreach (var c in charsToRemove)
+            {
+                santized = santized.Replace(c, string.Empty);
+            }
+            return santized.Trim();
+        }
+
+        public string ToJson()
+        {
+            string result = "{\n";
+            int i = 0; 
+            foreach (var keyvalPair in values)
+            {
+                result += string.Format("\"{0}\": \"{1}\"", SanitizeKey(keyvalPair.Key), keyvalPair.Value.Trim());
+                if (i < values.Count - 1)
+                {
+                    result += ",\n";
+                } else
+                {
+                    result += "\n";
+                }
+                i ++;
+            }
+            result += "}";
+            return result;
         }
 
     }
