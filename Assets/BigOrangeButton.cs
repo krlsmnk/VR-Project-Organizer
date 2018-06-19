@@ -15,7 +15,7 @@ public class BigOrangeButton : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.LeftAlt))
         {
             //GameObject.FindObjectOfType<GameManager>().makeFilterButtonPressed();
-            GameObject.FindObjectOfType<GameManager>().makeFilterOperands("TestFilter", "Number Filter", "1999", "Year", "GreaterThan", "1999", "3001", "Change Shape", "Cylinder");
+            GameObject.FindObjectOfType<GameManager>().makeFilterOperands("Made by Pressing Left Alt", "Number Filter", "1999", "Year", "GreaterThan", "1999", "3001", "Change Shape", "Cylinder");
         }
 
 	}

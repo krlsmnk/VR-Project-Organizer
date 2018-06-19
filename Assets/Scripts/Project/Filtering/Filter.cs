@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using CAVS.ProjectOrganizer.Project.Aggregations.Spiral;
 using UnityEngine.UI;
+using VRTK;
 
 
 namespace CAVS.ProjectOrganizer.Project.Filtering
@@ -56,12 +57,33 @@ namespace CAVS.ProjectOrganizer.Project.Filtering
 
 			//add tooltip to filter
 			GameObject tooltip = GameObject.Instantiate(Resources.Load<GameObject> ("ObjectTooltip"));
+
+			//put the canvas on / near the filter
+			tooltip.gameObject.transform.position = thisFilter.transform.position;
+			//move it up a bit so we can see it
+			tooltip.gameObject.transform.position += new Vector3(0, .25f, 0);
+
+			//parent the canvas to the filter
 			tooltip.gameObject.transform.parent = thisFilter.transform;
 
-			//set text with name of filter
-			Text tmpText = tooltip.GetComponent<Text>();
-			tmpText.text = filterName;
+			//find all text objects
+			Text[] arrayOfTexts = GameObject.FindObjectsOfType<Text>();
 
+			foreach (Text thisText in arrayOfTexts)
+			{	
+				//find the Text object who belongs to the current filter
+				if (thisText.gameObject.transform.IsChildOf (thisFilter.transform)) {
+					//assign its name
+					thisText.text = filterName;
+				}
+			}
+
+			//Draw the line from the tooltip to the filter
+			/*
+			VRTK_ObjectTooltip thisScript = tooltip.GetComponent<VRTK_ObjectTooltip> ();
+			thisScript.drawLineFrom = tooltip.transform;
+			thisScript.drawLineTo = thisFilter.transform;
+			*/
 
 			return thisFilter;
 		}//end of build
