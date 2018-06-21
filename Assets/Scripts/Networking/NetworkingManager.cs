@@ -9,6 +9,11 @@ using Firebase.Database;
 namespace CAVS.ProjectOrganizer.Netowrking
 {
 
+    /// <summary>
+    /// Abstract any Firebase implementation away from the existing code.
+    /// Minimize damage done from having to switch away from Firebase
+    /// if we ever have too.
+    /// </summary>
     public class NetworkingManager
     {
         
@@ -27,6 +32,8 @@ namespace CAVS.ProjectOrganizer.Netowrking
         }
 
         private DatabaseReference databaseReference;
+
+        private string displayName;
 
         private NetworkingManager()
         {
@@ -50,14 +57,21 @@ namespace CAVS.ProjectOrganizer.Netowrking
             });
 
             databaseReference = FirebaseDatabase.DefaultInstance.RootReference;
+
+            displayName = PlayerPrefs.GetString("displayName", "anonymous");
             // databaseReference.Child("item").SetRawJsonValueAsync("{ \"test\" : 1 }");
         }
 
-        public DatabaseReference CreateSceneEntry(string sceneName)
+        public NetworkRoom CreateSceneEntry(string sceneName)
         {
-            string key = databaseReference.Child("scenes").Push().Key;
-            databaseReference.Child("/scenes/" + key).SetValueAsync(sceneName);
-            return databaseReference.Child("/sceneData/" + key + "/");
+            string sceneKey = databaseReference.Child("scenes").Push().Key;
+            databaseReference.Child("/scenes/" + sceneKey).SetValueAsync(sceneName);
+
+            string playerKeyPath = string.Format("/scenePlayers/{0}/", sceneKey);
+            string playerKey = databaseReference.Child(playerKeyPath).Push().Key;
+            databaseReference.Child(playerKeyPath + playerKey).SetValueAsync(displayName);
+
+            return new NetworkRoom(playerKey, databaseReference.Child(string.Format("/sceneData/{0}/", sceneKey)));
         }
 
     }

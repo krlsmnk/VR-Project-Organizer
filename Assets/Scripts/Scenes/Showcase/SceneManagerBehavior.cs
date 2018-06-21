@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+using CAVS.ProjectOrganizer.Netowrking;
 using CAVS.ProjectOrganizer.Interation;
 using CAVS.ProjectOrganizer.Project;
 using CAVS.ProjectOrganizer.Project.Aggregations.Plot;
+
+using VRTK;
 
 using Firebase.Database;
 
@@ -86,11 +89,13 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         [SerializeField]
         private PlotControl graphControl;
 
-        private DatabaseReference sceneReference;
+        private NetworkRoom sceneReference;
+
+        GameObject player;
 
         void Start()
         {
-            sceneReference = Netowrking.NetworkingManager.Instance.CreateSceneEntry("showcase");
+            sceneReference = NetworkingManager.Instance.CreateSceneEntry("showcase");
 
             nextButton.Subscribe(this.DisplayNextCar);
             previousButton.Subscribe(this.DisplayPreviousCar);
@@ -98,6 +103,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             this.DisplayNextCar();
             tableTop.SetCars(cars);
             pedistal.Subscribe(OnPedistalSelection);
+            StartCoroutine(UpdatePlayerTransformOnFirebase());
             // graphControl.Initialize(this.PlotPointBuilder, cars);
         }
 
@@ -181,6 +187,35 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             DisplayCar(cars[carBeingDisplayedIndex]);
         }
 
+        private IEnumerator UpdatePlayerTransformOnFirebase()
+        {
+            while(true)
+            {
+                if (player == null)
+                {
+                    if (Camera.main == null)
+                    {
+                        try
+                        {
+                            player = VRTK_DeviceFinder.HeadsetCamera().gameObject;
+                        }
+                        catch (System.Exception e) { }
+                    }
+                    else
+                    {
+                        player = Camera.main.gameObject;
+                    }
+                }
+                else
+                {
+                    sceneReference.Update(new NetworkUpdateBuilder()
+                        .AddEntry("position", player.transform.position)
+                        .AddEntry("rotation", player.transform.rotation.eulerAngles)
+                        .Build());
+                }
+                yield return new WaitForSeconds(1);
+            }
+        }
 
         /// <summary>
         /// Set up the entire scene to be rendering information about the specific
@@ -189,7 +224,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         /// <param name="carToDisplay">Car to display info about</param>
         private void DisplayCar(PictureItem carToDisplay)
         {
-            sceneReference.Child("selectedCar").SetRawJsonValueAsync(carToDisplay.ToJson());
+            sceneReference.SetObjectValue("selectedCar", carToDisplay.ToJson());
 
             // Update All The Screens
             if (carImageScreens != null)
@@ -237,6 +272,11 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         }
 
 
+        private void OnApplicationQuit()
+        {
+            sceneReference.CloseRoom();
+        }
+
         /// <summary>
         /// This will change the quality in which you render the car models.
         /// Meant for rendering on different devices, such as Hololens, which
@@ -252,7 +292,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             }
 
             // Update what we're currently rendering.
-            this.qualityToRender = newQuality;
+            qualityToRender = newQuality;
             DisplayCar(cars[carBeingDisplayedIndex]);
         }
 
