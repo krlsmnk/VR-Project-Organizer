@@ -39,30 +39,25 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             return Object.Instantiate(carModel, position, rotation);
         }
 
-        public static GameObject MakeToyCar(Item car, Vector3 position, Quaternion rotation)
+        public static GameObject MakeToyCar(string display, float color, Vector3 position, Quaternion rotation)
         {
             GameObject carInstace = Object.Instantiate(GetToyReference());
             carInstace.transform.position = position;
             carInstace.transform.rotation = rotation;
 
-            string unsanitizedID = car.GetValue("id");
-            float id;
-            if(float.TryParse(unsanitizedID, out id))
+            var renders = carInstace.GetComponentsInChildren<MeshRenderer>();
+            foreach(var render in renders)
             {
-                var renders = carInstace.GetComponentsInChildren<MeshRenderer>();
-                foreach(var render in renders)
+                foreach (var mat in render.materials)
                 {
-                    foreach (var mat in render.materials)
+                    if(mat.name == "Body (Instance)")
                     {
-                        if(mat.name == "Body (Instance)")
-                        {
-                            mat.color = Color.HSVToRGB(id / 434f, 1, 1);
-                        }
+                        mat.color = Color.HSVToRGB(color, 1, 1);
                     }
                 }
             }
-            carInstace.GetComponentInChildren<Text>().text = unsanitizedID;
-            carInstace.name = unsanitizedID;
+            carInstace.GetComponentInChildren<Text>().text = display;
+            carInstace.name = display;
             return carInstace;
         }
 

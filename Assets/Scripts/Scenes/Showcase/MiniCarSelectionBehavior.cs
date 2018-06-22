@@ -63,7 +63,15 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                 position += (Vector3.left * .6f);
                 position += (Vector3.back * .7f);
 
-                carsBeingRendered[flatIndex] = CarFactory.MakeToyCar(allCars[i], position, Quaternion.identity);
+                float id;
+                if (float.TryParse(allCars[i].GetValue("id"), out id))
+                {
+                    carsBeingRendered[flatIndex] = CarFactory.MakeToyCar(allCars[i].GetValue("id"), id / itemsPerPage, position, Quaternion.identity);
+                }
+                else
+                {
+                    throw new System.Exception("ID IS NOT A NUMBER!");
+                }
             }
             pageDisplay.text = string.Format("{0} / {1}", currentPage + 1, numberOfPages);
         }

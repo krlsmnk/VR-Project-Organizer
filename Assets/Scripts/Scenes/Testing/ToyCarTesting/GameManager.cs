@@ -17,7 +17,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Testing.ToyCarTesting
             var cars = ProjectFactory.BuildItemsFromCSV("CarData.csv");
             for (int i = 0; i < cars.Length; i ++)
             {
-                CarFactory.MakeToyCar(cars[i], (Vector3.right * (i% width)) + Vector3.forward * 2 * Mathf.Floor(i/ width), Quaternion.identity);
+                CarFactory.MakeToyCar(cars[i].GetValue("id"), float.Parse(cars[i].GetValue("id")), (Vector3.right * (i% width)) + Vector3.forward * 2 * Mathf.Floor(i/ width), Quaternion.identity);
             }
         }
 

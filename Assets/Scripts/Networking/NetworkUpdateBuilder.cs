@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace CAVS.ProjectOrganizer.Netowrking
 {
     public class NetworkUpdateBuilder 
     {
 
-        Dictionary<string, Object> values;
+        Dictionary<string, object> values;
 
         public NetworkUpdateBuilder()
         {
-            values = new Dictionary<string, Object>();
+            values = new Dictionary<string, object>();
         }
 
         public NetworkUpdateBuilder AddEntry(string key, string value)
