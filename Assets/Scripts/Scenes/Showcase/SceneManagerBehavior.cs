@@ -96,6 +96,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         void Start()
         {
             sceneReference = NetworkingManager.Instance.CreateSceneEntry("showcase");
+            sceneReference.SubscribeToNewData(OnSceneUpdate);
 
             nextButton.Subscribe(this.DisplayNextCar);
             previousButton.Subscribe(this.DisplayPreviousCar);
@@ -105,6 +106,11 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             pedistal.Subscribe(OnPedistalSelection);
             StartCoroutine(UpdatePlayerTransformOnFirebase());
             // graphControl.Initialize(this.PlotPointBuilder, cars);
+        }
+
+        private void OnSceneUpdate(List<object> update)
+        {
+            var users = new ShowcaseData(update).UsersInScene();
         }
 
         private void OnPedistalSelection(string selection)

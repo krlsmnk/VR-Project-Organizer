@@ -71,7 +71,11 @@ namespace CAVS.ProjectOrganizer.Netowrking
             string playerKey = databaseReference.Child(playerKeyPath).Push().Key;
             databaseReference.Child(playerKeyPath + playerKey).SetValueAsync(displayName);
 
-            return new NetworkRoom(playerKey, databaseReference.Child(string.Format("/sceneData/{0}/", sceneKey)));
+            return new NetworkRoom(
+                playerKey, 
+                databaseReference.Child(string.Format("/sceneData/{0}/", sceneKey)), 
+                databaseReference.Child(string.Format("/scenePlayers/{0}/", sceneKey))
+            );
         }
 
     }

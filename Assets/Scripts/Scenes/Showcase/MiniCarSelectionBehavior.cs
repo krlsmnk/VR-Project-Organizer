@@ -59,6 +59,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
                 Vector3 position = (Vector3.right * (i % width)*.3f) + (Vector3.forward * .35f * Mathf.Floor(flatIndex / width)) + transform.position;
 
+                // Offset to position on the table
                 position += (Vector3.up * .25f);
                 position += (Vector3.left * .6f);
                 position += (Vector3.back * .7f);
