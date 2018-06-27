@@ -4353,6 +4353,7 @@ GameObject:
   - component: {fileID: 764930383}
   - component: {fileID: 764930384}
   - component: {fileID: 764930382}
+  - component: {fileID: 764930385}
   m_Layer: 0
   m_Name: __SCRIPTS__
   m_TagString: Untagged
@@ -4413,6 +4414,17 @@ MonoBehaviour:
   previousButton: {fileID: 1865255249}
   liftCarPlacement: {fileID: 243110814}
   graphControl: {fileID: 1619126752}
+--- !u!114 &764930385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 764930381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84d6537da28ed31419fb10e01cadb409, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &766700166
 GameObject:
   m_ObjectHideFlags: 0

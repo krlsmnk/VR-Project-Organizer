@@ -60,6 +60,12 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
 
         /// <summary>
+        /// Used for displaying the other players in the room
+        /// </summary>
+        private RoomDisplayBehavior roomDisplay;
+
+
+        /// <summary>
         /// All the cars we're going to display information about. (Grabbed from the database)
         /// </summary>
         private PictureItem[] cars;
@@ -93,24 +99,29 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         GameObject player;
 
+        private void Awake()
+        {
+            roomDisplay = gameObject.GetComponent<RoomDisplayBehavior>();
+        }
+
         void Start()
         {
             sceneReference = NetworkingManager.Instance.CreateSceneEntry("showcase");
             sceneReference.SubscribeToNewData(OnSceneUpdate);
 
-            nextButton.Subscribe(this.DisplayNextCar);
-            previousButton.Subscribe(this.DisplayPreviousCar);
+            nextButton.Subscribe(DisplayNextCar);
+            previousButton.Subscribe(DisplayPreviousCar);
             cars = ProjectFactory.BuildItemsFromCSV("Assets/Car_Dataset.csv", 7);
-            this.DisplayNextCar();
+            DisplayNextCar();
             tableTop.SetCars(cars);
             pedistal.Subscribe(OnPedistalSelection);
             StartCoroutine(UpdatePlayerTransformOnFirebase());
             // graphControl.Initialize(this.PlotPointBuilder, cars);
         }
 
-        private void OnSceneUpdate(List<object> update)
+        private void OnSceneUpdate(Dictionary<string, object> update)
         {
-            var users = new ShowcaseData(update).UsersInScene();
+            roomDisplay.UpdatePuppets(new ShowcaseData(update).UsersInScene());
         }
 
         private void OnPedistalSelection(string selection)
@@ -152,12 +163,12 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         {
             if (buttonName == "Next")
             {
-                this.DisplayNextCar();
+                DisplayNextCar();
             }
 
             if (buttonName == "Previous")
             {
-                this.DisplayPreviousCar();
+                DisplayPreviousCar();
             }
         }
 

@@ -9,57 +9,43 @@ namespace CAVS.ProjectOrganizer.Netowrking
     public class ShowcaseData
     {
 
-        public struct User {
 
-            private Vector3 position;
+        private List<NetworkedObject> otherUsersInScene;
 
-            private Vector3 rotation;
-
-            public User(Vector3 position, Vector3 rotation)
-            {
-                this.position = position;
-                this.rotation = rotation;
-            }
-
-        }
-
-        private List<User> otherUsersInScene;
-
-        public ShowcaseData(List<object> dataFromServer)
+        public ShowcaseData(Dictionary<string, object> dataFromServer)
         {
-            otherUsersInScene = new List<User>();
+            otherUsersInScene = new List<NetworkedObject>();
 
-            foreach (var item in dataFromServer)
+            foreach (var keyValPair in dataFromServer)
             {
-                if(item.GetType() == typeof(Dictionary<string, object>))
+                if(keyValPair.Value.GetType() == typeof(Dictionary<string, object>))
                 {
-                    var dict = item as Dictionary<string, object>;
+                    var playerDict = keyValPair.Value as Dictionary<string, object>;
 
-                    var posDict = dict["position"] as Dictionary<string, object>;
+                    Dictionary<string, object> posDict = playerDict["position"] as Dictionary<string, object>;
                     Vector3 position = new Vector3(
-                        (float)posDict["x"],
-                        (float)posDict["y"],
-                        (float)posDict["z"] 
-                        );
+                        float.Parse(posDict["x"].ToString()),
+                        float.Parse(posDict["y"].ToString()),
+                        float.Parse(posDict["z"].ToString())
+                    );
 
-                    var rotDict = dict["rotation"] as Dictionary<string, object>;
+                    var rotDict = playerDict["rotation"] as Dictionary<string, object>;
                     Vector3 rotation = new Vector3(
-                        (float)rotDict["x"],
-                        (float)rotDict["y"],
-                        (float)rotDict["z"]
-                        );
+                        float.Parse(rotDict["x"].ToString()),
+                        float.Parse(rotDict["y"].ToString()),
+                        float.Parse(rotDict["z"].ToString())
+                    );
 
-                    otherUsersInScene.Add(new User(position, rotation));
-
+                    otherUsersInScene.Add(new NetworkedObject(keyValPair.Key, position, rotation));
+                    Debug.Log(otherUsersInScene[otherUsersInScene.Count - 1]);
                 } else
                 {
                     throw new System.Exception("Data from server not in correct format!");
                 }
-                Debug.Log(item);
             }
         }
 
-        public List<User> UsersInScene()
+        public List<NetworkedObject> UsersInScene()
         {
             return otherUsersInScene;
         }

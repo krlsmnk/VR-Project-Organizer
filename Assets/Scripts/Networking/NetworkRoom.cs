@@ -27,17 +27,18 @@ namespace CAVS.ProjectOrganizer.Netowrking
 
         private DatabaseReference scenePlayers;
 
-        private List<Action<List<object>>> dataSubscribers;
+        private List<Action<Dictionary<string, object>>> dataSubscribers;
 
 
         public NetworkRoom(string playerId, DatabaseReference sceneData, DatabaseReference scenePlayers)
         {
+            
             this.playerId = playerId;
             this.sceneData = sceneData;
             this.sceneData.ValueChanged += RoomValueChanged;
             this.scenePlayers = scenePlayers;
             playerData = sceneData.Child(string.Format("players/{0}/", playerId));
-            dataSubscribers = new List<Action<List<object>>>();
+            dataSubscribers = new List<Action<Dictionary<string, object>>>();
             connectionStatus = ConnectionStatus.Connected;
         }
 
@@ -46,7 +47,7 @@ namespace CAVS.ProjectOrganizer.Netowrking
             return connectionStatus == ConnectionStatus.Connected;
         }
 
-        public void SubscribeToNewData(Action<List<object>> subscriber)
+        public void SubscribeToNewData(Action<Dictionary<string, object>> subscriber)
         {
             if (subscriber == null)
             {
@@ -96,13 +97,13 @@ namespace CAVS.ProjectOrganizer.Netowrking
                 UnityEngine.Debug.LogError(args.DatabaseError.Message);
                 return;
             }
-            List<object> filteredData = new List<object>();
+            Dictionary<string, object> filteredData = new Dictionary<string, object>();
 
-            foreach(var child in args.Snapshot.Child("players").Children)
+            foreach (var child in args.Snapshot.Child("players").Children)
             {
                 if(child.Key != playerId)
                 {
-                    filteredData.Add(child.Value);
+                    filteredData.Add(child.Key, child.Value);
                 }
             }
 
