@@ -36,13 +36,17 @@ namespace CAVS.ProjectOrganizer.Scenes.Testing.FilteringTesting
             return fakeNode.AddComponent<ItemBehaviour>();
         }
 
-        protected override void displayPalace()
+        protected override void DisplayPalace()
         {
             if (palace != null)
             {
                 Destroy(palace);
             }
-            palace = new ItemSpiral(allItems, appliedFilters.ToArray()).BuildPalace();
+            palace = new ItemSpiralBuilder()
+                .AddItems(allItems)
+                .AddFilters(appliedFilters.ToArray())
+                .Build()
+                .BuildPalace();
         }
     }
 

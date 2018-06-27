@@ -88,12 +88,12 @@ namespace CAVS.ProjectOrganizer.Scenes.GraphExploration
             return GameState.Nothing;
         }
 
-        private bool enteredScalingState(GameState last, GameState current)
+        private bool EnteredScalingState(GameState last, GameState current)
         {
             return last != GameState.Scaling && current == GameState.Scaling;
         }
 
-        private float controllerDistances()
+        private float ControllerDistances()
         {
             return this.leftController == null || this.rightController == null ?
                 float.MaxValue :
@@ -106,23 +106,23 @@ namespace CAVS.ProjectOrganizer.Scenes.GraphExploration
 
         private void initializeScaling()
         {
-            originalControllerDistance = controllerDistances();
+            originalControllerDistance = ControllerDistances();
             originalScale = plot.transform.localScale;
         }
 
-        private void scalingUpdate()
+        private void ScalingUpdate()
         {
-            plot.transform.localScale = originalScale * (controllerDistances() / originalControllerDistance);
+            plot.transform.localScale = originalScale * (ControllerDistances() / originalControllerDistance);
         }
 
-        private bool enteredMovingState(GameState last, GameState current)
+        private bool EnteredMovingState(GameState last, GameState current)
         {
             return last != GameState.Moving && current == GameState.Moving;
         }
 
         Vector3 originalControllerPosition;
 
-        private void initializeMovement()
+        private void InitializeMovement()
         {
             if (leftController.triggerPressed)
             {
@@ -134,7 +134,7 @@ namespace CAVS.ProjectOrganizer.Scenes.GraphExploration
             }
         }
 
-        private void movingUpdate()
+        private void MovingUpdate()
         {
             Vector3 pos;
             if (leftController.triggerPressed)
@@ -204,24 +204,29 @@ namespace CAVS.ProjectOrganizer.Scenes.GraphExploration
                 return;
             }
 
-            if (leftController == null)
+            try
             {
-                leftController = VRTK_DeviceFinder.GetControllerLeftHand().GetComponent<VRTK_ControllerEvents>();
-                InitializeControllers();
-            }
+                if (leftController == null)
+                {
+                    leftController = VRTK_DeviceFinder.GetControllerLeftHand().GetComponent<VRTK_ControllerEvents>();
+                    InitializeControllers();
+                }
 
-            if (rightController == null)
-            {
-                rightController = VRTK_DeviceFinder.GetControllerRightHand().GetComponent<VRTK_ControllerEvents>();
-                InitializeControllers();
+                if (rightController == null)
+                {
+                    rightController = VRTK_DeviceFinder.GetControllerRightHand().GetComponent<VRTK_ControllerEvents>();
+                    InitializeControllers();
+                }
             }
+            catch (System.Exception e) { }
+            
 
             GameState currentState = GetState();
 
-            if (enteredScalingState(lastFramesState, currentState)) { initializeScaling(); }
-            else if (currentState == GameState.Scaling) { scalingUpdate(); }
-            else if (enteredMovingState(lastFramesState, currentState)) { initializeMovement(); }
-            else if (currentState == GameState.Moving) { movingUpdate(); }
+            if (EnteredScalingState(lastFramesState, currentState)) { initializeScaling(); }
+            else if (currentState == GameState.Scaling) { ScalingUpdate(); }
+            else if (EnteredMovingState(lastFramesState, currentState)) { InitializeMovement(); }
+            else if (currentState == GameState.Moving) { MovingUpdate(); }
 
             this.lastFramesState = currentState;
         }

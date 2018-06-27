@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+using CAVS.ProjectOrganizer.Netowrking;
 using CAVS.ProjectOrganizer.Interation;
 using CAVS.ProjectOrganizer.Project;
 using CAVS.ProjectOrganizer.Project.Aggregations.Plot;
+
+using VRTK;
+
+using Firebase.Database;
 
 namespace CAVS.ProjectOrganizer.Scenes.Showcase
 {
@@ -16,11 +21,20 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
     public class SceneManagerBehavior : MonoBehaviour
     {
 
+        [SerializeField]
+        private Pedistal pedistal;
+
         /// <summary>
         /// The screens we're going to render the current car to
         /// </summary>
         [SerializeField]
         private RawImage[] carImageScreens;
+
+        /// <summary>
+        /// Table top for displaying mini cars
+        /// </summary>
+        [SerializeField]
+        private MiniCarSelectionBehavior tableTop;
 
         /// <summary>
         /// All text displays that will list the car's name currently being displayed
@@ -40,8 +54,15 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         [SerializeField]
         private ButtonBehavior nextButton;
 
+
         [SerializeField]
         private ButtonBehavior previousButton;
+
+
+        /// <summary>
+        /// Used for displaying the other players in the room
+        /// </summary>
+        private RoomDisplayBehavior roomDisplay;
 
 
         /// <summary>
@@ -74,14 +95,47 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         [SerializeField]
         private PlotControl graphControl;
 
+        private NetworkRoom sceneReference;
+
+        GameObject player;
+
+        private void Awake()
+        {
+            roomDisplay = gameObject.GetComponent<RoomDisplayBehavior>();
+        }
+
         void Start()
         {
-            nextButton.Subscribe(this.DisplayNextCar);
-            previousButton.Subscribe(this.DisplayPreviousCar);
-            cars = ProjectFactory.BuildItemsFromCSV("Assets/Car_Dataset.csv", 7);
-            this.DisplayNextCar();
+            sceneReference = NetworkingManager.Instance.CreateSceneEntry("showcase");
+            sceneReference.SubscribeToNewData(OnSceneUpdate);
 
-            graphControl.Initialize(this.PlotPointBuilder, cars);
+            nextButton.Subscribe(DisplayNextCar);
+            previousButton.Subscribe(DisplayPreviousCar);
+            cars = ProjectFactory.BuildItemsFromCSV("Assets/Car_Dataset.csv", 7);
+            DisplayNextCar();
+            tableTop.SetCars(cars);
+            pedistal.Subscribe(OnPedistalSelection);
+            StartCoroutine(UpdatePlayerTransformOnFirebase());
+            // graphControl.Initialize(this.PlotPointBuilder, cars);
+        }
+
+        private void OnSceneUpdate(Dictionary<string, object> update)
+        {
+            roomDisplay.UpdatePuppets(new ShowcaseData(update).UsersInScene());
+        }
+
+        private void OnPedistalSelection(string selection)
+        {
+            // ID: 1  - Lexus CT 200h - 4dr Hatchback highdef
+            // ID: 44 - Lexus GS GS 300 - Sedan highdef
+            // ID: 68 - Lexus GS GS 350 - Sedan highdef (Made up)
+            // ID: 4  - Lexus CT 200h Premium - 4dr Hatchback (Made up)
+            int j;
+            if (int.TryParse(selection, out j))
+            {
+                carBeingDisplayedIndex = Mathf.Clamp(j - 1, 0, cars.Length);
+                DisplayCar(cars[carBeingDisplayedIndex]);
+            }
         }
 
         private GameObject PlotPointBuilder(Item item)
@@ -109,12 +163,12 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         {
             if (buttonName == "Next")
             {
-                this.DisplayNextCar();
+                DisplayNextCar();
             }
 
             if (buttonName == "Previous")
             {
-                this.DisplayPreviousCar();
+                DisplayPreviousCar();
             }
         }
 
@@ -150,6 +204,35 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             DisplayCar(cars[carBeingDisplayedIndex]);
         }
 
+        private IEnumerator UpdatePlayerTransformOnFirebase()
+        {
+            while(true)
+            {
+                if (player == null)
+                {
+                    if (Camera.main == null)
+                    {
+                        try
+                        {
+                            player = VRTK_DeviceFinder.HeadsetCamera().gameObject;
+                        }
+                        catch (System.Exception e) { }
+                    }
+                    else
+                    {
+                        player = Camera.main.gameObject;
+                    }
+                }
+                else
+                {
+                    sceneReference.Update(new NetworkUpdateBuilder()
+                        .AddEntry("position", player.transform.position)
+                        .AddEntry("rotation", player.transform.rotation.eulerAngles)
+                        .Build());
+                }
+                yield return new WaitForSeconds(1);
+            }
+        }
 
         /// <summary>
         /// Set up the entire scene to be rendering information about the specific
@@ -158,6 +241,8 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         /// <param name="carToDisplay">Car to display info about</param>
         private void DisplayCar(PictureItem carToDisplay)
         {
+            sceneReference.SetObjectValue("selectedCar", carToDisplay.ToJson());
+
             // Update All The Screens
             if (carImageScreens != null)
             {
@@ -187,7 +272,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             // Add extra information about car..
             foreach (KeyValuePair<string, string> entry in carToDisplay.GetValues())
             {
-                GameObject uiEntry = Instantiate<GameObject>(extraInfoContentEntry, extraInfoContent.transform);
+                GameObject uiEntry = Instantiate(extraInfoContentEntry, extraInfoContent.transform);
                 uiEntry.transform.Find("DataName").GetComponent<Text>().text = entry.Key;
                 uiEntry.transform.Find("Value").GetComponent<Text>().text = entry.Value;
             }
@@ -198,18 +283,16 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                 Destroy(currentCarGameObject);
             }
 
-            // Display Car
-            currentCarGameObject = Instantiate<GameObject>(
-                LoadCarModelReference(carToDisplay, qualityToRender),
-                Vector3.zero,
-                Quaternion.identity,
-                liftCarPlacement.transform
-            );
-
+            currentCarGameObject = CarFactory.MakeCar(carToDisplay, qualityToRender, Vector3.zero, Quaternion.identity);
+            currentCarGameObject.transform.parent = liftCarPlacement.transform;
             currentCarGameObject.transform.localPosition = Vector3.zero;
-
         }
 
+
+        private void OnApplicationQuit()
+        {
+            sceneReference.CloseRoom();
+        }
 
         /// <summary>
         /// This will change the quality in which you render the car models.
@@ -226,41 +309,10 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             }
 
             // Update what we're currently rendering.
-            this.qualityToRender = newQuality;
+            qualityToRender = newQuality;
             DisplayCar(cars[carBeingDisplayedIndex]);
         }
 
-
-        /// <summary>
-        /// Loads a reference to a car model from the Resources folder to be instantiated and displayed in the scene
-        /// 
-        /// TODO: ACTUALLY IMPLEMENT THIS
-        /// </summary>
-        /// <returns>A reference of a car to be instantiated</returns>
-        private GameObject LoadCarModelReference(Item car, CarQuality quality)
-        {
-            string quality1 = "highdef";  //TODO:  change how this is set later
-
-            string Directory = string.Format("{0} {1}", car.GetValue("Make"), car.GetValue("Model"));
-            string Filename = string.Format("{0} {1} {2}", Directory, car.GetValue("Trim"), quality1);
-            string Path = string.Format("{0}/{1}", Directory, Filename);
-
-            GameObject CarModel = Resources.Load<GameObject>(Path);
-
-            if (CarModel == null)
-            {
-                Debug.Log("Load failed");
-            }
-
-            if (CarModel != null)
-            {
-                return CarModel;
-            }
-            else
-            {
-                return Resources.Load<GameObject>("Low Quality Car");
-            }
-        }
 
     }
 

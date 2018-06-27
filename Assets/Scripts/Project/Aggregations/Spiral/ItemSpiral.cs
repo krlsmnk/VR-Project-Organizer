@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using UnityEngine.Rendering;
 using CAVS.ProjectOrganizer.Project.Filtering;
 
 namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
@@ -18,10 +17,10 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
 
         public int Compare(System.Object x, System.Object y)
         {
-            return filterPassCount(itemFilterMappings[(Item)y]) - filterPassCount(itemFilterMappings[(Item)x]);
+            return FilterPassCount(itemFilterMappings[(Item)y]) - FilterPassCount(itemFilterMappings[(Item)x]);
         }
 
-        private int filterPassCount(Dictionary<Filter, bool> item)
+        private int FilterPassCount(Dictionary<Filter, bool> item)
         {
             int aCount = 0;
             foreach (var value in item.Values)
@@ -39,35 +38,22 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
     public class ItemSpiral : Graph
     {
 
-        public ItemSpiral(Item[] itemsToDisplay, Filter[] filters): base(itemsToDisplay, filters)
+        public ItemSpiral(Item[] items, Dictionary<Filter, Action<bool, GameObject>> filterGraphing, Func<GameObject> itemBuilder) : base(items, filterGraphing, itemBuilder)
         {
         }
 
-        public ItemSpiral(Item[] itemsToDisplay, Filter filter): base(itemsToDisplay, new Filter[]{filter})
+        private GameObject GetSpiralContainerReference()
         {
-        }
-
-        private GameObject getSpiralContainerReference()
-        {
-            return Resources.Load<GameObject>("Spiral Container");
+            return Resources.Load<GameObject>("Cube Container");
         }
 
         public GameObject BuildPreview(Vector3 positionForPreview)
         {
-            GameObject palace = GameObject.Instantiate(getSpiralContainerReference(), Vector3.zero, Quaternion.identity);
-            int i = 0;
+            GameObject palace = GameObject.Instantiate(GetSpiralContainerReference(), Vector3.zero, Quaternion.identity);
             Filter f = (Filters.Count == 1 ? new AggregateFilter(Filters.ToArray()) : Filters[0]);
+			
             Item[] filteredItems = f.FilterItems(items);
-            foreach (Item item in filteredItems)
-            {
-                GameObject node = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                node.transform.parent = palace.transform;
-                node.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
-                node.transform.position = new Vector3(Mathf.Sin(i) * .2f, -.35f + ((float)i / 400f), Mathf.Cos(i) * .2f);
-                node.GetComponent<MeshRenderer>().shadowCastingMode = ShadowCastingMode.Off;
-                i++;
-            }
-            palace.GetComponent<SprialPreviewBehavior>().SetFilter(f);
+			if(f!= null) palace.GetComponent<SprialPreviewBehavior>().SetFilter(f);
             palace.transform.position = positionForPreview;
             return palace;
         }
@@ -81,9 +67,10 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
         {
             GameObject palace = new GameObject("Palace");
             int itemsCreated = 0;
+            float radius = 10;
             foreach (Item item in items)
             {
-                Vector3 position = new Vector3(Mathf.Sin(itemsCreated) * 10, itemsCreated / 5, Mathf.Cos(itemsCreated) * 10);
+                Vector3 position = new Vector3(Mathf.Sin(itemsCreated) * radius, itemsCreated / 5, Mathf.Cos(itemsCreated) * radius);
                 GameObject itemInstances = Plot(item, position);
 
                 if (itemInstances != null)
@@ -97,7 +84,13 @@ namespace CAVS.ProjectOrganizer.Project.Aggregations.Spiral
             return palace;
         }
 
-        public Item[] sortItems(Item[] itemsToSort, Dictionary<Item, Dictionary<Filter, bool>> filtersApplied)
+        /// <summary>
+        /// UP FOR POTENTIAL DELETION
+        /// </summary>
+        /// <param name="itemsToSort"></param>
+        /// <param name="filtersApplied"></param>
+        /// <returns></returns>
+        public Item[] SortItems(Item[] itemsToSort, Dictionary<Item, Dictionary<Filter, bool>> filtersApplied)
         {
             Item[] copy = (Item[])itemsToSort.Clone();
             Array.Sort(copy, new ItemFilterComparer(filtersApplied));

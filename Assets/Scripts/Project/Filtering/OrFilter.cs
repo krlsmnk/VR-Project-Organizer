@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 
 namespace CAVS.ProjectOrganizer.Project.Filtering
 {
 
-    public class OrFilter : Filter
+    public class OrFilter : Filter, IEquatable<OrFilter>
     {
 
         Filter a;
@@ -21,6 +19,21 @@ namespace CAVS.ProjectOrganizer.Project.Filtering
         public override bool FilterItem(Item item)
         {
             return this.a.FilterItem(item) || this.b.FilterItem(item);
+        }
+
+        public bool Equals(OrFilter other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return this.a.Equals(other.a) && this.b.Equals(other.b);
         }
     }
 

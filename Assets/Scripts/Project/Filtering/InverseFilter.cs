@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 
 namespace CAVS.ProjectOrganizer.Project.Filtering
 {
 
-    public class InverseFilter : Filter
+    public class InverseFilter : Filter, IEquatable<InverseFilter>
     {
 
         Filter filterToInverse;
@@ -19,6 +17,22 @@ namespace CAVS.ProjectOrganizer.Project.Filtering
         {
             return !this.filterToInverse.FilterItem(item);
         }
+
+        public bool Equals(InverseFilter other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return this.filterToInverse.Equals(other.filterToInverse);
+        }
+
     }
 
 }

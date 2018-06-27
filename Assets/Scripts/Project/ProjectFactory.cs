@@ -13,9 +13,181 @@ namespace CAVS.ProjectOrganizer.Project
         private static char lineSeperater = '\n'; // It defines line seperate character
         private static char fieldSeperator = ','; // It defines field seperate chracter
 
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <param name="key"></param>
+        /// <returns>all records when there is a match in either left (table1) or right (table2) table records. Null if left or right side was null</returns>
+        public static Item[] FullOuterJoin(Item[] left, Item[] right, string key)
+        {
+            if(left == null || right == null)
+            {
+                return null;
+            }
+
+            List<Item> resultingSet = new List<Item>();
+
+            List<Item> remainingRight = new List<Item>(right);
+
+            foreach (var item in left)
+            {
+                if(item == null)
+                {
+                    continue;
+                }
+
+                string keyValue = item.GetValue(key);
+                if(keyValue == null)
+                {
+                    resultingSet.Add(item);
+                    continue;
+                }
+
+                Item match = null;
+                int i = 0;
+                while (match == null && i < remainingRight.Count)
+                {
+                    if (remainingRight[i] != null && remainingRight[i].GetValue(key) == keyValue)
+                    {
+                        match = remainingRight[i];
+                    }
+                    i++;
+                }
+
+                if(match != null)
+                {
+                    resultingSet.Add(item.Merge(match));
+                    remainingRight.Remove(match);
+                } else
+                {
+                    remainingRight.Add(item);
+                }
+            }
+
+            foreach(var remainingItem in remainingRight)
+            {
+                if(remainingItem != null)
+                {
+                    resultingSet.Add(remainingItem);
+                }
+            }
+
+            return resultingSet.ToArray();
+        }
+
+        /// <summary>
+        /// You're 'intersect' operation.
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static Item[] InnerJoin(Item[] left, Item[] right, string key)
+        {
+            if (left == null || right == null)
+            {
+                return null;
+            }
+
+            List<Item> resultingSet = new List<Item>();
+
+            foreach (var item in left)
+            {
+                if (item == null)
+                {
+                    continue;
+                }
+
+                string keyValue = item.GetValue(key);
+                if (keyValue == null)
+                {
+                    continue;
+                }
+
+                bool matchFound = false;
+                int i = 0;
+                while (!matchFound && i < right.Length)
+                {
+                    if (right[i] != null && right[i].GetValue(key) == keyValue)
+                    {
+                        matchFound = true;
+                        resultingSet.Add(item.Merge(right[i]));
+                    }
+                    i++;
+                }
+            }
+
+            return resultingSet.ToArray();
+        }
+
+        public static Item[] LeftJoin(Item[] left, Item[] right, string key)
+        {
+            return SideJoin(left, right, key);
+        }
+
+        public static Item[] RightJoin(Item[] left, Item[] right, string key)
+        {
+            return SideJoin(right, left, key);
+        }
+
+        /// <summary>
+        /// Mimics the LEFT and RIGHT JOIN key words. If you are trying to 
+        /// mimic a LEFT JOIN, you pass in the left side to the first parameter,
+        /// if you are trying to mimic a RIGHT JOIN, you pass the right side in
+        /// to the first parameter.
+        /// </summary>
+        /// <param name="larger"></param>
+        /// <param name="smaller"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static Item[] SideJoin(Item[] larger, Item[] smaller, string key)
+        {
+            if (larger == null || smaller == null)
+            {
+                return null;
+            }
+
+            List<Item> resultingSet = new List<Item>();
+
+            foreach (var item in larger)
+            {
+                if (item == null)
+                {
+                    continue;
+                }
+
+                string keyValue = item.GetValue(key);
+                if (keyValue == null)
+                {
+                    continue;
+                }
+
+                bool matchFound = false;
+                int i = 0;
+                while (!matchFound && i < smaller.Length)
+                {
+                    if (smaller[i] != null && smaller[i].GetValue(key) == keyValue)
+                    {
+                        matchFound = true;
+                        resultingSet.Add(item.Merge(smaller[i]));
+                    }
+                    i++;
+                }
+
+                if(!matchFound)
+                {
+                    resultingSet.Add(item);
+                }
+            }
+
+            return resultingSet.ToArray();
+        }
+
         public static TextItem[] BuildItemsFromCSV(string csvPath)
         {
-            string fileData = System.IO.File.ReadAllText(csvPath);
+            string fileData = File.ReadAllText(csvPath);
             string[] records = fileData.Split(lineSeperater);
             string[] titles = records[0].Split(fieldSeperator);
 
@@ -45,7 +217,7 @@ namespace CAVS.ProjectOrganizer.Project
                 return BuildItemsFromCSV(csvPath);
             }
 
-            string fileData = System.IO.File.ReadAllText(csvPath);
+            string fileData = File.ReadAllText(csvPath);
             string[] records = fileData.Split(lineSeperater);
 
             // Skip the first line of the csv cause those are titles of columns
@@ -69,7 +241,7 @@ namespace CAVS.ProjectOrganizer.Project
 
         public static PictureItem[] BuildItemsFromCSV(string csvPath, int iconColumn)
         {
-            string fileData = System.IO.File.ReadAllText(csvPath);
+            string fileData = File.ReadAllText(csvPath);
             string[] records = fileData.Split(lineSeperater);
             string[] titles = records[0].Split(fieldSeperator);
 

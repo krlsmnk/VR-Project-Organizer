@@ -1,11 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 
 namespace CAVS.ProjectOrganizer.Project.Filtering
 {
 
-	public class RangeFilterNum : Filter
-	{
+	public class RangeFilterNum : Filter, IEquatable<RangeFilterNum>
+    {
 
 		public enum Operator
 		{
@@ -71,6 +70,24 @@ namespace CAVS.ProjectOrganizer.Project.Filtering
 			return false;
 		}
 
-	}
+        public bool Equals(RangeFilterNum other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return this.op.Equals(other.op) &&
+                this.min.Equals(other.min) &&
+                this.max.Equals(other.max) &&
+                this.fieldToFilterOn.Equals(other.fieldToFilterOn);
+        }
+
+    }
 
 }

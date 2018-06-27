@@ -1,0 +1,202 @@
+fileFormatVersion: 2
+guid: 3cdc556faaf064a4fb631eaa95984889
+timeCreated: 1529620338
+licenseType: Free
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: body
+    100002: body.001
+    100004: body.002
+    100006: body.003
+    100008: body.004
+    100010: body.005
+    100012: body.006
+    100014: body.007
+    100016: body.008
+    100018: glass
+    100020: glass.001
+    100022: glass.002
+    100024: glass.003
+    100026: //RootNode
+    100028: parts
+    100030: tire
+    100032: wheel
+    100034: wheel.001
+    100036: wheel.002
+    100038: wheel.003
+    400000: body
+    400002: body.001
+    400004: body.002
+    400006: body.003
+    400008: body.004
+    400010: body.005
+    400012: body.006
+    400014: body.007
+    400016: body.008
+    400018: glass
+    400020: glass.001
+    400022: glass.002
+    400024: glass.003
+    400026: //RootNode
+    400028: parts
+    400030: tire
+    400032: wheel
+    400034: wheel.001
+    400036: wheel.002
+    400038: wheel.003
+    2100000: logo
+    2100002: disk
+    2100004: wheel
+    2100006: glass2
+    2100008: glass3
+    2100010: lightglass
+    2100012: mirror
+    2100014: plastic
+    2100016: botoom
+    2100018: bottom2
+    2100020: grill
+    2100022: black2
+    2100024: parts
+    2100026: body
+    2100028: glass
+    2100030: seat
+    2100032: headlight
+    2100034: tire
+    2300000: body
+    2300002: body.001
+    2300004: body.002
+    2300006: body.003
+    2300008: body.004
+    2300010: body.005
+    2300012: body.006
+    2300014: body.007
+    2300016: body.008
+    2300018: glass
+    2300020: glass.001
+    2300022: glass.002
+    2300024: glass.003
+    2300026: parts
+    2300028: tire
+    2300030: wheel
+    2300032: wheel.001
+    2300034: wheel.002
+    2300036: wheel.003
+    3300000: body
+    3300002: body.001
+    3300004: body.002
+    3300006: body.003
+    3300008: body.004
+    3300010: body.005
+    3300012: body.006
+    3300014: body.007
+    3300016: body.008
+    3300018: glass
+    3300020: glass.001
+    3300022: glass.002
+    3300024: glass.003
+    3300026: parts
+    3300028: tire
+    3300030: wheel
+    3300032: wheel.001
+    3300034: wheel.002
+    3300036: wheel.003
+    4300000: wheel.003
+    4300002: wheel.002
+    4300004: wheel.001
+    4300006: glass.003
+    4300008: glass.002
+    4300010: glass.001
+    4300012: body.008
+    4300014: body.007
+    4300016: body.006
+    4300018: body.005
+    4300020: body.004
+    4300022: body.003
+    4300024: body.002
+    4300026: body.001
+    4300028: wheel
+    4300030: glass
+    4300032: parts
+    4300034: body
+    4300036: tire
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

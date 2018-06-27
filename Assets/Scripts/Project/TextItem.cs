@@ -48,6 +48,11 @@ namespace CAVS.ProjectOrganizer.Project
             return behavior;
         }
 
+        public override string ToString()
+        {
+            return "Text" + base.ToString();
+        }
+
     }
 
 }
