@@ -95,6 +95,10 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         [SerializeField]
         private PlotControl graphControl;
 
+
+        [SerializeField]
+        private string roomToJoin;
+
         private NetworkRoom sceneReference;
 
         GameObject player;
@@ -106,7 +110,14 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         void Start()
         {
-            sceneReference = NetworkingManager.Instance.CreateSceneEntry("showcase");
+            if(roomToJoin == null || roomToJoin == "")
+            {
+                sceneReference = NetworkingManager.Instance.CreateSceneEntry("showcase");
+            } else
+            {
+                sceneReference = NetworkingManager.Instance.JoinScene(roomToJoin);
+            }
+
             sceneReference.SubscribeToNewData(OnSceneUpdate);
 
             nextButton.Subscribe(DisplayNextCar);
