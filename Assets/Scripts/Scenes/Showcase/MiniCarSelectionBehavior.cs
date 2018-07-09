@@ -67,7 +67,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                 float id;
                 if (float.TryParse(allCars[i].GetValue("id"), out id))
                 {
-                    carsBeingRendered[flatIndex] = CarFactory.MakeToyCar(allCars[i].GetValue("id"), id / itemsPerPage, position, Quaternion.identity);
+                    carsBeingRendered[flatIndex] = CarFactory.MakeToyCar(allCars[i].GetValue("id"), id / allCars.Length, position, Quaternion.identity);
                 }
                 else
                 {

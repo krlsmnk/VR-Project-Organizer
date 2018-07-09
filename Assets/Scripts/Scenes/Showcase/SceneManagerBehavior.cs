@@ -10,8 +10,6 @@ using CAVS.ProjectOrganizer.Project.Aggregations.Plot;
 
 using VRTK;
 
-using Firebase.Database;
-
 namespace CAVS.ProjectOrganizer.Scenes.Showcase
 {
 
@@ -126,7 +124,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             DisplayNextCar();
             tableTop.SetCars(cars);
             pedistal.Subscribe(OnPedistalSelection);
-            StartCoroutine(UpdatePlayerTransformOnFirebase());
+            StartCoroutine(UpdatePlayerTransformOnServer());
             // graphControl.Initialize(this.PlotPointBuilder, cars);
         }
 
@@ -215,7 +213,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             DisplayCar(cars[carBeingDisplayedIndex]);
         }
 
-        private IEnumerator UpdatePlayerTransformOnFirebase()
+        private IEnumerator UpdatePlayerTransformOnServer()
         {
             while(true)
             {
@@ -294,7 +292,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                 Destroy(currentCarGameObject);
             }
 
-            currentCarGameObject = CarFactory.MakeCar(carToDisplay, qualityToRender, Vector3.zero, Quaternion.identity);
+            currentCarGameObject = CarFactory.MakeLargeToyCar(carToDisplay, float.Parse(carToDisplay.GetValue("id")) / (float)cars.Length, Vector3.zero, Quaternion.Euler(0, 90, 0));
             currentCarGameObject.transform.parent = liftCarPlacement.transform;
             currentCarGameObject.transform.localPosition = Vector3.zero;
         }

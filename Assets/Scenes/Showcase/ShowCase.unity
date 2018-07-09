@@ -4414,6 +4414,7 @@ MonoBehaviour:
   previousButton: {fileID: 1865255249}
   liftCarPlacement: {fileID: 243110814}
   graphControl: {fileID: 1619126752}
+  roomToJoin: 
 --- !u!114 &764930385
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4425,6 +4426,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84d6537da28ed31419fb10e01cadb409, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  puppetRepresentation: {fileID: 1135015509805552, guid: e37a5793b0015b743856ea1e2d8b443d,
+    type: 2}
 --- !u!1 &766700166
 GameObject:
   m_ObjectHideFlags: 0
@@ -4528,6 +4531,7 @@ GameObject:
   - component: {fileID: 893761446}
   - component: {fileID: 893761445}
   - component: {fileID: 893761444}
+  - component: {fileID: 893761448}
   m_Layer: 5
   m_Name: Extra Info
   m_TagString: Untagged
@@ -4611,6 +4615,19 @@ RectTransform:
   m_AnchoredPosition: {x: 2.1099997, y: 2.0430002}
   m_SizeDelta: {x: 132.8228, y: 178.1632}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &893761448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 893761443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1518a5e598c7da244bc4850d3ae63354, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clickOnPointerCollision: 0
+  autoActivateWithinDistance: 0
 --- !u!1 &1011164478 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1389930903116070, guid: a90e900725f7aba448bd0e37af2a2e7a,

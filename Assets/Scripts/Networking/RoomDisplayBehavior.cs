@@ -7,6 +7,9 @@ namespace CAVS.ProjectOrganizer.Netowrking
 
     public class RoomDisplayBehavior : MonoBehaviour
     {
+        [SerializeField]
+        private GameObject puppetRepresentation;
+
         private Dictionary<string, Transform> puppets;
 
         private Dictionary<string, Vector3> puppetsDesiredPosition;
@@ -75,7 +78,7 @@ namespace CAVS.ProjectOrganizer.Netowrking
 
         private void AddPuppetEntry(NetworkedObject puppet)
         {
-            GameObject newPuppet = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            GameObject newPuppet = Instantiate(puppetRepresentation);
             newPuppet.transform.name = string.Format("Puppet: {0}", puppet.GetId());
             newPuppet.transform.position = puppet.GetPosition();
             newPuppet.transform.rotation = Quaternion.Euler(puppet.GetRotation());
