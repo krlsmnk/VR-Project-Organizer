@@ -10,9 +10,10 @@ namespace CAVS.ProjectOrganizer.Netowrking
     /// Minimize damage done from having to switch away from Firebase
     /// if we ever have too.
     /// </summary>
-    public class NetworkRoom
+    public class FirebaseNetworkRoom: INetworkRoom
     {
-        enum ConnectionStatus {
+        enum ConnectionStatus
+        {
             Connected,
             Ended
         }
@@ -30,9 +31,9 @@ namespace CAVS.ProjectOrganizer.Netowrking
         private List<Action<Dictionary<string, object>>> dataSubscribers;
 
 
-        public NetworkRoom(string playerId, DatabaseReference sceneData, DatabaseReference scenePlayers)
+        public FirebaseNetworkRoom(string playerId, DatabaseReference sceneData, DatabaseReference scenePlayers)
         {
-            
+
             this.playerId = playerId;
             this.sceneData = sceneData;
             this.sceneData.ValueChanged += RoomValueChanged;
@@ -47,12 +48,13 @@ namespace CAVS.ProjectOrganizer.Netowrking
             return connectionStatus == ConnectionStatus.Connected;
         }
 
-        public void SubscribeToNewData(Action<Dictionary<string, object>> subscriber)
+        public void SubscribeToUpdates(Action<Dictionary<string, object>> subscriber)
         {
             if (subscriber == null)
             {
                 throw new Exception("Subscriber can't be null!");
-            } else if (connectionStatus == ConnectionStatus.Ended)
+            }
+            else if (connectionStatus == ConnectionStatus.Ended)
             {
                 throw new Exception("The connection has ended");
             }
@@ -101,7 +103,7 @@ namespace CAVS.ProjectOrganizer.Netowrking
 
             foreach (var child in args.Snapshot.Child("players").Children)
             {
-                if(child.Key != playerId)
+                if (child.Key != playerId)
                 {
                     filteredData.Add(child.Key, child.Value);
                 }
@@ -126,3 +128,4 @@ namespace CAVS.ProjectOrganizer.Netowrking
 
     }
 }
+

@@ -62,7 +62,7 @@ namespace CAVS.ProjectOrganizer.Netowrking
             // databaseReference.Child("item").SetRawJsonValueAsync("{ \"test\" : 1 }");
         }
 
-        public NetworkRoom CreateSceneEntry(string sceneName)
+        public INetworkRoom CreateSceneEntry(string sceneName)
         {
             string sceneKey = databaseReference.Child("scenes").Push().Key;
             databaseReference.Child("/scenes/" + sceneKey).SetValueAsync(sceneName);
@@ -71,20 +71,20 @@ namespace CAVS.ProjectOrganizer.Netowrking
             string playerKey = databaseReference.Child(playerKeyPath).Push().Key;
             databaseReference.Child(playerKeyPath + playerKey).SetValueAsync(displayName);
 
-            return new NetworkRoom(
+            return new FirebaseNetworkRoom(
                 playerKey, 
                 databaseReference.Child(string.Format("/sceneData/{0}/", sceneKey)), 
                 databaseReference.Child(string.Format("/scenePlayers/{0}/", sceneKey))
             );
         }
 
-        public NetworkRoom JoinScene(string sceneKey)
+        public INetworkRoom JoinScene(string sceneKey)
         {
             string playerKeyPath = string.Format("/scenePlayers/{0}/", sceneKey);
             string playerKey = databaseReference.Child(playerKeyPath).Push().Key;
             databaseReference.Child(playerKeyPath + playerKey).SetValueAsync(displayName);
 
-            return new NetworkRoom(
+            return new FirebaseNetworkRoom(
                 playerKey,
                 databaseReference.Child(string.Format("/sceneData/{0}/", sceneKey)),
                 databaseReference.Child(string.Format("/scenePlayers/{0}/", sceneKey))

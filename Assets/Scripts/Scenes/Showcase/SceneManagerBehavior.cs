@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-using CAVS.ProjectOrganizer.Netowrking;
 using CAVS.ProjectOrganizer.Interation;
 using CAVS.ProjectOrganizer.Project;
-using CAVS.ProjectOrganizer.Project.Aggregations.Plot;
+using CAVS.ProjectOrganizer.Netowrking;
 
 using VRTK;
 
@@ -97,7 +96,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         [SerializeField]
         private string roomToJoin;
 
-        private NetworkRoom sceneReference;
+        private INetworkRoom sceneReference;
 
         GameObject player;
 
@@ -108,15 +107,21 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         void Start()
         {
-            if(roomToJoin == null || roomToJoin == "")
+            var prosignServer = new EliCDavis.Prosign.Prosign("videogamedev.club", 3000);
+            if (roomToJoin == null || roomToJoin == "")
             {
-                sceneReference = NetworkingManager.Instance.CreateSceneEntry("showcase");
+                prosignServer.CreatePrivateRoom(delegate(string id) {
+                    Debug.Log(id);
+                });
             } else
             {
-                sceneReference = NetworkingManager.Instance.JoinScene(roomToJoin);
+                prosignServer.JoinRoom(roomToJoin, delegate(string message)
+                {
+                    Debug.Log(prosignServer);
+                });
             }
-
-            sceneReference.SubscribeToNewData(OnSceneUpdate);
+            sceneReference = prosignServer;
+            sceneReference.SubscribeToUpdates(OnSceneUpdate);
 
             nextButton.Subscribe(DisplayNextCar);
             previousButton.Subscribe(DisplayPreviousCar);
@@ -130,6 +135,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         private void OnSceneUpdate(Dictionary<string, object> update)
         {
+            Debug.Log(update);
             roomDisplay.UpdatePuppets(new ShowcaseData(update).UsersInScene());
         }
 
@@ -250,7 +256,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         /// <param name="carToDisplay">Car to display info about</param>
         private void DisplayCar(PictureItem carToDisplay)
         {
-            sceneReference.SetObjectValue("selectedCar", carToDisplay.ToJson());
+            //sceneReference.SetObjectValue("selectedCar", carToDisplay.ToJson());
 
             // Update All The Screens
             if (carImageScreens != null)
