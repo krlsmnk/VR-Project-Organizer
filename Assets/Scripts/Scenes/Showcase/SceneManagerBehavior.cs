@@ -107,7 +107,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         void Start()
         {
-            var prosignServer = new EliCDavis.Prosign.Prosign("videogamedev.club", 3000);
+            var prosignServer = new ProsignAdapterNetworkRoom("videogamedev.club", 3000);
             if (roomToJoin == null || roomToJoin == "")
             {
                 prosignServer.CreatePrivateRoom(delegate(string id) {
@@ -115,7 +115,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                 });
             } else
             {
-                prosignServer.JoinRoom(roomToJoin, delegate(string message)
+                prosignServer.JoinRoom(roomToJoin, delegate()
                 {
                     Debug.Log(prosignServer);
                 });
@@ -245,7 +245,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                         .AddEntry("rotation", player.transform.rotation.eulerAngles)
                         .Build());
                 }
-                yield return new WaitForSeconds(1);
+                yield return new WaitForSeconds(.1f);
             }
         }
 

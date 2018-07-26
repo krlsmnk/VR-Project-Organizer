@@ -1,0 +1,10 @@
+version: '2'
+
+services:
+  prosign:
+    image: prosign
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+        - 3000:3000

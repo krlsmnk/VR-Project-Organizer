@@ -20,6 +20,8 @@ namespace CAVS.ProjectOrganizer.Netowrking
 
         private float durationBetweenLastTwoUpdates;
 
+        IEnumerable<NetworkedObject> incomingPuppets = null;
+
         // Use this for initialization
         void Awake()
         {
@@ -32,9 +34,15 @@ namespace CAVS.ProjectOrganizer.Netowrking
 
         public void UpdatePuppets(IEnumerable<NetworkedObject> incomingPuppets)
         {
+            this.incomingPuppets = incomingPuppets;
+            
+        }
+
+        private bool AdjustToIncomingPuppets()
+        {
             if (incomingPuppets == null)
             {
-                throw new System.Exception("Argument can not be null");
+                return false;
             }
 
             durationBetweenLastTwoUpdates = Time.time - timeLastUpdated;
@@ -46,7 +54,8 @@ namespace CAVS.ProjectOrganizer.Netowrking
                 if (puppets.ContainsKey(puppet.GetId()))
                 {
                     UpdatePuppet(puppet);
-                } else
+                }
+                else
                 {
                     AddPuppetEntry(puppet);
                 }
@@ -55,11 +64,13 @@ namespace CAVS.ProjectOrganizer.Netowrking
 
             foreach (var keyValPair in puppets)
             {
-                if(!puppetsUpdated.Contains(keyValPair.Key))
+                if (!puppetsUpdated.Contains(keyValPair.Key))
                 {
                     RemovePuppetEntry(keyValPair.Key);
                 }
             }
+            incomingPuppets = null;
+            return true;
         }
 
         private void RemovePuppetEntry(string id)
@@ -90,6 +101,10 @@ namespace CAVS.ProjectOrganizer.Netowrking
         // Update is called once per frame
         void Update()
         {
+            if (AdjustToIncomingPuppets())
+            {
+                return;
+            }
             float percentThroughLerp = (Time.time - timeLastUpdated) / durationBetweenLastTwoUpdates;
             foreach (var keyValPair in puppets)
             {
