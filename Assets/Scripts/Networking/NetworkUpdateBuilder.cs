@@ -22,6 +22,16 @@ namespace CAVS.ProjectOrganizer.Netowrking
             return this;
         }
 
+        public NetworkUpdateBuilder AddEntry(string key, int value)
+        {
+            if (values.ContainsKey(key))
+            {
+                throw new System.Exception("Attempting to add an entry that already exists in the builder.");
+            }
+            values.Add(key, value);
+            return this;
+        }
+
         public NetworkUpdateBuilder AddEntry(string key, UnityEngine.Vector3 value)
         {
             if (values.ContainsKey(key))

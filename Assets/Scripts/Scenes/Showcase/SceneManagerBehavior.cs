@@ -135,8 +135,15 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         private void OnSceneUpdate(Dictionary<string, object> update)
         {
-            Debug.Log(update);
-            roomDisplay.UpdatePuppets(new ShowcaseData(update).UsersInScene());
+            if (update.ContainsKey("carUpdate"))
+            {
+                int newCar = (int)update["carUpdate"];
+                DisplayCar(cars[newCar]);
+            }
+            else
+            {
+                roomDisplay.UpdatePuppets(new ShowcaseData(update).UsersInScene());
+            }
         }
 
         private void OnPedistalSelection(string selection)
@@ -149,7 +156,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             if (int.TryParse(selection, out j))
             {
                 carBeingDisplayedIndex = Mathf.Clamp(j - 1, 0, cars.Length);
-                DisplayCar(cars[carBeingDisplayedIndex]);
+                UpdateCar(carBeingDisplayedIndex);
             }
         }
 
@@ -167,7 +174,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             if (int.TryParse(point.GetValue("ID"), out id))
             {
                 carBeingDisplayedIndex = id - 1;
-                DisplayCar(cars[carBeingDisplayedIndex]);
+                UpdateCar(carBeingDisplayedIndex);
             }
         }
 
@@ -201,7 +208,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             // Increment Index
             carBeingDisplayedIndex = Mathf.Clamp(carBeingDisplayedIndex - 1, 0, this.cars.Length);
 
-            DisplayCar(cars[carBeingDisplayedIndex]);
+            UpdateCar(carBeingDisplayedIndex);
         }
 
 
@@ -216,7 +223,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             // Increment Index
             carBeingDisplayedIndex = Mathf.Clamp(carBeingDisplayedIndex + 1, 0, this.cars.Length);
 
-            DisplayCar(cars[carBeingDisplayedIndex]);
+            UpdateCar(carBeingDisplayedIndex);
         }
 
         private IEnumerator UpdatePlayerTransformOnServer()
@@ -249,6 +256,15 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             }
         }
 
+        private void UpdateCar(int index)
+        {
+            sceneReference.Update(new NetworkUpdateBuilder()
+                .AddEntry("selectedCar", index)
+                .Build());
+
+            DisplayCar(cars[index]);
+        }
+
         /// <summary>
         /// Set up the entire scene to be rendering information about the specific
         /// car passed in.
@@ -256,8 +272,6 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         /// <param name="carToDisplay">Car to display info about</param>
         private void DisplayCar(PictureItem carToDisplay)
         {
-            //sceneReference.SetObjectValue("selectedCar", carToDisplay.ToJson());
-
             // Update All The Screens
             if (carImageScreens != null)
             {
