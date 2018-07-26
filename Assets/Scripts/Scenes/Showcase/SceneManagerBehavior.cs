@@ -100,6 +100,14 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         GameObject player;
 
+        /// <summary>
+        /// The socket exists outside the main thread, and therefor can't 
+        /// change stuff like transform. We set this as a flag if things
+        /// have changed. -1 represents nothing has changed, anything else
+        /// it is the index to the car we want to display
+        /// </summary>
+        int carChangeFromUpdate = -1;
+
         private void Awake()
         {
             roomDisplay = gameObject.GetComponent<RoomDisplayBehavior>();
@@ -137,8 +145,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         {
             if (update.ContainsKey("carUpdate"))
             {
-                int newCar = (int)update["carUpdate"];
-                DisplayCar(cars[newCar]);
+                carChangeFromUpdate = (int)update["carUpdate"];
             }
             else
             {
@@ -253,6 +260,16 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                         .Build());
                 }
                 yield return new WaitForSeconds(.1f);
+            }
+        }
+
+        void Update()
+        {
+            if (carChangeFromUpdate != -1)
+            {
+                carBeingDisplayedIndex = carChangeFromUpdate;
+                DisplayCar(cars[carChangeFromUpdate]);
+                carChangeFromUpdate = -1;
             }
         }
 
