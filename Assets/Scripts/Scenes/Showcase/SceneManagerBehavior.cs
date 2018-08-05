@@ -28,12 +28,6 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         private RawImage[] carImageScreens;
 
         /// <summary>
-        /// Table top for displaying mini cars
-        /// </summary>
-        [SerializeField]
-        private MiniCarSelectionBehavior tableTop;
-
-        /// <summary>
         /// All text displays that will list the car's name currently being displayed
         /// </summary>
         [SerializeField]
@@ -135,7 +129,9 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             previousButton.Subscribe(DisplayPreviousCar);
             cars = ProjectFactory.BuildItemsFromCSV("Assets/Car_Dataset.csv", 7);
             DisplayNextCar();
-            tableTop.SetCars(cars);
+            new MiniCarSelectionBuilder()
+                .SetCars(cars.SubArray(0, 25))
+                .Build(new Vector3(3, 0.77f, 4.5f), Vector3.zero);
             pedistal.Subscribe(OnPedistalSelection);
             StartCoroutine(UpdatePlayerTransformOnServer());
             // graphControl.Initialize(this.PlotPointBuilder, cars);
