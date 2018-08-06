@@ -127,10 +127,10 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
             nextButton.Subscribe(DisplayNextCar);
             previousButton.Subscribe(DisplayPreviousCar);
-            cars = ProjectFactory.BuildItemsFromCSV("Assets/Car_Dataset.csv", 7);
+            cars = ProjectFactory.BuildItemsFromCSV("Assets/Car_Dataset.csv", 7).SubArray(0, 25);
             DisplayNextCar();
             new MiniCarSelectionBuilder()
-                .SetCars(cars.SubArray(0, 25))
+                .SetCars(cars)
                 .Build(new Vector3(3, 0.77f, 4.5f), Vector3.zero);
             pedistal.Subscribe(OnPedistalSelection);
             StartCoroutine(UpdatePlayerTransformOnServer());
