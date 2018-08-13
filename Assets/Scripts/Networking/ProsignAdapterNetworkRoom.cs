@@ -20,32 +20,51 @@ namespace CAVS.ProjectOrganizer.Netowrking
             Close();
         }
 
+        private Dictionary<string, object> TransformFromBinary(byte[] response, int start)
+        {
+            return new Dictionary<string, object>() {
+                {
+                    "position",
+                    new Dictionary<string, object>() {
+                        { "x", BitConverter.ToSingle(response, start) },
+                        { "y", BitConverter.ToSingle(response, start + 4) },
+                        { "z", BitConverter.ToSingle(response, start + 8) }
+                    }
+                },
+                {
+                    "rotation",
+                    new Dictionary<string, object>() {
+                        { "x", BitConverter.ToSingle(response, start + 12) },
+                        { "y", BitConverter.ToSingle(response, start + 16) },
+                        { "z", BitConverter.ToSingle(response, start + 20) }
+                    }
+                }
+            };
+        }
+
         public void SubscribeToUpdates(Action<Dictionary<string, object>> subscriber)
         {
-            SubscribeToRoomUpdates(delegate(byte[] response)
+            SubscribeToRoomUpdates(delegate (byte[] response)
             {
 
                 bool positionUpdate = BitConverter.ToBoolean(response, 0);
 
                 if (positionUpdate)
                 {
+                    var returnMessage = new Dictionary<string, object>();
                     if (response.Length >= 24)
                     {
-                        var pos = new Dictionary<string, object>() {
-                            { "x", BitConverter.ToSingle(response, 1) },
-                            { "y", BitConverter.ToSingle(response, 5) },
-                            { "z", BitConverter.ToSingle(response, 9) }
-                        };
+                        returnMessage.Add("player-head", TransformFromBinary(response, 1));
 
-                        var rot = new Dictionary<string, object>() {
-                            { "x", BitConverter.ToSingle(response, 13) },
-                            { "y", BitConverter.ToSingle(response, 17) },
-                            { "z", BitConverter.ToSingle(response, 21) }
-                        };
-
-                        subscriber(new Dictionary<string, object>() {
-                            { "player", new Dictionary<string, object>() {{ "position", pos }, { "rotation", rot } } }
-                        });
+                        if (response.Length >= 48)
+                        {
+                            returnMessage.Add("player-left", TransformFromBinary(response, 25));
+                            if (response.Length >= 72)
+                            {
+                                returnMessage.Add("player-right", TransformFromBinary(response, 49));
+                            }
+                        }
+                        subscriber(returnMessage);
                     }
                     else
                     {
@@ -55,13 +74,20 @@ namespace CAVS.ProjectOrganizer.Netowrking
                 else
                 {
                     int carIndex = BitConverter.ToInt32(response, 1);
-                    subscriber(new Dictionary<string, object>() { 
+                    subscriber(new Dictionary<string, object>() {
                         {"carUpdate", carIndex}
                     });
                 }
 
 
             });
+        }
+
+        private void WriteVector(List<byte> buffer, Dictionary<string, object> vals)
+        {
+            buffer.AddRange(BitConverter.GetBytes((float)vals["x"]));
+            buffer.AddRange(BitConverter.GetBytes((float)vals["y"]));
+            buffer.AddRange(BitConverter.GetBytes((float)vals["z"]));
         }
 
         public void Update(NetworkUpdate update)
@@ -78,17 +104,15 @@ namespace CAVS.ProjectOrganizer.Netowrking
             }
             else
             {
-                var positionVals = (Dictionary<string, object>)vals["position"];
-                var rotationVals = (Dictionary<string, object>)vals["rotation"];
-
                 buffer.AddRange(BitConverter.GetBytes(true));
 
-                buffer.AddRange(BitConverter.GetBytes((float)positionVals["x"]));
-                buffer.AddRange(BitConverter.GetBytes((float)positionVals["y"]));
-                buffer.AddRange(BitConverter.GetBytes((float)positionVals["z"]));
-                buffer.AddRange(BitConverter.GetBytes((float)rotationVals["x"]));
-                buffer.AddRange(BitConverter.GetBytes((float)rotationVals["y"]));
-                buffer.AddRange(BitConverter.GetBytes((float)rotationVals["z"]));
+                if (vals.ContainsKey("head-position")) WriteVector(buffer, (Dictionary<string, object>)vals["head-position"]);
+                if (vals.ContainsKey("head-rotation")) WriteVector(buffer, (Dictionary<string, object>)vals["head-rotation"]);
+                if (vals.ContainsKey("left-position")) WriteVector(buffer, (Dictionary<string, object>)vals["left-position"]);
+                if (vals.ContainsKey("left-rotation")) WriteVector(buffer, (Dictionary<string, object>)vals["left-rotation"]);
+                if (vals.ContainsKey("right-position")) WriteVector(buffer, (Dictionary<string, object>)vals["right-position"]);
+                if (vals.ContainsKey("right-rotation")) WriteVector(buffer, (Dictionary<string, object>)vals["right-rotation"]);
+
             }
 
 

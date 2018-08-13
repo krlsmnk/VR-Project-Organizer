@@ -10,6 +10,9 @@ namespace CAVS.ProjectOrganizer.Netowrking
         [SerializeField]
         private GameObject puppetRepresentation;
 
+        [SerializeField]
+        private GameObject puppetHandRepresentation;
+
         private Dictionary<string, Transform> puppets;
 
         private Dictionary<string, Vector3> puppetsDesiredPosition;
@@ -89,7 +92,7 @@ namespace CAVS.ProjectOrganizer.Netowrking
 
         private void AddPuppetEntry(NetworkedObject puppet)
         {
-            GameObject newPuppet = Instantiate(puppetRepresentation);
+            GameObject newPuppet = puppet.GetId().Contains("head")? Instantiate(puppetRepresentation) : Instantiate(puppetHandRepresentation);
             newPuppet.transform.name = string.Format("Puppet: {0}", puppet.GetId());
             newPuppet.transform.position = puppet.GetPosition();
             newPuppet.transform.rotation = Quaternion.Euler(puppet.GetRotation());

@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
 using UnityEngine;
 
@@ -23,7 +22,7 @@ namespace EliCDavis.Examples.Positions
 
         private List<string> messages;
 
-        private Prosign.Server hotel;
+        private Server hotel;
 
         private string roomId;
 
@@ -48,6 +47,8 @@ namespace EliCDavis.Examples.Positions
 
         private Vector3 newPuppetRotation;
 
+        private List<Room> rooms;
+
         void Start()
         {
             lastPuppetUpdate = 0;
@@ -59,7 +60,8 @@ namespace EliCDavis.Examples.Positions
             puppet = GameObject.CreatePrimitive(PrimitiveType.Cube).transform;
             messages = new List<string>();
             roomId = "";
-            hotel = new Prosign.Server(prosignServer, prosignPort);
+            hotel = new Server(prosignServer, prosignPort);
+            StartCoroutine(PollRoomListing());
         }
 
         void OnRoomCreated(string roomId)
@@ -74,7 +76,7 @@ namespace EliCDavis.Examples.Positions
         {
             Debug.Log(string.Format("Room Joined"));
             hotel.SubscribeToRoomUpdates(OnRoomUpdate);
-            this.roomId = roomIdToConnectTo;
+            roomId = roomIdToConnectTo;
             messages.Add("< Joined Room >");
         }
 
@@ -88,19 +90,19 @@ namespace EliCDavis.Examples.Positions
         void OnRoomUpdate(byte[] update)
         {
             messages.Add(string.Format("{0}: {1}", DateTime.Now.ToShortTimeString(), update));
-            if (update.Length == 24)
+            if (update.Length >= 24)
             {
                 lastPuppetPosition = newPuppetPosition;
                 lastPuppetRotation = newPuppetRotation;
                 newPuppetPosition = new Vector3(
-                    System.BitConverter.ToSingle(update, 0),
-                    System.BitConverter.ToSingle(update, 4),
-                    System.BitConverter.ToSingle(update, 8)
+                    BitConverter.ToSingle(update, 0),
+                    BitConverter.ToSingle(update, 4),
+                    BitConverter.ToSingle(update, 8)
                 );
                 newPuppetRotation = new Vector3(
-                    System.BitConverter.ToSingle(update, 12),
-                    System.BitConverter.ToSingle(update, 16),
-                    System.BitConverter.ToSingle(update, 20)
+                    BitConverter.ToSingle(update, 12),
+                    BitConverter.ToSingle(update, 16),
+                    BitConverter.ToSingle(update, 20)
                 );
                 flipped = true;
             }
@@ -127,9 +129,23 @@ namespace EliCDavis.Examples.Positions
                 hotel.CreateRoom("Unity", OnRoomCreated);
             }
 
-            if (GUI.Button(new Rect(20, 60, 100, 20), "Join Room"))
+            if (GUI.Button(new Rect(20, 50, 100, 20), "Join Room"))
             {
                 hotel.JoinRoom(roomIdToConnectTo, OnRoomJoin);
+            }
+
+            if(rooms == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < rooms.Count; i++)
+            {
+                if (GUI.Button(new Rect(20, 80 + (i*30), 100, 20), rooms[i].GetName()))
+                {
+                    hotel.JoinRoom(rooms[i].GetID(), OnRoomJoin);
+                    roomIdToConnectTo = rooms[i].GetID();
+                }
             }
 
             roomIdToConnectTo = GUI.TextField(new Rect(130, 60, 100, 20), roomIdToConnectTo);
@@ -171,7 +187,21 @@ namespace EliCDavis.Examples.Positions
             }
         }
 
-        IEnumerator UpdatePosition()
+        private void OnRoomListingUpdate(List<Room> rooms)
+        {
+            this.rooms = rooms;
+        }
+
+        IEnumerator PollRoomListing()
+        {
+            while (CurrentState() == TestState.Lobby)
+            {
+                hotel.GetRooms(OnRoomListingUpdate);
+                yield return new WaitForSeconds(1);
+            }
+        }
+
+            IEnumerator UpdatePosition()
         {
             while (CurrentState() == TestState.InRoom)
             {

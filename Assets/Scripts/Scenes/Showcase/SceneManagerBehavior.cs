@@ -19,6 +19,12 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
     {
 
         [SerializeField]
+        private GameObject rightHand;
+
+        [SerializeField]
+        private GameObject leftHand;
+
+        [SerializeField]
         private Pedistal pedistal;
 
         /// <summary>
@@ -87,9 +93,6 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         private PlotControl graphControl;
 
 
-        [SerializeField]
-        private string roomToJoin;
-
         private INetworkRoom sceneReference;
 
         GameObject player;
@@ -110,18 +113,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         void Start()
         {
             var prosignServer = new ProsignAdapterNetworkRoom("videogamedev.club", 3000);
-            if (roomToJoin == null || roomToJoin == "")
-            {
-                prosignServer.CreatePrivateRoom(delegate(string id) {
-                    Debug.Log(id);
-                });
-            } else
-            {
-                prosignServer.JoinRoom(roomToJoin, delegate()
-                {
-                    Debug.Log(prosignServer);
-                });
-            }
+            Netowrking.RoomPanel.Builder.Build(new Vector3(3.5f, 2.1f, 5.5f), Quaternion.Euler(14.7f, 27.6f, 3.1f), prosignServer);
             sceneReference = prosignServer;
             sceneReference.SubscribeToUpdates(OnSceneUpdate);
 
@@ -231,7 +223,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         private IEnumerator UpdatePlayerTransformOnServer()
         {
-            while(true)
+            while (true)
             {
                 if (player == null)
                 {
@@ -248,12 +240,28 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                         player = Camera.main.gameObject;
                     }
                 }
-                else
+                else if (sceneReference != null)
                 {
-                    sceneReference.Update(new NetworkUpdateBuilder()
-                        .AddEntry("position", player.transform.position)
-                        .AddEntry("rotation", player.transform.rotation.eulerAngles)
-                        .Build());
+                    var update = new NetworkUpdateBuilder()
+                        .AddEntry("head-position", player.transform.position)
+                        .AddEntry("head-rotation", player.transform.rotation.eulerAngles);
+                        
+                    if (leftHand != null)
+                    {
+                        update
+                            .AddEntry("left-position", leftHand.transform.position)
+                            .AddEntry("left-rotation", leftHand.transform.rotation.eulerAngles);
+                    }
+
+                    if (rightHand != null)
+                    {
+                        update
+                            .AddEntry("right-position", rightHand.transform.position)
+                            .AddEntry("right-rotation", rightHand.transform.rotation.eulerAngles);
+                    }
+
+
+                    sceneReference.Update(update.Build());
                 }
                 yield return new WaitForSeconds(.1f);
             }
@@ -271,9 +279,13 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         private void UpdateCar(int index)
         {
-            sceneReference.Update(new NetworkUpdateBuilder()
-                .AddEntry("selectedCar", index)
-                .Build());
+            if (sceneReference != null)
+            {
+                sceneReference.Update(new NetworkUpdateBuilder()
+                    .AddEntry("selectedCar", index)
+                    .Build());
+            }
+
 
             DisplayCar(cars[index]);
         }

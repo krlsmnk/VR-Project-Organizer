@@ -34,9 +34,33 @@ namespace EliCDavis.Prosign
             MessageServer("room", "join", id);
         }
 
+        public void GetRooms(Action<List<Room>> onGetRooms)
+        {
+            subscriptionManager.SubscribeOneShot("room", "list", SubscriberFactory.MakeSubscriber(delegate(string message)
+            {
+                var rooms = new List<Room>();
+                var roomStrings = message.Split(';');
+                foreach(var rS in roomStrings)
+                {
+                    if (!rS.Equals(""))
+                    {
+                        var roomContents = rS.Split(':');
+                        rooms.Add(new Room(roomContents[1], roomContents[0]));
+                    }
+                }
+                onGetRooms(rooms);
+            }));
+            MessageServer("room", "list");
+        }
+
         public void UpdateRoom(byte[] msg)
         {
             MessageServer("room", "update", msg);
+        }
+
+        private void MessageServer(string service, string method)
+        {
+            MessageServer(service, method, new byte[0]);
         }
 
         private void MessageServer(string service, string method, string message)
@@ -103,12 +127,13 @@ namespace EliCDavis.Prosign
         private void ParseAndHandleIncomingMessage(byte[] rawMessage, int bufferSize)
         {
             // System.Text.Encoding.UTF8.GetString(buffer, 0, buffer.Length)
-            uint bodyLength = Convert.ToUInt32(rawMessage[0]);
-            int headerLength = bufferSize - (int)bodyLength - 2;
-            string header = Encoding.UTF8.GetString(rawMessage, 1, headerLength);
+            byte status = rawMessage[0];
+            uint bodyLength = Convert.ToUInt32(rawMessage[1]);
+            int headerLength = bufferSize - (int)bodyLength - 3;
+            string header = Encoding.UTF8.GetString(rawMessage, 2, headerLength);
 
             byte[] body = new byte[(int)bodyLength];
-            Array.Copy(rawMessage, headerLength + 2, body, 0, (int)bodyLength);
+            Array.Copy(rawMessage, headerLength + 3, body, 0, (int)bodyLength);
 
             if (header.IndexOf(".") == -1)
             {
@@ -116,7 +141,15 @@ namespace EliCDavis.Prosign
             }
 
             var headerContents = header.Split('.'); 
-            subscriptionManager.DistributeMessage(headerContents[0], headerContents[1], body);
+
+            if(status.Equals(Convert.ToByte(0)))
+            {
+                subscriptionManager.DistributeMessage(headerContents[0], headerContents[1], body);
+            }
+            else if (status.Equals(Convert.ToByte(0)))
+            {
+                Debug.LogErrorFormat("Error from server. {0}:{1}", header, Encoding.UTF8.GetString(body));
+            }
         }
 
         public void Dispose()

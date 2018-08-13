@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -4059,6 +4059,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23d328aaa64f79a48a0946f3154c3780, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rightHand: {fileID: 1676811119}
+  leftHand: {fileID: 1345709327}
   pedistal: {fileID: 1612413673}
   carImageScreens:
   - {fileID: 1478308469}
@@ -4071,7 +4073,6 @@ MonoBehaviour:
   previousButton: {fileID: 1865255249}
   liftCarPlacement: {fileID: 243110814}
   graphControl: {fileID: 1619126752}
-  roomToJoin: 
 --- !u!114 &764930385
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4083,7 +4084,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84d6537da28ed31419fb10e01cadb409, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  puppetRepresentation: {fileID: 1135015509805552, guid: e37a5793b0015b743856ea1e2d8b443d,
+  puppetRepresentation: {fileID: 1547769202242938, guid: e34f5fb019af99b47ad346ae734a81d8,
+    type: 2}
+  puppetHandRepresentation: {fileID: 1547769202242938, guid: 9b20543bd5a0f494d8f889c83acfee8a,
     type: 2}
 --- !u!1001 &847116008
 Prefab:
@@ -4683,6 +4686,11 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1332939928}
+--- !u!1 &1345709327 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1905611960771496, guid: d4a01d01d33b0f745a34bfc5ea4e52ed,
+    type: 2}
+  m_PrefabInternal: {fileID: 847116008}
 --- !u!1 &1397131830
 GameObject:
   m_ObjectHideFlags: 0
@@ -5241,6 +5249,11 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 1228396541}
   m_Script: {fileID: 11500000, guid: 453cc76308339c848b94e8c72a3ad52d, type: 3}
+--- !u!1 &1676811119 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1288637042466948, guid: d4a01d01d33b0f745a34bfc5ea4e52ed,
+    type: 2}
+  m_PrefabInternal: {fileID: 847116008}
 --- !u!1001 &1753234323
 Prefab:
   m_ObjectHideFlags: 0
