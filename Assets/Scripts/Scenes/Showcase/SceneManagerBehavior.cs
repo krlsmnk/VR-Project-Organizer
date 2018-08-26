@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+using CAVS.Anvel;
+using CAVS.Anvel.Lidar;
+using CAVS.Anvel.Vehicle;
+
 using CAVS.ProjectOrganizer.Interation;
 using CAVS.ProjectOrganizer.Project;
 using CAVS.ProjectOrganizer.Netowrking;
@@ -92,6 +96,11 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         [SerializeField]
         private PlotControl graphControl;
 
+        [SerializeField]
+        private string anvelLidarSensorName;
+
+        [SerializeField]
+        private string anvelVehicleName;
 
         private INetworkRoom sceneReference;
 
@@ -127,6 +136,18 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             pedistal.Subscribe(OnPedistalSelection);
             StartCoroutine(UpdatePlayerTransformOnServer());
             // graphControl.Initialize(this.PlotPointBuilder, cars);
+
+            //gameObject.AddComponent<LiveDisplayBehavior>().Initialize(
+            //    ConnectionFactory.CreateConnection(),
+            //    anvelLidarSensorName,
+            //    anvelVehicleName
+            // );
+
+            var fileDisplayBehavior = gameObject.AddComponent<FileDisplayBehavior>();
+            fileDisplayBehavior.Initialize(
+                LidarSerialization.Load("360 Lidar-11.pcrp"),
+                VehicleLoader.LoadVehicleData("vehicle1_pos_2.vprp")
+            );
         }
 
         private void OnSceneUpdate(Dictionary<string, object> update)
