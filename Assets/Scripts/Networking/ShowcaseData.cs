@@ -15,6 +15,7 @@ namespace CAVS.ProjectOrganizer.Netowrking
         public ShowcaseData(Dictionary<string, object> dataFromServer)
         {
             otherUsersInScene = new List<NetworkedObject>();
+            Debug.LogFormat("Data length: {0}", dataFromServer.Count);
 
             foreach (var keyValPair in dataFromServer)
             {

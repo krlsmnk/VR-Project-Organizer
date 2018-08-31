@@ -104,7 +104,7 @@ namespace CAVS.ProjectOrganizer.Scenes.GraphExploration
 
         private Vector3 originalScale;
 
-        private void initializeScaling()
+        private void InitializeScaling()
         {
             originalControllerDistance = ControllerDistances();
             originalScale = plot.transform.localScale;
@@ -223,7 +223,7 @@ namespace CAVS.ProjectOrganizer.Scenes.GraphExploration
 
             GameState currentState = GetState();
 
-            if (EnteredScalingState(lastFramesState, currentState)) { initializeScaling(); }
+            if (EnteredScalingState(lastFramesState, currentState)) { InitializeScaling(); }
             else if (currentState == GameState.Scaling) { ScalingUpdate(); }
             else if (EnteredMovingState(lastFramesState, currentState)) { InitializeMovement(); }
             else if (currentState == GameState.Moving) { MovingUpdate(); }

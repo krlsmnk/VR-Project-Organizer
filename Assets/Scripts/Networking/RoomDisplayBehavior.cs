@@ -7,6 +7,12 @@ namespace CAVS.ProjectOrganizer.Netowrking
 
     public class RoomDisplayBehavior : MonoBehaviour
     {
+        [SerializeField]
+        private GameObject puppetRepresentation;
+
+        [SerializeField]
+        private GameObject puppetHandRepresentation;
+
         private Dictionary<string, Transform> puppets;
 
         private Dictionary<string, Vector3> puppetsDesiredPosition;
@@ -16,6 +22,8 @@ namespace CAVS.ProjectOrganizer.Netowrking
         private float timeLastUpdated;
 
         private float durationBetweenLastTwoUpdates;
+
+        IEnumerable<NetworkedObject> incomingPuppets = null;
 
         // Use this for initialization
         void Awake()
@@ -29,9 +37,15 @@ namespace CAVS.ProjectOrganizer.Netowrking
 
         public void UpdatePuppets(IEnumerable<NetworkedObject> incomingPuppets)
         {
+            this.incomingPuppets = incomingPuppets;
+            
+        }
+
+        private bool AdjustToIncomingPuppets()
+        {
             if (incomingPuppets == null)
             {
-                throw new System.Exception("Argument can not be null");
+                return false;
             }
 
             durationBetweenLastTwoUpdates = Time.time - timeLastUpdated;
@@ -43,7 +57,8 @@ namespace CAVS.ProjectOrganizer.Netowrking
                 if (puppets.ContainsKey(puppet.GetId()))
                 {
                     UpdatePuppet(puppet);
-                } else
+                }
+                else
                 {
                     AddPuppetEntry(puppet);
                 }
@@ -52,11 +67,13 @@ namespace CAVS.ProjectOrganizer.Netowrking
 
             foreach (var keyValPair in puppets)
             {
-                if(!puppetsUpdated.Contains(keyValPair.Key))
+                if (!puppetsUpdated.Contains(keyValPair.Key))
                 {
                     RemovePuppetEntry(keyValPair.Key);
                 }
             }
+            incomingPuppets = null;
+            return true;
         }
 
         private void RemovePuppetEntry(string id)
@@ -75,7 +92,7 @@ namespace CAVS.ProjectOrganizer.Netowrking
 
         private void AddPuppetEntry(NetworkedObject puppet)
         {
-            GameObject newPuppet = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            GameObject newPuppet = puppet.GetId().Contains("head")? Instantiate(puppetRepresentation) : Instantiate(puppetHandRepresentation);
             newPuppet.transform.name = string.Format("Puppet: {0}", puppet.GetId());
             newPuppet.transform.position = puppet.GetPosition();
             newPuppet.transform.rotation = Quaternion.Euler(puppet.GetRotation());
@@ -87,6 +104,10 @@ namespace CAVS.ProjectOrganizer.Netowrking
         // Update is called once per frame
         void Update()
         {
+            if (AdjustToIncomingPuppets())
+            {
+                return;
+            }
             float percentThroughLerp = (Time.time - timeLastUpdated) / durationBetweenLastTwoUpdates;
             foreach (var keyValPair in puppets)
             {

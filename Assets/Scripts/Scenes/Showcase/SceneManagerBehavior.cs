@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-using CAVS.ProjectOrganizer.Netowrking;
+using CAVS.Anvel;
+using CAVS.Anvel.Lidar;
+using CAVS.Anvel.Vehicle;
+
 using CAVS.ProjectOrganizer.Interation;
 using CAVS.ProjectOrganizer.Project;
-using CAVS.ProjectOrganizer.Project.Aggregations.Plot;
+using CAVS.ProjectOrganizer.Netowrking;
 
 using VRTK;
-
-using Firebase.Database;
 
 namespace CAVS.ProjectOrganizer.Scenes.Showcase
 {
@@ -22,6 +23,12 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
     {
 
         [SerializeField]
+        private GameObject rightHand;
+
+        [SerializeField]
+        private GameObject leftHand;
+
+        [SerializeField]
         private Pedistal pedistal;
 
         /// <summary>
@@ -29,12 +36,6 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         /// </summary>
         [SerializeField]
         private RawImage[] carImageScreens;
-
-        /// <summary>
-        /// Table top for displaying mini cars
-        /// </summary>
-        [SerializeField]
-        private MiniCarSelectionBehavior tableTop;
 
         /// <summary>
         /// All text displays that will list the car's name currently being displayed
@@ -95,9 +96,23 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         [SerializeField]
         private PlotControl graphControl;
 
-        private NetworkRoom sceneReference;
+        [SerializeField]
+        private string anvelLidarSensorName;
+
+        [SerializeField]
+        private string anvelVehicleName;
+
+        private INetworkRoom sceneReference;
 
         GameObject player;
+
+        /// <summary>
+        /// The socket exists outside the main thread, and therefor can't 
+        /// change stuff like transform. We set this as a flag if things
+        /// have changed. -1 represents nothing has changed, anything else
+        /// it is the index to the car we want to display
+        /// </summary>
+        int carChangeFromUpdate = -1;
 
         private void Awake()
         {
@@ -106,22 +121,45 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         void Start()
         {
-            sceneReference = NetworkingManager.Instance.CreateSceneEntry("showcase");
-            sceneReference.SubscribeToNewData(OnSceneUpdate);
+            var prosignServer = new ProsignAdapterNetworkRoom("videogamedev.club", 3000);
+            Netowrking.RoomPanel.Builder.Build(new Vector3(3.5f, 2.1f, 5.5f), Quaternion.Euler(14.7f, 27.6f, 3.1f), prosignServer);
+            sceneReference = prosignServer;
+            sceneReference.SubscribeToUpdates(OnSceneUpdate);
 
             nextButton.Subscribe(DisplayNextCar);
             previousButton.Subscribe(DisplayPreviousCar);
-            cars = ProjectFactory.BuildItemsFromCSV("Assets/Car_Dataset.csv", 7);
+            cars = ProjectFactory.BuildItemsFromCSV("Assets/Car_Dataset.csv", 7).SubArray(0, 25);
             DisplayNextCar();
-            tableTop.SetCars(cars);
+            new MiniCarSelectionBuilder()
+                .SetCars(cars)
+                .Build(new Vector3(3, 0.77f, 4.5f), Vector3.zero);
             pedistal.Subscribe(OnPedistalSelection);
-            StartCoroutine(UpdatePlayerTransformOnFirebase());
+            StartCoroutine(UpdatePlayerTransformOnServer());
             // graphControl.Initialize(this.PlotPointBuilder, cars);
+
+            //gameObject.AddComponent<LiveDisplayBehavior>().Initialize(
+            //    ConnectionFactory.CreateConnection(),
+            //    anvelLidarSensorName,
+            //    anvelVehicleName
+            // );
+
+            var fileDisplayBehavior = gameObject.AddComponent<FileDisplayBehavior>();
+            fileDisplayBehavior.Initialize(
+                LidarSerialization.Load("360 Lidar-11.pcrp"),
+                VehicleLoader.LoadVehicleData("vehicle1_pos_2.vprp")
+            );
         }
 
         private void OnSceneUpdate(Dictionary<string, object> update)
         {
-            roomDisplay.UpdatePuppets(new ShowcaseData(update).UsersInScene());
+            if (update.ContainsKey("carUpdate"))
+            {
+                carChangeFromUpdate = (int)update["carUpdate"];
+            }
+            else
+            {
+                roomDisplay.UpdatePuppets(new ShowcaseData(update).UsersInScene());
+            }
         }
 
         private void OnPedistalSelection(string selection)
@@ -134,7 +172,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             if (int.TryParse(selection, out j))
             {
                 carBeingDisplayedIndex = Mathf.Clamp(j - 1, 0, cars.Length);
-                DisplayCar(cars[carBeingDisplayedIndex]);
+                UpdateCar(carBeingDisplayedIndex);
             }
         }
 
@@ -152,7 +190,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             if (int.TryParse(point.GetValue("ID"), out id))
             {
                 carBeingDisplayedIndex = id - 1;
-                DisplayCar(cars[carBeingDisplayedIndex]);
+                UpdateCar(carBeingDisplayedIndex);
             }
         }
 
@@ -186,7 +224,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             // Increment Index
             carBeingDisplayedIndex = Mathf.Clamp(carBeingDisplayedIndex - 1, 0, this.cars.Length);
 
-            DisplayCar(cars[carBeingDisplayedIndex]);
+            UpdateCar(carBeingDisplayedIndex);
         }
 
 
@@ -201,12 +239,12 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             // Increment Index
             carBeingDisplayedIndex = Mathf.Clamp(carBeingDisplayedIndex + 1, 0, this.cars.Length);
 
-            DisplayCar(cars[carBeingDisplayedIndex]);
+            UpdateCar(carBeingDisplayedIndex);
         }
 
-        private IEnumerator UpdatePlayerTransformOnFirebase()
+        private IEnumerator UpdatePlayerTransformOnServer()
         {
-            while(true)
+            while (true)
             {
                 if (player == null)
                 {
@@ -223,15 +261,54 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                         player = Camera.main.gameObject;
                     }
                 }
-                else
+                else if (sceneReference != null)
                 {
-                    sceneReference.Update(new NetworkUpdateBuilder()
-                        .AddEntry("position", player.transform.position)
-                        .AddEntry("rotation", player.transform.rotation.eulerAngles)
-                        .Build());
+                    var update = new NetworkUpdateBuilder()
+                        .AddEntry("head-position", player.transform.position)
+                        .AddEntry("head-rotation", player.transform.rotation.eulerAngles);
+                        
+                    if (leftHand != null)
+                    {
+                        update
+                            .AddEntry("left-position", leftHand.transform.position)
+                            .AddEntry("left-rotation", leftHand.transform.rotation.eulerAngles);
+                    }
+
+                    if (rightHand != null)
+                    {
+                        update
+                            .AddEntry("right-position", rightHand.transform.position)
+                            .AddEntry("right-rotation", rightHand.transform.rotation.eulerAngles);
+                    }
+
+
+                    sceneReference.Update(update.Build());
                 }
-                yield return new WaitForSeconds(1);
+                yield return new WaitForSeconds(.1f);
             }
+        }
+
+        void Update()
+        {
+            if (carChangeFromUpdate != -1)
+            {
+                carBeingDisplayedIndex = carChangeFromUpdate;
+                DisplayCar(cars[carChangeFromUpdate]);
+                carChangeFromUpdate = -1;
+            }
+        }
+
+        private void UpdateCar(int index)
+        {
+            if (sceneReference != null)
+            {
+                sceneReference.Update(new NetworkUpdateBuilder()
+                    .AddEntry("selectedCar", index)
+                    .Build());
+            }
+
+
+            DisplayCar(cars[index]);
         }
 
         /// <summary>
@@ -241,8 +318,6 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         /// <param name="carToDisplay">Car to display info about</param>
         private void DisplayCar(PictureItem carToDisplay)
         {
-            sceneReference.SetObjectValue("selectedCar", carToDisplay.ToJson());
-
             // Update All The Screens
             if (carImageScreens != null)
             {
@@ -283,7 +358,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                 Destroy(currentCarGameObject);
             }
 
-            currentCarGameObject = CarFactory.MakeCar(carToDisplay, qualityToRender, Vector3.zero, Quaternion.identity);
+            currentCarGameObject = CarFactory.MakeLargeToyCar(carToDisplay, float.Parse(carToDisplay.GetValue("id")) / (float)cars.Length, Vector3.zero, Quaternion.Euler(0, 90, 0));
             currentCarGameObject.transform.parent = liftCarPlacement.transform;
             currentCarGameObject.transform.localPosition = Vector3.zero;
         }

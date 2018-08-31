@@ -39,6 +39,32 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             return Object.Instantiate(carModel, position, rotation);
         }
 
+        public static GameObject MakeLargeToyCar(Item car, float color,  Vector3 position, Quaternion rotation)
+        {
+            GameObject carInstace = Object.Instantiate(GetToyReference());
+            carInstace.transform.position = position;
+            carInstace.transform.rotation = rotation;
+
+            var renders = carInstace.GetComponentsInChildren<MeshRenderer>();
+            foreach (var render in renders)
+            {
+                foreach (var mat in render.materials)
+                {
+                    if (mat.name == "Body (Instance)")
+                    {
+                        mat.color = Color.HSVToRGB(color, 1, 1);
+                    }
+                }
+            }
+            carInstace.transform.localScale = new Vector3(
+                float.Parse(car.GetValue("Width (in)")) / 69.5f,
+                float.Parse(car.GetValue("Height (in)")) / 56.7f,
+                float.Parse(car.GetValue("Length (in)")) / 170.1f
+            ) * 18;
+            Object.Destroy(carInstace.GetComponentInChildren<Text>().transform.parent.gameObject);
+            return carInstace;
+        }
+
         public static GameObject MakeToyCar(string display, float color, Vector3 position, Quaternion rotation)
         {
             GameObject carInstace = Object.Instantiate(GetToyReference());

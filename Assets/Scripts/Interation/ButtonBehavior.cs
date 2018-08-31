@@ -87,16 +87,21 @@ namespace CAVS.ProjectOrganizer.Interation
         // Update is called once per frame
         void Update()
         {
+            GameObject[] controllers = null;
 
             if (Input.GetKeyDown(alternativeActivationViaKey))
             {
                 CallSubscribers();
             }
-
-            GameObject[] controllers = new GameObject[] {
-                VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.LeftController).gameObject,
-                VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.RightController).gameObject
-            };
+            try
+            {
+                controllers = new GameObject[] {
+                    VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.LeftController).gameObject,
+                    VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.RightController).gameObject
+                };
+            }
+            catch (Exception e) { }
+            
 
             if (controllers == null)
             {
