@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-using CAVS.Anvel;
-using CAVS.Anvel.Lidar;
-using CAVS.Anvel.Vehicle;
-
 using CAVS.ProjectOrganizer.Interation;
 using CAVS.ProjectOrganizer.Project;
 using CAVS.ProjectOrganizer.Netowrking;
@@ -92,15 +88,14 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         [SerializeField]
         private GameObject liftCarPlacement;
 
-
         [SerializeField]
         private PlotControl graphControl;
 
         [SerializeField]
-        private string anvelLidarSensorName;
+        private string roomUUID;
 
         [SerializeField]
-        private string anvelVehicleName;
+        private bool createRoomOnStartup;
 
         private INetworkRoom sceneReference;
 
@@ -123,6 +118,17 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         {
             var prosignServer = new ProsignAdapterNetworkRoom("videogamedev.club", 3000);
             Netowrking.RoomPanel.Builder.Build(new Vector3(3.5f, 2.1f, 5.5f), Quaternion.Euler(14.7f, 27.6f, 3.1f), prosignServer);
+            if(createRoomOnStartup)
+            {
+                prosignServer.CreateRoom("Auto Room", delegate(string id)
+                {
+                    Debug.LogFormat("Room Id: {0}", id);
+                });
+            } else if (roomUUID != null && roomUUID != "")
+            {
+                prosignServer.JoinRoom(roomUUID, delegate() { });
+            }
+
             sceneReference = prosignServer;
             sceneReference.SubscribeToUpdates(OnSceneUpdate);
 
@@ -137,17 +143,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             StartCoroutine(UpdatePlayerTransformOnServer());
             // graphControl.Initialize(this.PlotPointBuilder, cars);
 
-            //gameObject.AddComponent<LiveDisplayBehavior>().Initialize(
-            //    ConnectionFactory.CreateConnection(),
-            //    anvelLidarSensorName,
-            //    anvelVehicleName
-            // );
-
-            var fileDisplayBehavior = gameObject.AddComponent<FileDisplayBehavior>();
-            fileDisplayBehavior.Initialize(
-                LidarSerialization.Load("360 Lidar-11.pcrp"),
-                VehicleLoader.LoadVehicleData("vehicle1_pos_2.vprp")
-            );
+            
         }
 
         private void OnSceneUpdate(Dictionary<string, object> update)
