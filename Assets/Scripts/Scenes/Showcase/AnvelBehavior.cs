@@ -19,10 +19,13 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         }
 
         [SerializeField]
+        private GameObject objectForOffset;
+
+        [SerializeField]
         private DisplayType startup;
 
         [SerializeField]
-        private string anvelLidarSensorName;
+        private LiveDisplayBehavior.LidarEntry[] lidarSensors;
 
         [SerializeField]
         private string anvelVehicleName;
@@ -46,16 +49,32 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                     break;
 
                 case DisplayType.Networked:
-                    gameObject.AddComponent<LiveDisplayBehavior>().Initialize(
+                    var display = gameObject.AddComponent<LiveDisplayBehavior>();
+                    display.Initialize(
                         ConnectionFactory.CreateConnection(),
-                        anvelLidarSensorName,
+                        lidarSensors,
                         anvelVehicleName,
                         new Vector3(0.1f, 0.1f, 2.27f),
                         new Vector3(0, 90, 0)
                      );
+                    StartCoroutine(UpdateOffsetTick(display));
                     break;
             }
 
+        }
+
+        IEnumerator UpdateOffsetTick(LiveDisplayBehavior displayBehavior)
+        {
+            while(true)
+            {
+                if(objectForOffset == null)
+                {
+                    break;
+                }
+                displayBehavior.UpdateCenterOffset(objectForOffset.transform.position);
+                displayBehavior.UpdateRotationOffset(objectForOffset.transform.rotation.eulerAngles);
+                yield return null;
+            }
         }
 
         // Update is called once per frame
