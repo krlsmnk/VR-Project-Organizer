@@ -5,7 +5,7 @@ using UnityEngine;
 using CAVS.Anvel;
 using CAVS.Anvel.Lidar;
 using CAVS.Anvel.Vehicle;
-
+using AnvelApi;
 
 namespace CAVS.ProjectOrganizer.Scenes.Showcase
 {
@@ -20,6 +20,9 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         [SerializeField]
         private GameObject objectForOffset;
+
+        [SerializeField]
+        private GameObject drivingController;
 
         [SerializeField]
         private DisplayType startup;
@@ -50,13 +53,20 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
                 case DisplayType.Networked:
                     var display = gameObject.AddComponent<LiveDisplayBehavior>();
+
+                    AnvelControlService.Client connection = ConnectionFactory.CreateConnection();
                     display.Initialize(
-                        ConnectionFactory.CreateConnection(),
+                        connection,
                         lidarSensors,
                         anvelVehicleName,
                         new Vector3(0.1f, 0.1f, 2.27f),
                         new Vector3(0, 90, 0)
                      );
+
+                    var driving = drivingController.AddComponent<VehicleControl>();
+
+                    driving.Initialize(connection, anvelVehicleName);
+
                     StartCoroutine(UpdateOffsetTick(display));
                     break;
             }
