@@ -25,6 +25,12 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         private GameObject drivingController;
 
         [SerializeField]
+        private GameObject cameraDisplayPane;
+
+        [SerializeField]
+        private string anvelCameraName;
+
+        [SerializeField]
         private DisplayType startup;
 
         [SerializeField]
@@ -64,8 +70,10 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                      );
 
                     var driving = drivingController.AddComponent<VehicleControl>();
-
+                    var cameraDisplay = cameraDisplayPane.AddComponent<DisplayCameraFeed>();
                     driving.Initialize(connection, anvelVehicleName);
+                    cameraDisplay.Initialize(connection, anvelCameraName);
+
 
                     StartCoroutine(UpdateOffsetTick(display));
                     break;
