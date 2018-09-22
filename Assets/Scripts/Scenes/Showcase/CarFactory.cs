@@ -45,6 +45,9 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             carInstace.transform.position = position;
             carInstace.transform.rotation = rotation;
 
+            GameObject.Destroy(carInstace.GetComponent<VRTK.GrabAttachMechanics.VRTK_FixedJointGrabAttach>());
+            GameObject.Destroy(carInstace.GetComponent<VRTK.VRTK_InteractableObject>());
+
             var renders = carInstace.GetComponentsInChildren<MeshRenderer>();
             foreach (var render in renders)
             {

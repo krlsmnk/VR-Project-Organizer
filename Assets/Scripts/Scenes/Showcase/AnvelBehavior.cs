@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 using CAVS.Anvel;
@@ -62,6 +61,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
                     AnvelControlService.Client connection = ConnectionFactory.CreateConnection();
 
+
                     if (lidarSensors?.Length > 0)
                     {
                         display.Initialize(
@@ -79,6 +79,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                             .AddComponent<VehicleControl>()
                             .Initialize(connection, anvelVehicleName);
                     }
+
                     
                     if(cameraDisplayPane != null && anvelCameraName != null)
                     {
@@ -87,7 +88,6 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                             .Initialize(connection, anvelCameraName);
                     }
                     
-
                     StartCoroutine(UpdateOffsetTick(display));
                     break;
             }
