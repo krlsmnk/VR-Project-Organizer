@@ -70,7 +70,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             client.SetVehicleInput(vehicle.ObjectKey, vehicleInput);
         }
 
-        public void setVehicleName(string newVehicleName)
+        public void SetVehicleName(string newVehicleName)
         {
             vehicleName = newVehicleName;
             vehicle = client.GetObjectDescriptorByName(vehicleName);

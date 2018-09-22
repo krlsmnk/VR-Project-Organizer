@@ -87,7 +87,7 @@ namespace CAVS.Anvel
         void Update()
         {
             var toRender = particles;
-            if (toRender.Length > 0)
+            if (toRender?.Length > 0)
             {
                 lidarDisplay.SetParticles(toRender, toRender.Length);
             }

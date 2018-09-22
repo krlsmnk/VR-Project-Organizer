@@ -25,6 +25,12 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         private GameObject drivingController;
 
         [SerializeField]
+        private GameObject cameraDisplayPane;
+
+        [SerializeField]
+        private string anvelCameraName;
+
+        [SerializeField]
         private DisplayType startup;
 
         [SerializeField]
@@ -55,17 +61,32 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                     var display = gameObject.AddComponent<LiveDisplayBehavior>();
 
                     AnvelControlService.Client connection = ConnectionFactory.CreateConnection();
-                    display.Initialize(
-                        connection,
-                        lidarSensors,
-                        anvelVehicleName,
-                        new Vector3(0.1f, 0.1f, 2.27f),
-                        new Vector3(0, 90, 0)
-                     );
 
-                    var driving = drivingController.AddComponent<VehicleControl>();
+                    if (lidarSensors?.Length > 0)
+                    {
+                        display.Initialize(
+                            connection,
+                            lidarSensors,
+                            anvelVehicleName,
+                            new Vector3(0.1f, 0.1f, 2.27f),
+                            new Vector3(0, 90, 0)
+                         );
+                    }
 
-                    driving.Initialize(connection, anvelVehicleName);
+                    if(drivingController != null)
+                    {
+                        drivingController
+                            .AddComponent<VehicleControl>()
+                            .Initialize(connection, anvelVehicleName);
+                    }
+                    
+                    if(cameraDisplayPane != null && anvelCameraName != null)
+                    {
+                        cameraDisplayPane
+                            .AddComponent<DisplayCameraFeed>()
+                            .Initialize(connection, anvelCameraName);
+                    }
+                    
 
                     StartCoroutine(UpdateOffsetTick(display));
                     break;

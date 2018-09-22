@@ -142,8 +142,6 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             pedistal.Subscribe(OnPedistalSelection);
             StartCoroutine(UpdatePlayerTransformOnServer());
             // graphControl.Initialize(this.PlotPointBuilder, cars);
-
-            
         }
 
         private void OnSceneUpdate(Dictionary<string, object> update)
