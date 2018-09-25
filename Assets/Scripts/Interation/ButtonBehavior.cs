@@ -72,14 +72,14 @@ namespace CAVS.ProjectOrganizer.Interation
         {
             proximityPiece.GetComponent<MeshRenderer>().material.color = Color.green;
             GetComponent<BoxCollider>().size = new Vector3(0.6f, 3f, 0.6f);
-            buttonPiece.transform.Translate(Vector3.up / 15f);
+			buttonPiece.transform.Translate(Vector3.down / 15f);
             CallSubscribers();
         }
 
         void OnTriggerExit(Collider other)
         {
             GetComponent<BoxCollider>().size = new Vector3(0.6f, 2f, 0.6f);
-            buttonPiece.transform.Translate(Vector3.down / 15f);
+			buttonPiece.transform.Translate(Vector3.up / 15f);
             proximityPiece.GetComponent<MeshRenderer>().material.color = Color.blue;
         }
 
