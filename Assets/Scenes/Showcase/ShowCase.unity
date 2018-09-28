@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -7524,7 +7524,11 @@ MonoBehaviour:
   cameraDisplayPane: {fileID: 1402582033}
   anvelCameraName: API Camera-1
   startup: 0
-  lidarSensors: []
+  lidarSensors:
+  - sensorName: API 3D Lidar-1
+    renderColor: {r: 1, g: 0, b: 0, a: 1}
+  - sensorName: API 3D Lidar-2
+    renderColor: {r: 0, g: 0.17241383, b: 1, a: 1}
   anvelVehicleName: Generic 4x4-1
   anvelIP: 127.0.0.1
   anvelPort: 9094
@@ -8232,7 +8236,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4978c9fc614ba1641b4dffb43cd3051f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-
 --- !u!1 &1397131830
 GameObject:
   m_ObjectHideFlags: 0
@@ -9254,7 +9257,7 @@ Camera:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1994016136}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
