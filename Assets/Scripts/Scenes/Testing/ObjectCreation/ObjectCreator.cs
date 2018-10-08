@@ -14,13 +14,16 @@ public class ObjectCreator : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        AnvelControlService.Client connection = ConnectionFactory.CreateConnection();
+        connection = ConnectionFactory.CreateConnection();
+        Debug.Log("Start");
+        obj = new AnvelObject(connection, "newObject", "Generic 4x4", null);
     }
 	
 	// Update is called once per frame
-	void OnCollision(Collider col) {
+	void OnCollisionEnter(Collision col) {
         Debug.Log("Collision");
-        obj = new AnvelObject(connection, "newObject", "Generic 4x4");
-        obj.SetObjectPosition(0,0,0);
+        
+        obj.SetObjectPosition(col.transform.position.x, col.transform.position.y, col.transform.position.z);
+        obj.SetObjectRotation(col.transform.rotation.x, col.transform.rotation.y, col.transform.rotation.z);
     }
 }
