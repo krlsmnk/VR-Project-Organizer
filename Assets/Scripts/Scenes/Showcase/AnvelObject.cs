@@ -72,11 +72,16 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         public void SetObjectRotation(float x, float y, float z)
         {
-            objectOrientation.Roll = x;
-            objectOrientation.Yaw = y;
-            objectOrientation.Pitch = z;
+            objectOrientation.Roll = ConvertToRadians(x);
+            objectOrientation.Yaw = ConvertToRadians(y);
+            objectOrientation.Pitch = ConvertToRadians(z);
 
             UpdateObjectTransform();
+        }
+
+        private float ConvertToRadians(float degrees)
+        {
+            return (Math.PI / 180) * degrees;
         }
 
         private void UpdateObjectTransform()

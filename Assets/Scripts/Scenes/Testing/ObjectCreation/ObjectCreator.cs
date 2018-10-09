@@ -18,7 +18,7 @@ public class ObjectCreator : MonoBehaviour {
     // Use this for initialization
     public void CreateObject () {
         connection = ConnectionFactory.CreateConnection();
-        Instantiate(model);
+        model = Instantiate(model) as GameObject;
         obj = new AnvelObject(connection, "camera", "SampleCamera", connection.GetObjectDescriptorByName("newObject"));
     }
 	
@@ -26,7 +26,11 @@ public class ObjectCreator : MonoBehaviour {
 	public void UpdatePosition() {
         Debug.Log("Position Update");
         
-        obj.SetObjectPosition(model.transform.position.x, model.transform.position.y, model.transform.position.z);
-        obj.SetObjectRotation(model.transform.rotation.x, model.transform.rotation.y, model.transform.rotation.z);
+        obj.SetObjectPosition(model.transform.position.x, 
+                              model.transform.position.y, 
+                              model.transform.position.z);
+        obj.SetObjectRotation(model.transform.eulerAngles.x, 
+                              model.transform.eulerAngles.y, 
+                              model.transform.eulerAngles.z);
     }
 }
