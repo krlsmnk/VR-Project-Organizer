@@ -12,18 +12,21 @@ public class ObjectCreator : MonoBehaviour {
     AnvelObject obj;
     AnvelControlService.Client connection;
 
+    [SerializeField]
+    GameObject model;
+
     // Use this for initialization
-    void Start () {
+    public void CreateObject () {
         connection = ConnectionFactory.CreateConnection();
-        Debug.Log("Start");
-        obj = new AnvelObject(connection, "newObject", "Generic 4x4", null);
+        Instantiate(model);
+        obj = new AnvelObject(connection, "camera", "SampleCamera", connection.GetObjectDescriptorByName("newObject"));
     }
 	
 	// Update is called once per frame
-	void OnCollisionEnter(Collision col) {
-        Debug.Log("Collision");
+	public void UpdatePosition() {
+        Debug.Log("Position Update");
         
-        obj.SetObjectPosition(col.transform.position.x, col.transform.position.y, col.transform.position.z);
-        obj.SetObjectRotation(col.transform.rotation.x, col.transform.rotation.y, col.transform.rotation.z);
+        obj.SetObjectPosition(model.transform.position.x, model.transform.position.y, model.transform.position.z);
+        obj.SetObjectRotation(model.transform.rotation.x, model.transform.rotation.y, model.transform.rotation.z);
     }
 }
