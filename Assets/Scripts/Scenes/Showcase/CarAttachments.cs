@@ -32,7 +32,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase.AnvelObject
             connection = ConnectionFactory.CreateConnection();
             model = Instantiate(model) as GameObject;
 
-            obj = new AnvelObject(connection, objectName, anvelAssetName, connection.GetObjectDescriptorByName(carName));
+            obj = AnvelObject.CreateObject(connection, objectName, anvelAssetName, connection.GetObjectDescriptorByName(carName));
         }
 
         public void RemoveObject()
@@ -40,12 +40,6 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase.AnvelObject
             obj.RemoveObject();
             obj = null;
         }
-
-        /*public CarAttachment(AnvelControlService.Client connection, string objectName, string assetName, ObjectDescriptor parent)
-                : base(connection, objectName, assetName, parent)
-        {
-            
-        }*/
 
         private void OnCollisionEnter(Collision collision)
         {

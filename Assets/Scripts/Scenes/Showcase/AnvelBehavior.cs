@@ -42,6 +42,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         // Use this for initialization
         void Start()
         {
+
             switch (startup)
             {
                 case DisplayType.File:
@@ -55,6 +56,9 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                     var display = gameObject.AddComponent<LiveDisplayBehavior>();
 
                     AnvelControlService.Client connection = ConnectionFactory.CreateConnection();
+
+                    AnvelObject.CreateObject(connection, "Example", "API 3D Lidar");
+
                     display.Initialize(
                         connection,
                         lidarSensors,
@@ -63,9 +67,14 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                         new Vector3(0, 90, 0)
                      );
 
-                    var driving = drivingController.AddComponent<VehicleControl>();
-
-                    driving.Initialize(connection, anvelVehicleName);
+                    if (drivingController != null)
+                    {
+                        drivingController.AddComponent<VehicleControl>().Initialize(connection, anvelVehicleName);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("No Driving Controller Assigned!");
+                    }
 
                     StartCoroutine(UpdateOffsetTick(display));
                     break;
@@ -75,9 +84,9 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         IEnumerator UpdateOffsetTick(LiveDisplayBehavior displayBehavior)
         {
-            while(true)
+            while (true)
             {
-                if(objectForOffset == null)
+                if (objectForOffset == null)
                 {
                     break;
                 }

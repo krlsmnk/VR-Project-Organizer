@@ -173,12 +173,12 @@ namespace CAVS.Anvel
             }
             catch (AnvelException e)
             {
-                Debug.Log(string.Format("Anvel Exception: {0} at {1}", e.ErrorMessage, e.Source));
+                Debug.LogErrorFormat("Anvel Exception: {0} at {1}", e.ErrorMessage, e.Source);
                 throw;
             }
             catch (System.Exception e)
             {
-                Debug.Log(e.Message);
+                Debug.LogError(e.Message);
             }
            
         }

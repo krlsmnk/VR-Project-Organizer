@@ -10,6 +10,7 @@ using CAVS.ProjectOrganizer.Scenes.Showcase;
 public class ObjectCreator : MonoBehaviour {
 
     AnvelObject obj;
+    
     AnvelControlService.Client connection;
 
     [SerializeField]
@@ -19,12 +20,12 @@ public class ObjectCreator : MonoBehaviour {
     public void CreateObject () {
         connection = ConnectionFactory.CreateConnection();
         model = Instantiate(model) as GameObject;
-        obj = new AnvelObject(connection, "camera", "SampleCamera", connection.GetObjectDescriptorByName("newObject"));
+        obj = AnvelObject.CreateObject(connection, "camera", "SampleCamera", connection.GetObjectDescriptorByName("newObject"));
     }
 	
 	// Update is called once per frame
-	public void UpdatePosition() {
-        Debug.Log("Position Update");
+	public void UpdateTransformInAnvel() {
+        Debug.Log("Anvel Transform Update");
         
         obj.SetObjectPosition(model.transform.position.x, 
                               model.transform.position.y, 
