@@ -47,6 +47,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         // Use this for initialization
         void Start()
         {
+
             switch (startup)
             {
                 case DisplayType.File:
@@ -59,13 +60,12 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                 case DisplayType.Networked:
                     var display = gameObject.AddComponent<LiveDisplayBehavior>();
 
-                    AnvelControlService.Client connection = ConnectionFactory.CreateConnection();
 
-
+                    var connectionToken = new ClientConnectionToken();
                     if (lidarSensors?.Length > 0)
                     {
                         display.Initialize(
-                            connection,
+                            connectionToken,
                             lidarSensors,
                             anvelVehicleName,
                             new Vector3(0.1f, 0.1f, 2.27f),
@@ -73,21 +73,20 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                          );
                     }
 
-                    if(drivingController != null)
+                    if (cameraDisplayPane != null && anvelCameraName != null)
+                    {
+                        LiveCameraDisplay.Build(cameraDisplayPane, connectionToken, anvelCameraName);
+                    }
+
+                    if (drivingController != null)
                     {
                         drivingController
                             .AddComponent<VehicleControl>()
-                            .Initialize(connection, anvelVehicleName);
+                            .Initialize(connectionToken, anvelVehicleName);
+                    } else {
+                        Debug.LogWarning("No Driving Controller Assigned!");
                     }
 
-                    
-                    if(cameraDisplayPane != null && anvelCameraName != null)
-                    {
-                        cameraDisplayPane
-                            .AddComponent<DisplayCameraFeed>()
-                            .Initialize(connection, anvelCameraName);
-                    }
-                    
                     StartCoroutine(UpdateOffsetTick(display));
                     break;
             }
@@ -96,9 +95,9 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         IEnumerator UpdateOffsetTick(LiveDisplayBehavior displayBehavior)
         {
-            while(true)
+            while (true)
             {
-                if(objectForOffset == null)
+                if (objectForOffset == null)
                 {
                     break;
                 }

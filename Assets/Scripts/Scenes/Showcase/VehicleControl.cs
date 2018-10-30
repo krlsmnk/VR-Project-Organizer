@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-
+using CAVS.Anvel;
 using AnvelApi;
 namespace CAVS.ProjectOrganizer.Scenes.Showcase
 {
@@ -15,19 +15,22 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         VRTK.VRTK_ControllerEvents controllerInput;
 
-        public void Initialize(AnvelControlService.Client connection, string vehicleName)
+        public void Initialize(ClientConnectionToken connectionToken, string vehicleName)
         {
-            this.client = connection;
+            this.client = ConnectionFactory.CreateConnection(connectionToken);
             this.vehicleName = vehicleName;
 
-            vehicleInput = new VehicleInputRecord();
-
-            //Steering 0 = No Left/Right Movement ; 1.0 -> 0 = Right ; 0 -> -1.0 = Left
-            vehicleInput.Steering = 0.0;
-            //Throttle 0 = No Movement ; -1.0 -> 0 = Reverse ; 0 -> 1.0 = Forward
-            vehicleInput.Throttle = 0.0;
-            //Brake 0 = No Braking ; 1.0 = Full breaks
-            vehicleInput.Brake = 0.0;
+            vehicleInput = new VehicleInputRecord
+            {
+                //Steering 0 = No Left/Right Movement ; 1.0 -> 0 = Right ; 0 -> -1.0 = Left
+                Steering = 0.0,
+                
+                //Throttle 0 = No Movement ; -1.0 -> 0 = Reverse ; 0 -> 1.0 = Forward
+                Throttle = 0.0,
+                
+                //Brake 0 = No Braking ; 1.0 = Full breaks
+                Brake = 0.0
+            };
 
             vehicle = client.GetObjectDescriptorByName(vehicleName);
 
@@ -36,7 +39,10 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         void Update()
         {
-
+            if (controllerInput == null)
+            {
+                return;
+            }
             if (controllerInput.touchpadTouched || controllerInput.touchpadPressed)
             {
                 vehicleInput.Steering = controllerInput.GetTouchpadAxis().x;
