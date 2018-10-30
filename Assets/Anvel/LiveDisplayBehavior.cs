@@ -1,6 +1,7 @@
 ﻿using AnvelApi;
 
 using System.Threading;
+using System.Collections.Generic;
 
 using UnityEngine;
 
@@ -40,7 +41,7 @@ namespace CAVS.Anvel
 
         private Thread pollingThread;
 
-        private LidarEntry[] lidarDisplays;
+        private List<LidarEntry> lidarDisplays;
 
         private string vehicleName;
 
@@ -50,7 +51,7 @@ namespace CAVS.Anvel
 
         public void Initialize(AnvelControlService.Client anvelConnection, string lidarSensorName, string vehicleName)
         {
-            this.lidarDisplays = new LidarEntry[] { new LidarEntry(lidarSensorName) };
+            lidarDisplays = new List<LidarEntry>() { new LidarEntry(lidarSensorName) };
             this.vehicleName = vehicleName;
             this.anvelConnection = anvelConnection;
             this.centerOffset = Vector3.zero;
@@ -63,7 +64,7 @@ namespace CAVS.Anvel
 
         public void Initialize(AnvelControlService.Client anvelConnection, LidarEntry[] lidarDisplays, string vehicleName, Vector3 centerOffset, Vector3 rotationOffset)
         {
-            this.lidarDisplays = lidarDisplays;
+            this.lidarDisplays = new List<LidarEntry>(lidarDisplays);
             this.vehicleName = vehicleName;
             this.anvelConnection = anvelConnection;
             this.centerOffset = centerOffset;
@@ -93,6 +94,11 @@ namespace CAVS.Anvel
             }
         }
 
+        public void AddLidar(string name, Color color)
+        {
+            lidarDisplays.Add(new LidarEntry(name, color));
+        }
+
         private void OnDestroy()
         {
             if(pollingThread != null && pollingThread.IsAlive)
@@ -113,15 +119,15 @@ namespace CAVS.Anvel
         {
             try
             {
-                ObjectDescriptor[] lidarSensorDescriptions = new ObjectDescriptor[lidarDisplays.Length];
-                for (int i = 0; i < lidarDisplays.Length; i++)
+                ObjectDescriptor[] lidarSensorDescriptions = new ObjectDescriptor[lidarDisplays.Count];
+                for (int i = 0; i < lidarDisplays.Count; i++)
                 {
                     lidarSensorDescriptions[i] = anvelConnection.GetObjectDescriptorByName(lidarDisplays[i].sensorName);
                 }
                 ObjectDescriptor vehicle = anvelConnection.GetObjectDescriptorByName(vehicleName);
 
-                LidarPoints[] allPoints = new LidarPoints[lidarDisplays.Length];
-                Vector3[] offsets = new Vector3[lidarDisplays.Length];
+                LidarPoints[] allPoints = new LidarPoints[lidarDisplays.Count];
+                Vector3[] offsets = new Vector3[lidarDisplays.Count];
                 int totalNumberOfPoints = 0;
 
                 while (true)
@@ -130,7 +136,7 @@ namespace CAVS.Anvel
 
                     totalNumberOfPoints = 0;
 
-                    for (int i = 0; i < lidarDisplays.Length; i++)
+                    for (int i = 0; i < lidarDisplays.Count; i++)
                     {
                         allPoints[i] = anvelConnection.GetLidarPoints(lidarSensorDescriptions[i].ObjectKey, 0);
                         totalNumberOfPoints += allPoints[i].Points.Count;
@@ -143,7 +149,7 @@ namespace CAVS.Anvel
                     var newParticles = new ParticleSystem.Particle[totalNumberOfPoints];
                     int particleIndex = 0;
                     Vector3 lastPos = Vector3.forward*1000000;
-                    for (int lidarIndex = 0; lidarIndex < lidarDisplays.Length; lidarIndex++)
+                    for (int lidarIndex = 0; lidarIndex < lidarDisplays.Count; lidarIndex++)
                     {
                         for (int pointIndex = 0; pointIndex < allPoints[lidarIndex].Points.Count; pointIndex++)
                         {

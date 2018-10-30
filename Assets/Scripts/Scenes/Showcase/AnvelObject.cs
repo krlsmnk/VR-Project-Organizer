@@ -17,36 +17,33 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         /// Private so no one can directly create it, must use static methods.
         /// </summary>
         /// <param name="connection"></param>
-        private AnvelObject(AnvelControlService.Client connection)
+        private AnvelObject(AnvelControlService.Client connection, ObjectDescriptor descriptor)
         {
-            this.client = connection;
+            client = connection;
+            objectDescriptor = descriptor;
+            objectOrientation = new Euler
+            {
+                Pitch = 0,
+                Roll = 0,
+                Yaw = 0
+            };
+            objectPosition = new Point3
+            {
+                X = 0,
+                Y = 0,
+                Z = 0
+            };
         }
 
         public static AnvelObject GetReference(AnvelControlService.Client connection, string objectName)
         {
-            var obj = new AnvelObject(connection);
-            obj.objectDescriptor = connection.GetObjectDescriptorByName(objectName);
-            return obj;
+            return new AnvelObject(connection, connection.GetObjectDescriptorByName(objectName));
         }
 
         //TODO: Get ObjectKey to work for passing parent
         public static AnvelObject CreateObject(AnvelControlService.Client connection, string objectName, string assetName, ObjectDescriptor parent)
         {
-            var obj = new AnvelObject(connection);
-
-            obj.objectOrientation = new Euler();
-            obj.objectOrientation.Pitch = 0;
-            obj.objectOrientation.Roll = 0;
-            obj.objectOrientation.Yaw = 0;
-
-            obj.objectPosition = new Point3();
-            obj.objectPosition.X = 0;
-            obj.objectPosition.Y = 0;
-            obj.objectPosition.Z = 0;
-
-            obj.objectDescriptor = connection.CreateObject(assetName, objectName, parent == null ? 0 : parent.ObjectKey, obj.objectPosition, obj.objectOrientation, false);
-
-            return obj;
+            return new AnvelObject(connection, connection.CreateObject(assetName, objectName, parent == null ? 0 : parent.ObjectKey, new Point3(), new Euler(), false));
         }
 
         public static AnvelObject CreateObject(AnvelControlService.Client connection, string objectName, string assetName)
@@ -54,22 +51,26 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             return CreateObject(connection, objectName, assetName, null);
         }
 
-        public void SetObjectPosition(float x, float y, float z)
+        public void UpdateTransform(Vector3 pos, Vector3 rot)
         {
-            objectPosition.X = z;
-            objectPosition.Y = x;
-            objectPosition.Z = y;
-
+            SetObjectPosition(pos);
+            SetObjectRotation(rot);
             UpdateObjectTransform();
         }
 
-        public void SetObjectRotation(float x, float y, float z)
+        private void SetObjectPosition(Vector3 pos)
         {
-            objectOrientation.Roll = Mathf.Deg2Rad * x;
-            objectOrientation.Yaw = Mathf.Deg2Rad * y;
-            objectOrientation.Pitch = Mathf.Deg2Rad * z;
+            objectPosition.X = pos.z;
+            objectPosition.Y = pos.x;
+            objectPosition.Z = pos.y;
+        }
 
-            UpdateObjectTransform();
+        private void SetObjectRotation(Vector3 rot)
+        {
+            var rotInRads = rot * Mathf.Deg2Rad;
+            objectOrientation.Roll = rotInRads.x;
+            objectOrientation.Yaw = rotInRads.y;
+            objectOrientation.Pitch = rotInRads.z;
         }
 
         private void UpdateObjectTransform()
@@ -82,9 +83,5 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             client.RemoveObject(objectDescriptor.ObjectKey);
         }
 
-        public ObjectDescriptor GetObjectDescriptor()
-        {
-            return objectDescriptor;
-        }
     }
 }

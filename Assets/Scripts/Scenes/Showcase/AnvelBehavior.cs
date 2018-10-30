@@ -57,8 +57,6 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
                     AnvelControlService.Client connection = ConnectionFactory.CreateConnection();
 
-                    AnvelObject.CreateObject(connection, "Example", "API 3D Lidar");
-
                     display.Initialize(
                         connection,
                         lidarSensors,

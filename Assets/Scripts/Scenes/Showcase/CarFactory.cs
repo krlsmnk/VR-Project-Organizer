@@ -42,8 +42,12 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         public static GameObject MakeLargeToyCar(Item car, float color,  Vector3 position, Quaternion rotation)
         {
             GameObject carInstace = Object.Instantiate(GetToyReference());
+            carInstace.transform.name = "Big Car";
             carInstace.transform.position = position;
             carInstace.transform.rotation = rotation;
+
+            Object.Destroy(carInstace.GetComponent<VRTK.VRTK_InteractableObject>());
+            carInstace.GetComponent<Rigidbody>().mass = 1000;
 
             var renders = carInstace.GetComponentsInChildren<MeshRenderer>();
             foreach (var render in renders)

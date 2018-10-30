@@ -27,11 +27,6 @@ public class ObjectCreator : MonoBehaviour {
 	public void UpdateTransformInAnvel() {
         Debug.Log("Anvel Transform Update");
         
-        obj.SetObjectPosition(model.transform.position.x, 
-                              model.transform.position.y, 
-                              model.transform.position.z);
-        obj.SetObjectRotation(model.transform.eulerAngles.x, 
-                              model.transform.eulerAngles.y, 
-                              model.transform.eulerAngles.z);
+        obj.UpdateTransform(model.transform.position, model.transform.eulerAngles);
     }
 }

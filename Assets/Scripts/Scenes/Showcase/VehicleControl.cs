@@ -20,14 +20,17 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             this.client = connection;
             this.vehicleName = vehicleName;
 
-            vehicleInput = new VehicleInputRecord();
-
-            //Steering 0 = No Left/Right Movement ; 1.0 -> 0 = Right ; 0 -> -1.0 = Left
-            vehicleInput.Steering = 0.0;
-            //Throttle 0 = No Movement ; -1.0 -> 0 = Reverse ; 0 -> 1.0 = Forward
-            vehicleInput.Throttle = 0.0;
-            //Brake 0 = No Braking ; 1.0 = Full breaks
-            vehicleInput.Brake = 0.0;
+            vehicleInput = new VehicleInputRecord
+            {
+                //Steering 0 = No Left/Right Movement ; 1.0 -> 0 = Right ; 0 -> -1.0 = Left
+                Steering = 0.0,
+                
+                //Throttle 0 = No Movement ; -1.0 -> 0 = Reverse ; 0 -> 1.0 = Forward
+                Throttle = 0.0,
+                
+                //Brake 0 = No Braking ; 1.0 = Full breaks
+                Brake = 0.0
+            };
 
             vehicle = client.GetObjectDescriptorByName(vehicleName);
 

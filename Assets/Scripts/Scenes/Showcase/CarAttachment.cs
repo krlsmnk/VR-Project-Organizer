@@ -1,10 +1,8 @@
-﻿//using System.Collections;
-//using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using AnvelApi;
 using CAVS.Anvel;
 
-namespace CAVS.ProjectOrganizer.Scenes.Showcase.AnvelObject
+namespace CAVS.ProjectOrganizer.Scenes.Showcase
 {
     public class CarAttachment : MonoBehaviour
     {
@@ -30,8 +28,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase.AnvelObject
         public void CreateObject()
         {
             connection = ConnectionFactory.CreateConnection();
-            model = Instantiate(model) as GameObject;
-
+            model = Instantiate(model);
             obj = AnvelObject.CreateObject(connection, objectName, anvelAssetName, connection.GetObjectDescriptorByName(carName));
         }
 
@@ -47,18 +44,14 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase.AnvelObject
             {
                 joint.connectedBody = collision.gameObject.GetComponent<Rigidbody>();
                 attached = true;
-                float offsetX = model.transform.position.x - car.transform.position.x;
-                float offsetY = model.transform.position.y - car.transform.position.y;
-                float offsetZ = model.transform.position.z - car.transform.position.z;
-                obj.SetObjectPosition(offsetX,offsetY,offsetZ);
+                obj.UpdateTransform(model.transform.position - car.transform.position, model.transform.rotation.eulerAngles);
             }
         }
 
         private void OnJointBreak(float breakForce)
         {
             attached = false;
-            this.gameObject.AddComponent<FixedJoint>();
-            joint = this.gameObject.GetComponent<FixedJoint>();
+            joint = gameObject.AddComponent<FixedJoint>();
             joint.breakForce = 1;
             joint.breakTorque = 1;
         }
