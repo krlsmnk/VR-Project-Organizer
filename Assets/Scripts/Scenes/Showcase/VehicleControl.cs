@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using CAVS.Anvel;
 using AnvelApi;
+
 namespace CAVS.ProjectOrganizer.Scenes.Showcase
 {
     public class VehicleControl : MonoBehaviour
     {
-        private string vehicleName;
 
         private AnvelControlService.Client client;
 
@@ -15,12 +15,13 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         VRTK.VRTK_ControllerEvents controllerInput;
 
-        public void Initialize(ClientConnectionToken connectionToken, string vehicleName)
+        public static VehicleControl Build(GameObject parent, ClientConnectionToken connectionToken, ObjectDescriptor vehicle)
         {
-            this.client = ConnectionFactory.CreateConnection(connectionToken);
-            this.vehicleName = vehicleName;
+            VehicleControl controller = parent.AddComponent<VehicleControl>();
+            controller.client = ConnectionFactory.CreateConnection(connectionToken);
 
-            vehicleInput = new VehicleInputRecord
+            controller.vehicle = vehicle;
+            controller.vehicleInput = new VehicleInputRecord
             {
                 //Steering 0 = No Left/Right Movement ; 1.0 -> 0 = Right ; 0 -> -1.0 = Left
                 Steering = 0.0,
@@ -32,9 +33,8 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                 Brake = 0.0
             };
 
-            vehicle = client.GetObjectDescriptorByName(vehicleName);
-
-            controllerInput = GetComponent<VRTK.VRTK_ControllerEvents>();
+            controller.controllerInput = parent.GetComponent<VRTK.VRTK_ControllerEvents>();
+            return controller;
         }
 
         void Update()
@@ -76,11 +76,6 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             client.SetVehicleInput(vehicle.ObjectKey, vehicleInput);
         }
 
-        public void SetVehicleName(string newVehicleName)
-        {
-            vehicleName = newVehicleName;
-            vehicle = client.GetObjectDescriptorByName(vehicleName);
-        }
     }
 }
 

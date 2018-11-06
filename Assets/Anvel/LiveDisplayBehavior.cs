@@ -11,21 +11,30 @@ namespace CAVS.Anvel
         [System.Serializable]
         public class LidarEntry
         {
-
             public string sensorName;
 
             public Color renderColor;
 
-            public LidarEntry(string sensorName, Color renderColor)
+            private ObjectDescriptor descriptor;
+
+            public LidarEntry(string sensorName, Color renderColor, ObjectDescriptor descriptor)
             {
                 this.sensorName = sensorName;
                 this.renderColor = renderColor;
+                this.descriptor = descriptor;
             }
 
-            public LidarEntry(string sensorName)
+            public LidarEntry(string sensorName, Color renderColor) : this(sensorName, renderColor, null) { }
+
+            public LidarEntry(string sensorName) : this(sensorName, Color.white, null) { }
+
+            public ObjectDescriptor GetDescriptor(AnvelControlService.Client connection)
             {
-                this.sensorName = sensorName;
-                this.renderColor = Color.white;
+                if (descriptor == null)
+                {
+                    descriptor = connection.GetObjectDescriptorByName(sensorName);
+                }
+                return descriptor;
             }
 
         }
@@ -34,23 +43,28 @@ namespace CAVS.Anvel
 
         private ParticleSystem.Particle[] particles;
 
-        private AnvelControlService.Client anvelConnection;
+        private AnvelControlService.Client conn;
 
         private Thread pollingThread;
 
         private List<LidarEntry> lidarDisplays;
 
-        private string vehicleName;
+        private ObjectDescriptor vehicle;
 
         private Vector3 centerOffset;
 
         private Vector3 rotationOffset;
 
-        public void Initialize(ClientConnectionToken connectionToken, string lidarSensorName, string vehicleName)
+        private void Awake()
         {
-            lidarDisplays = new List<LidarEntry>() { new LidarEntry(lidarSensorName) };
-            this.vehicleName = vehicleName;
-            this.anvelConnection = ConnectionFactory.CreateConnection(connectionToken);
+            lidarDisplays = new List<LidarEntry>();
+        }
+
+        public void Initialize(ClientConnectionToken connectionToken, string lidarSensorName, ObjectDescriptor vehicle)
+        {
+            lidarDisplays.Add(new LidarEntry(lidarSensorName));
+            this.vehicle = vehicle;
+            this.conn = ConnectionFactory.CreateConnection(connectionToken);
             this.centerOffset = Vector3.zero;
             this.rotationOffset = Vector3.zero;
             particles = new ParticleSystem.Particle[0];
@@ -59,11 +73,11 @@ namespace CAVS.Anvel
             pollingThread.Start();
         }
 
-        public void Initialize(ClientConnectionToken connectionToken, LidarEntry[] lidarDisplays, string vehicleName, Vector3 centerOffset, Vector3 rotationOffset)
+        public void Initialize(ClientConnectionToken connectionToken, LidarEntry[] lidarDisplays, ObjectDescriptor vehicle, Vector3 centerOffset, Vector3 rotationOffset)
         {
-            this.lidarDisplays = new List<LidarEntry>(lidarDisplays);
-            this.vehicleName = vehicleName;
-            this.anvelConnection = ConnectionFactory.CreateConnection(connectionToken);
+            this.lidarDisplays.AddRange(lidarDisplays);
+            this.vehicle = vehicle;
+            this.conn = ConnectionFactory.CreateConnection(connectionToken);
             this.centerOffset = centerOffset;
             this.rotationOffset = rotationOffset;
             particles = new ParticleSystem.Particle[0];
@@ -85,22 +99,22 @@ namespace CAVS.Anvel
         void Update()
         {
             var toRender = particles;
-            if (toRender.Length > 0)
+            if (toRender != null && toRender.Length > 0)
             {
                 lidarDisplay.SetParticles(toRender, toRender.Length);
             }
         }
 
-        public void AddLidar(string name, Color color)
+        public void AddLidar(string name, Color color, ObjectDescriptor objectDescriptor)
         {
-            lidarDisplays.Add(new LidarEntry(name, color));
+            lidarDisplays.Add(new LidarEntry(name, color, objectDescriptor));
         }
 
         private void OnDestroy()
         {
-            if(pollingThread != null && pollingThread.IsAlive)
+            if (pollingThread != null && pollingThread.IsAlive)
             {
-               pollingThread.Abort();
+                pollingThread.Abort();
             }
         }
 
@@ -114,40 +128,36 @@ namespace CAVS.Anvel
         /// </summary>
         private void PollLidarPoints()
         {
-            try
+
+            int totalNumberOfPoints = 0;
+            float lowestPoint = float.MaxValue;
+            float highestPoint = float.MinValue;
+            while (true)
             {
-                ObjectDescriptor[] lidarSensorDescriptions = new ObjectDescriptor[lidarDisplays.Count];
-                for (int i = 0; i < lidarDisplays.Count; i++)
+                try
                 {
-                    lidarSensorDescriptions[i] = anvelConnection.GetObjectDescriptorByName(lidarDisplays[i].sensorName);
-                }
-                ObjectDescriptor vehicle = anvelConnection.GetObjectDescriptorByName(vehicleName);
+                    var displays = new List<LidarEntry>(lidarDisplays);
 
-                LidarPoints[] allPoints = new LidarPoints[lidarDisplays.Count];
-                Vector3[] offsets = new Vector3[lidarDisplays.Count];
-                int totalNumberOfPoints = 0;
+                    LidarPoints[] allPoints = new LidarPoints[displays.Count];
+                    Vector3[] offsets = new Vector3[displays.Count];
 
-                float lowestPoint =  float.MaxValue;
-                float highestPoint = float.MinValue;
-                while (true)
-                {
-                    Point3 vehiclePosition = anvelConnection.GetPoseAbs(vehicle.ObjectKey).Position;
+                    Point3 vehiclePosition = conn.GetPoseAbs(vehicle.ObjectKey).Position;
                     totalNumberOfPoints = 0;
 
-                    Vector3 lastPos = Vector3.forward*1000000;
-                    for (int i = 0; i < lidarDisplays.Count; i++)
+                    Vector3 lastPos = Vector3.forward * 1000000;
+                    for (int i = 0; i < displays.Count; i++)
                     {
-                        allPoints[i] = anvelConnection.GetLidarPoints(lidarSensorDescriptions[i].ObjectKey, 0);
+                        allPoints[i] = conn.GetLidarPoints(displays[i].GetDescriptor(conn).ObjectKey, 0);
                         totalNumberOfPoints += allPoints[i].Points.Count;
-                        if (anvelConnection.GetProperty(lidarSensorDescriptions[i].ObjectKey, "Lidar Global Frame") == "true")
-                        {
-                            offsets[i] = new Vector3((float)vehiclePosition.Y, (float)vehiclePosition.Z, (float)vehiclePosition.X);
-                        }
+                        //if (conn.GetProperty(displays[i].GetDescriptor(conn).ObjectKey, "Lidar Global Frame") == "true")
+                        //{
+                        //    offsets[i] = new Vector3((float)vehiclePosition.Y, (float)vehiclePosition.Z, (float)vehiclePosition.X);
+                        //}
                     }
 
                     var newParticles = new ParticleSystem.Particle[totalNumberOfPoints];
                     int particleIndex = 0;
-                    for (int lidarIndex = 0; lidarIndex < lidarDisplays.Count; lidarIndex++)
+                    for (int lidarIndex = 0; lidarIndex < displays.Count; lidarIndex++)
                     {
                         for (int pointIndex = 0; pointIndex < allPoints[lidarIndex].Points.Count; pointIndex++)
                         {
@@ -157,25 +167,26 @@ namespace CAVS.Anvel
                                     (float)allPoints[lidarIndex].Points[pointIndex].X
                                 ) - offsets[lidarIndex], Vector3.zero, rotationOffset) + centerOffset;
 
-                            if(position.y > highestPoint) 
+                            if (position.y > highestPoint)
                             {
                                 highestPoint = position.y;
                             }
 
-                            if(position.y < lowestPoint) 
+                            if (position.y < lowestPoint)
                             {
                                 lowestPoint = position.y;
                             }
 
-                            var colorToRender = lidarDisplays[lidarIndex].renderColor;
-                            if(Mathf.Abs(highestPoint - lowestPoint) >0.001f){
+                            var colorToRender = displays[lidarIndex].renderColor;
+                            if (Mathf.Abs(highestPoint - lowestPoint) > 0.001f)
+                            {
                                 float H;
                                 float S;
                                 float V;
                                 Color.RGBToHSV(colorToRender, out H, out S, out V);
-                                var p =  (position.y-lowestPoint) / (highestPoint-lowestPoint);
+                                var p = (position.y - lowestPoint) / (highestPoint - lowestPoint);
                                 colorToRender = Color.HSVToRGB(H, p, p);
-                                colorToRender.a = lidarDisplays[lidarIndex].renderColor.a; 
+                                colorToRender.a = displays[lidarIndex].renderColor.a;
                             }
 
                             if ((position - lastPos).sqrMagnitude > .1)
@@ -196,18 +207,21 @@ namespace CAVS.Anvel
                     }
                     particles = newParticles;
                 }
+                catch (AnvelException e)
+                {
+                    Debug.LogErrorFormat("Anvel Exception: {0} at {1}", e.ErrorMessage, e.Source);
+                }
+                catch (PropertyNameNotFound e)
+                {
+                    Debug.LogErrorFormat("Anvel Property \"{0}\" was not found.\n{1}", e.PropertyName, e.Message);
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogFormat("{0}:{1}", e.GetType(), e.Message);
+                }
             }
-            catch (AnvelException e)
-            {
-                Debug.LogErrorFormat("Anvel Exception: {0} at {1}", e.ErrorMessage, e.Source);
-                throw;
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogFormat("{0}:{1}", e.GetType(), e.Message);
-                throw e;
-            }
-           
+
+
         }
 
     }

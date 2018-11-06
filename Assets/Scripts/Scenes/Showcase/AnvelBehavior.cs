@@ -58,32 +58,33 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                     break;
 
                 case DisplayType.Networked:
-                    var display = gameObject.AddComponent<LiveDisplayBehavior>();
-
-
                     var connectionToken = new ClientConnectionToken();
-                    if (lidarSensors?.Length > 0)
-                    {
-                        display.Initialize(
+
+                    var connnnnn = ConnectionFactory.CreateConnection(connectionToken);
+                    var carReference = AnvelObject.CreateObject(connnnnn, "car", AnvelAssetName.Vehicles.GENERIC_4X4);
+                    CreateAnvelObjectOnCollision.Build(new Vector3(0, 1, -5.5f), carReference, connnnnn);
+
+                    var display = gameObject.AddComponent<LiveDisplayBehavior>();
+                    
+                    display.Initialize(
                             connectionToken,
-                            lidarSensors,
-                            anvelVehicleName,
+                            lidarSensors == null ? new LiveDisplayBehavior.LidarEntry[0] : lidarSensors,
+                            carReference.ObjectDescriptor(),
                             new Vector3(0.1f, 0.1f, 2.27f),
                             new Vector3(0, 90, 0)
                          );
-                    }
 
-                    if (cameraDisplayPane != null && anvelCameraName != null)
-                    {
-                        LiveCameraDisplay.Build(cameraDisplayPane, connectionToken, anvelCameraName);
-                    }
+                    //if (cameraDisplayPane != null && anvelCameraName != null)
+                    //{
+                    //    LiveCameraDisplay.Build(cameraDisplayPane, connectionToken, anvelCameraName);
+                    //}
 
                     if (drivingController != null)
                     {
-                        drivingController
-                            .AddComponent<VehicleControl>()
-                            .Initialize(connectionToken, anvelVehicleName);
-                    } else {
+                        VehicleControl.Build(drivingController, connectionToken, carReference.ObjectDescriptor());
+                    }
+                    else
+                    {
                         Debug.LogWarning("No Driving Controller Assigned!");
                     }
 
@@ -91,6 +92,11 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                     break;
             }
 
+        }
+
+        private void OnApplicationQuit()
+        {
+            AnvelObjectManager.Instance.DeleteAllObjectsWeCreatedInAnvel();
         }
 
         IEnumerator UpdateOffsetTick(LiveDisplayBehavior displayBehavior)

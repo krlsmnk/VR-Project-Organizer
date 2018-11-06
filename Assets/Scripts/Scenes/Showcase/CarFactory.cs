@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using CAVS.ProjectOrganizer.Project;
 
@@ -70,7 +68,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             return carInstace;
         }
 
-        public static GameObject MakeToyCar(string display, float color, Vector3 position, Quaternion rotation)
+        public static GameObject MakeToyCar(Item car, string display, float color, Vector3 position, Quaternion rotation)
         {
             GameObject carInstace = Object.Instantiate(GetToyReference());
             carInstace.transform.position = position;
@@ -87,6 +85,12 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                     }
                 }
             }
+            carInstace.transform.localScale = new Vector3(
+                float.Parse(car.GetValue("Width (in)")) / 69.5f,
+                float.Parse(car.GetValue("Height (in)")) / 56.7f,
+                float.Parse(car.GetValue("Length (in)")) / 170.1f
+            );
+
             carInstace.GetComponentInChildren<Text>().text = display;
             carInstace.name = display;
             return carInstace;

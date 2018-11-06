@@ -9,41 +9,30 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         private AnvelControlService.Client client;
 
-        private Point3 objectPosition;
-
-        private Euler objectOrientation;
-
         /// <summary>
         /// Private so no one can directly create it, must use static methods.
         /// </summary>
         /// <param name="connection"></param>
-        private AnvelObject(AnvelControlService.Client connection, ObjectDescriptor descriptor)
+        private AnvelObject(AnvelControlService.Client connection, ObjectDescriptor descriptor, bool newlyCreated)
         {
             client = connection;
             objectDescriptor = descriptor;
-            objectOrientation = new Euler
+
+            if (newlyCreated)
             {
-                Pitch = 0,
-                Roll = 0,
-                Yaw = 0
-            };
-            objectPosition = new Point3
-            {
-                X = 0,
-                Y = 0,
-                Z = 0
-            };
+                AnvelObjectManager.Instance.RegisterCreatedObject(this);
+            }
         }
 
-        public static AnvelObject GetReference(AnvelControlService.Client connection, string objectName)
+        public static AnvelObject GetReferenceByName(AnvelControlService.Client connection, string objectName)
         {
-            return new AnvelObject(connection, connection.GetObjectDescriptorByName(objectName));
+            return new AnvelObject(connection, connection.GetObjectDescriptorByName(objectName), false);
         }
 
         //TODO: Get ObjectKey to work for passing parent
         public static AnvelObject CreateObject(AnvelControlService.Client connection, string objectName, string assetName, ObjectDescriptor parent)
         {
-            return new AnvelObject(connection, connection.CreateObject(assetName, objectName, parent == null ? 0 : parent.ObjectKey, new Point3(), new Euler(), false));
+            return new AnvelObject(connection, connection.CreateObject(assetName, objectName, parent == null ? 0 : parent.ObjectKey, new Point3(), new Euler(), false), true);
         }
 
         public static AnvelObject CreateObject(AnvelControlService.Client connection, string objectName, string assetName)
@@ -53,34 +42,47 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         public void UpdateTransform(Vector3 pos, Vector3 rot)
         {
-            SetObjectPosition(pos);
-            SetObjectRotation(rot);
-            UpdateObjectTransform();
-        }
-
-        private void SetObjectPosition(Vector3 pos)
-        {
-            objectPosition.X = pos.z;
-            objectPosition.Y = pos.x;
-            objectPosition.Z = pos.y;
-        }
-
-        private void SetObjectRotation(Vector3 rot)
-        {
             var rotInRads = rot * Mathf.Deg2Rad;
-            objectOrientation.Roll = rotInRads.x;
-            objectOrientation.Yaw = rotInRads.y;
-            objectOrientation.Pitch = rotInRads.z;
+            client.SetPoseRelE(objectDescriptor.ObjectKey, new Point3
+            {
+                X = pos.z,
+                Y = pos.x,
+                Z = pos.y
+            }, new Euler
+            {
+                Pitch = rotInRads.z,
+                Roll = rotInRads.x,
+                Yaw = rotInRads.y
+            });
         }
 
-        private void UpdateObjectTransform()
+        public string ObjectName()
         {
-            client.SetPoseRelE(objectDescriptor.ObjectKey, objectPosition, objectOrientation);
+            return objectDescriptor.ObjectName;
+        }
+
+        public ObjectDescriptor ObjectDescriptor()
+        {
+            return objectDescriptor;
+        }
+
+
+        public Vector3 Position()
+        {
+            var pose = client.GetPoseAbs(objectDescriptor.ObjectKey);
+            return new Vector3((float)pose.Position.Y, (float)pose.Position.Z, (float)pose.Position.X);
+        }
+
+        public Vector3 Rotation()
+        {
+            var pose = client.GetPoseAbs(objectDescriptor.ObjectKey);
+            return new Vector3((float)pose.Attitude.Euler.Roll, (float)pose.Attitude.Euler.Yaw, (float)pose.Attitude.Euler.Pitch);
         }
 
         public void RemoveObject()
         {
             client.RemoveObject(objectDescriptor.ObjectKey);
+            Debug.Log($"Destroyed: {objectDescriptor.ObjectName} ({objectDescriptor.ObjectKey})");
         }
 
     }
