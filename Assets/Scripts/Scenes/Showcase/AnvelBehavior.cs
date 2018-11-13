@@ -24,12 +24,6 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         private GameObject drivingController;
 
         [SerializeField]
-        private GameObject cameraDisplayPane;
-
-        [SerializeField]
-        private string anvelCameraName;
-
-        [SerializeField]
         private DisplayType startup;
 
         [SerializeField]
@@ -62,7 +56,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
                     var connnnnn = ConnectionFactory.CreateConnection(connectionToken);
                     var carReference = AnvelObject.CreateObject(connnnnn, "car", AnvelAssetName.Vehicles.GENERIC_4X4);
-                    CreateAnvelObjectOnCollision.Build(new Vector3(0, 1, -5.5f), carReference, connnnnn);
+                    CreateAnvelObjectOnCollision.Build(AnvelAssetName.Sensors.API_Camera, new Vector3(0, 1, -5.5f), carReference, connnnnn);
 
                     var display = gameObject.AddComponent<LiveDisplayBehavior>();
                     
@@ -73,11 +67,6 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                             new Vector3(0.1f, 0.1f, 2.27f),
                             new Vector3(0, 90, 0)
                          );
-
-                    //if (cameraDisplayPane != null && anvelCameraName != null)
-                    //{
-                    //    LiveCameraDisplay.Build(cameraDisplayPane, connectionToken, anvelCameraName);
-                    //}
 
                     if (drivingController != null)
                     {

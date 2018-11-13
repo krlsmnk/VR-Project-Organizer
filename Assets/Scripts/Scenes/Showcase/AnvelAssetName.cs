@@ -6,6 +6,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         public static class Sensors
         {
             public readonly static string API_3D_LIDAR = "API 3D Lidar";
+            public readonly static string API_Camera = "API Camera";
         }
 
         public static class Vehicles

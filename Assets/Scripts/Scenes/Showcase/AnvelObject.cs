@@ -29,7 +29,6 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             return new AnvelObject(connection, connection.GetObjectDescriptorByName(objectName), false);
         }
 
-        //TODO: Get ObjectKey to work for passing parent
         public static AnvelObject CreateObject(AnvelControlService.Client connection, string objectName, string assetName, ObjectDescriptor parent)
         {
             return new AnvelObject(connection, connection.CreateObject(assetName, objectName, parent == null ? 0 : parent.ObjectKey, new Point3(), new Euler(), false), true);
@@ -46,12 +45,12 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             client.SetPoseRelE(objectDescriptor.ObjectKey, new Point3
             {
                 X = pos.z,
-                Y = pos.x,
+                Y = -pos.x,
                 Z = pos.y
             }, new Euler
             {
-                Pitch = rotInRads.z,
-                Roll = rotInRads.x,
+                Pitch = rotInRads.x,
+                Roll = rotInRads.z,
                 Yaw = rotInRads.y
             });
         }
@@ -66,17 +65,21 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             return objectDescriptor;
         }
 
-
+        /// <summary>
+        /// Queries and retrieves the absolute position in the scene of the object inside of ANVEL
+        /// </summary>
+        /// <returns></returns>
         public Vector3 Position()
         {
             var pose = client.GetPoseAbs(objectDescriptor.ObjectKey);
-            return new Vector3((float)pose.Position.Y, (float)pose.Position.Z, (float)pose.Position.X);
+            return new Vector3(-(float)pose.Position.Y, (float)pose.Position.Z, (float)pose.Position.X);
         }
 
-        public Vector3 Rotation()
+        public UnityEngine.Quaternion Rotation()
         {
             var pose = client.GetPoseAbs(objectDescriptor.ObjectKey);
-            return new Vector3((float)pose.Attitude.Euler.Roll, (float)pose.Attitude.Euler.Yaw, (float)pose.Attitude.Euler.Pitch);
+            return new UnityEngine.Quaternion((float)pose.Attitude.Quaternion.Y, (float)pose.Attitude.Quaternion.Z, (float)pose.Attitude.Quaternion.X, (float)pose.Attitude.Quaternion.W);
+            //return new Vector3((float)pose.Attitude.Euler.Roll, (float)pose.Attitude.Euler.Yaw, (float)pose.Attitude.Euler.Pitch);
         }
 
         public void RemoveObject()
