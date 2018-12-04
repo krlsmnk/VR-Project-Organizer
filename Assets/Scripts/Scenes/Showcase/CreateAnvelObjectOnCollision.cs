@@ -46,6 +46,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
             newScript.rb = newObj.AddComponent<Rigidbody>();
             newScript.interactableObject = newObj.AddComponent<VRTK_InteractableObject>();
+            //newObj.AddComponent<VRTK.GrabAttachMechanics.VRTK_TrackObjectGrabAttach>();
             newScript.parent = parent;
             newScript.connection = connection;
             newScript.objCreationState = ObjCreationState.NotCreated;
@@ -58,14 +59,21 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (objCreationState == ObjCreationState.NotCreated && collision.transform.name == "Big Car")
+            if (collision.transform.name == "Big Car")
             {
-                transform.SetParent(collision.transform.parent);
-                rb.useGravity = false;
-                GetComponent<Collider>().isTrigger = true;
-                objCreationState = ObjCreationState.Created;
-                //rb.freezeRotation = true;
-                CreateApprorpiateAnvelObject();
+                if(objCreationState == ObjCreationState.NotCreated)
+                {
+                    //transform.SetParent(collision.transform.parent);
+                    rb.useGravity = false;
+                    //GetComponent<Collider>().isTrigger = true;
+                    objCreationState = ObjCreationState.Created;
+                    //rb.freezeRotation = true;
+                    CreateApprorpiateAnvelObject();
+                }
+                //FixedJoint joint = gameObject.AddComponent<FixedJoint>();
+                //joint.connectedBody = collision.gameObject.GetComponent<Rigidbody>();
+                //joint.breakTorque = 1000;
+                //joint.breakForce = 1000;
             }
         }
 
@@ -76,7 +84,6 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             Vector3 currentPosition = transform.position;
             if (objCreationState == ObjCreationState.Created)
             {
-                rb.velocity = Vector3.zero;
 
                 if ((currentPosition - lastPosition).Equals(Vector3.zero) == false)
                 {

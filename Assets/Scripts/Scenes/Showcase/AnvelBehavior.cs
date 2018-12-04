@@ -57,7 +57,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                     var connnnnn = ConnectionFactory.CreateConnection(connectionToken);
                     var carReference = AnvelObject.CreateObject(connnnnn, "car", AnvelAssetName.Vehicles.GENERIC_4X4);
                     CreateAnvelObjectOnCollision.Build(AnvelAssetName.Sensors.API_Camera, new Vector3(-1, 1, -5.5f), carReference, connnnnn);
-                    CreateAnvelObjectOnCollision.Build(AnvelAssetName.Sensors.API_Camera, new Vector3(1, 1, -5.5f), carReference, connnnnn);
+                    CreateAnvelObjectOnCollision.Build(AnvelAssetName.Sensors.API_3D_LIDAR, new Vector3(1, 1, -5.5f), carReference, connnnnn);
 
                     var display = gameObject.AddComponent<LiveDisplayBehavior>();
                     
