@@ -9,7 +9,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         {
             string name = $"Camera - {Random.Range(0, 1000000)}"; 
             objectWeArecontrolling = AnvelObject.CreateObject(connection, name, AnvelAssetName.Sensors.API_Camera, parent.ObjectDescriptor());
-            objectWeArecontrolling.UpdateTransform(transform.localPosition, transform.localRotation.eulerAngles);
+            objectWeArecontrolling.UpdateTransform(transform.localPosition, transform.localRotation);
 
             GameObject displayPlane = GameObject.CreatePrimitive(PrimitiveType.Quad);
             Destroy(displayPlane.GetComponent<Collider>());

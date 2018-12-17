@@ -44,7 +44,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             {
                 joint.connectedBody = collision.gameObject.GetComponent<Rigidbody>();
                 attached = true;
-                obj.UpdateTransform(model.transform.position - car.transform.position, model.transform.rotation.eulerAngles);
+                obj.UpdateTransform(model.transform.position - car.transform.position, model.transform.rotation);
             }
         }
 

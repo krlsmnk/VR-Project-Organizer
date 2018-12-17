@@ -45,8 +45,14 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             newObj.transform.position = position;
 
             newScript.rb = newObj.AddComponent<Rigidbody>();
+            newScript.rb.useGravity = false;
+
             newScript.interactableObject = newObj.AddComponent<VRTK_InteractableObject>();
-            //newObj.AddComponent<VRTK.GrabAttachMechanics.VRTK_TrackObjectGrabAttach>();
+            newScript.interactableObject.InteractableObjectUngrabbed += delegate (object sender, InteractableObjectEventArgs e)
+            {
+                newScript.rb.velocity = Vector3.zero;
+                newScript.rb.angularVelocity = Vector3.zero;
+            };
             newScript.parent = parent;
             newScript.connection = connection;
             newScript.objCreationState = ObjCreationState.NotCreated;
@@ -57,23 +63,21 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             return newScript;
         }
 
+
         private void OnCollisionEnter(Collision collision)
         {
             if (collision.transform.name == "Big Car")
             {
-                if(objCreationState == ObjCreationState.NotCreated)
+                
+                if (objCreationState == ObjCreationState.NotCreated)
                 {
-                    //transform.SetParent(collision.transform.parent);
-                    rb.useGravity = false;
-                    //GetComponent<Collider>().isTrigger = true;
+                    GetComponent<Collider>().isTrigger = true;
                     objCreationState = ObjCreationState.Created;
-                    //rb.freezeRotation = true;
                     CreateApprorpiateAnvelObject();
                 }
-                //FixedJoint joint = gameObject.AddComponent<FixedJoint>();
-                //joint.connectedBody = collision.gameObject.GetComponent<Rigidbody>();
-                //joint.breakTorque = 1000;
-                //joint.breakForce = 1000;
+
+                rb.velocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
             }
         }
 
@@ -84,10 +88,9 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             Vector3 currentPosition = transform.position;
             if (objCreationState == ObjCreationState.Created)
             {
-
                 if ((currentPosition - lastPosition).Equals(Vector3.zero) == false)
                 {
-                    objectWeArecontrolling.UpdateTransform(transform.localPosition, transform.localRotation.eulerAngles);
+                    objectWeArecontrolling.UpdateTransform(transform.localPosition, transform.localRotation);
                 }
             }
             lastPosition = currentPosition;

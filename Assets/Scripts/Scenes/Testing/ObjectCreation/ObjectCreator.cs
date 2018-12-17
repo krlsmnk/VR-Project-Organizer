@@ -23,6 +23,6 @@ public class ObjectCreator : MonoBehaviour {
 	public void UpdateTransformInAnvel() {
         Debug.Log("Anvel Transform Update");
         
-        obj.UpdateTransform(model.transform.position, model.transform.eulerAngles);
+        obj.UpdateTransform(model.transform.position, model.transform.rotation);
     }
 }

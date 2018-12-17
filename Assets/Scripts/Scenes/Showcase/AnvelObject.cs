@@ -39,19 +39,19 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             return CreateObject(connection, objectName, assetName, null);
         }
 
-        public void UpdateTransform(Vector3 pos, Vector3 rot)
+        public void UpdateTransform(Vector3 pos, UnityEngine.Quaternion rot)
         {
-            var rotInRads = rot * Mathf.Deg2Rad;
-            client.SetPoseRelE(objectDescriptor.ObjectKey, new Point3
+            client.SetPoseRelQ(objectDescriptor.ObjectKey, new Point3
             {
                 X = pos.z,
                 Y = -pos.x,
                 Z = pos.y
-            }, new Euler
+            }, new AnvelApi.Quaternion
             {
-                Pitch = rotInRads.x,
-                Roll = rotInRads.z,
-                Yaw = rotInRads.y
+                X = rot.z * Mathf.Deg2Rad,
+                Y = -rot.x * Mathf.Deg2Rad,
+                Z = rot.y * Mathf.Deg2Rad,
+                W = rot.w * Mathf.Deg2Rad
             });
         }
 
