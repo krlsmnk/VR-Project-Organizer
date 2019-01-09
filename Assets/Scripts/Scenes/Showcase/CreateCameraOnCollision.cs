@@ -20,6 +20,21 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             displayPlane.transform.localScale = Vector3.one* 4f;
             LiveCameraDisplay.Build(displayPlane, new ClientConnectionToken(), name);
         }
+
+        protected override string PropertyKeyForModifying()
+        {
+            return "Quality";
+        }
+
+        protected override Vector2 PropertyRangeForModifying()
+        {
+            return new Vector2(10, 20);
+        }
+
+        protected override float PropertyStartingValueForModifying()
+        {
+            return 15;
+        }
     }
 
 }

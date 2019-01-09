@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using AnvelApi;
 using VRTK;
+using EliCDavis.UIGen;
 
 namespace CAVS.ProjectOrganizer.Scenes.Showcase
 {
@@ -27,6 +28,10 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         private Vector3 lastPosition;
 
+        private GameObject uiView;
+
+        private float lastValueSeen;
+
         public static CreateAnvelObjectOnCollision Build(string anvelAsset, Vector3 position, AnvelObject parent, AnvelControlService.Client connection)
         {
             GameObject newObj = null;
@@ -48,21 +53,56 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             newScript.rb.useGravity = false;
 
             newScript.interactableObject = newObj.AddComponent<VRTK_InteractableObject>();
-            newScript.interactableObject.InteractableObjectUngrabbed += delegate (object sender, InteractableObjectEventArgs e)
-            {
-                newScript.rb.velocity = Vector3.zero;
-                newScript.rb.angularVelocity = Vector3.zero;
-            };
+            newScript.interactableObject.InteractableObjectUngrabbed += newScript.OnUngrabbed;
+            newScript.interactableObject.InteractableObjectGrabbed += newScript.OnGrabbed;
+
             newScript.parent = parent;
             newScript.connection = connection;
             newScript.objCreationState = ObjCreationState.NotCreated;
             newScript.lastPosition = newObj.transform.position;
             newScript.interactableObject.isGrabbable = true;
             newScript.objectWeArecontrolling = null;
+            newScript.lastValueSeen = newScript.PropertyStartingValueForModifying();
 
             return newScript;
         }
 
+        /// <summary>
+        /// Called whenever the object is "un" grabbed under a VRTK context
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnUngrabbed(object sender, InteractableObjectEventArgs e)
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            if (uiView != null)
+            {
+                Destroy(uiView);
+            }
+        }
+
+        private void OnGrabbed(object sender, InteractableObjectEventArgs e)
+        {
+            if (objCreationState != ObjCreationState.Created)
+            {
+                return;
+            }
+
+            var window = new Window(PropertyKeyForModifying(), new IElement[] {
+                new SliderElement(PropertyRangeForModifying().x, PropertyRangeForModifying().y, lastValueSeen, delegate(float x) {
+                    lastValueSeen = x;
+                    connection.SetProperty(objectWeArecontrolling.ObjectDescriptor().ObjectKey, PropertyKeyForModifying(), x.ToString());
+                }, delegate(float x) { return x.ToString("0.00"); }) });
+
+            Vector3 position = transform.position + ((transform.rotation * new Vector3(.8f, .2f, 0)).normalized * .5f) ;
+
+            uiView =  new View(window).Build(position, UnityEngine.Quaternion.identity, Vector2.one / 2f);
+            uiView.transform.parent = transform;
+            uiView.transform.localRotation = UnityEngine.Quaternion.Euler(0, 180, 0);
+
+            uiView.AddComponent<VRTK_UICanvas>();
+        }
 
         private void OnCollisionEnter(Collision collision)
         {
@@ -82,6 +122,12 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         }
 
         protected abstract void CreateApprorpiateAnvelObject();
+
+        protected abstract string PropertyKeyForModifying();
+
+        protected abstract Vector2 PropertyRangeForModifying();
+
+        protected abstract float PropertyStartingValueForModifying();
 
         private void Update()
         {
