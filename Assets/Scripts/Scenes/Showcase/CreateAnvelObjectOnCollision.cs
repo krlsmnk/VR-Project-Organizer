@@ -2,6 +2,7 @@
 using AnvelApi;
 using VRTK;
 using EliCDavis.UIGen;
+using CAVS.Anvel;
 
 namespace CAVS.ProjectOrganizer.Scenes.Showcase
 {
@@ -20,6 +21,8 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         protected AnvelObject objectWeArecontrolling;
 
+        protected AnvelObject objectSensorWeArecontrolling;
+
         private Rigidbody rb;
 
         private VRTK_InteractableObject interactableObject;
@@ -37,14 +40,19 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             GameObject newObj = null;
             CreateAnvelObjectOnCollision newScript = null;
 
-            if (anvelAsset.Equals(AnvelAssetName.Sensors.API_3D_LIDAR))
+            if (anvelAsset.Equals(AssetName.Sensors.API_3D_LIDAR))
             {
                 newObj = Instantiate(Resources.Load<GameObject>("Lidar Sensor"));
                 newScript = newObj.AddComponent<CreateLidarOnCollision>();
-            } else if (anvelAsset.Equals(AnvelAssetName.Sensors.API_Camera))
+            } else if (anvelAsset.Equals(AssetName.Sensors.API_Camera))
             {
                 newObj = Instantiate(Resources.Load<GameObject>("Camera Sensor"));
                 newScript = newObj.AddComponent<CreateCameraOnCollision>();
+            }
+
+            if(newScript == null)
+            {
+                throw new System.Exception("Do not support: " + anvelAsset);
             }
 
             newObj.transform.position = position;
@@ -62,6 +70,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             newScript.lastPosition = newObj.transform.position;
             newScript.interactableObject.isGrabbable = true;
             newScript.objectWeArecontrolling = null;
+            newScript.objectSensorWeArecontrolling = null;
             newScript.lastValueSeen = newScript.PropertyStartingValueForModifying();
 
             return newScript;
@@ -92,7 +101,8 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             var window = new Window(PropertyKeyForModifying(), new IElement[] {
                 new SliderElement(PropertyRangeForModifying().x, PropertyRangeForModifying().y, lastValueSeen, delegate(float x) {
                     lastValueSeen = x;
-                    connection.SetProperty(objectWeArecontrolling.ObjectDescriptor().ObjectKey, PropertyKeyForModifying(), x.ToString());
+                    connection.SetProperty(objectSensorWeArecontrolling.ObjectDescriptor().ObjectKey, PropertyKeyForModifying(), ((int)x).ToString());
+                    Debug.Log("Sent value");
                 }, delegate(float x) { return x.ToString("0.00"); }) });
 
             Vector3 position = transform.position + ((transform.rotation * new Vector3(.8f, .2f, 0)).normalized * .5f) ;

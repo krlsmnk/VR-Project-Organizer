@@ -152,60 +152,70 @@ namespace CAVS.Anvel
                         //if (conn.GetProperty(displays[i].GetDescriptor(conn).ObjectKey, "Lidar Global Frame") == "true")
                         //{
                         //    offsets[i] = new Vector3((float)vehiclePosition.Y, (float)vehiclePosition.Z, (float)vehiclePosition.X);
-                        //}
+                        //} else {
+                        offsets[i] = Vector3.zero;
+                        // }
                     }
 
-                    var newParticles = new ParticleSystem.Particle[totalNumberOfPoints];
-                    int particleIndex = 0;
-                    for (int lidarIndex = 0; lidarIndex < displays.Count; lidarIndex++)
+                    Debug.Log(totalNumberOfPoints);
+
+                    if (totalNumberOfPoints > 0)
                     {
-                        for (int pointIndex = 0; pointIndex < allPoints[lidarIndex].Points.Count; pointIndex++)
+                        var newParticles = new ParticleSystem.Particle[totalNumberOfPoints];
+                        int particleIndex = 0;
+                        for (int lidarIndex = 0; lidarIndex < displays.Count; lidarIndex++)
                         {
-                            Vector3 position = ModifiedPositionFromRotationalOffset(new Vector3(
-                                    -(float)allPoints[lidarIndex].Points[pointIndex].Y,
-                                    (float)allPoints[lidarIndex].Points[pointIndex].Z,
-                                    (float)allPoints[lidarIndex].Points[pointIndex].X
-                                ) - offsets[lidarIndex], Vector3.zero, rotationOffset) + centerOffset;
-
-                            if (position.y > highestPoint)
+                            for (int pointIndex = 0; pointIndex < allPoints[lidarIndex].Points.Count; pointIndex++)
                             {
-                                highestPoint = position.y;
-                            }
+                                Vector3 position = ModifiedPositionFromRotationalOffset(new Vector3(
+                                        -(float)allPoints[lidarIndex].Points[pointIndex].Y,
+                                        (float)allPoints[lidarIndex].Points[pointIndex].Z,
+                                        (float)allPoints[lidarIndex].Points[pointIndex].X
+                                    ) - offsets[lidarIndex], Vector3.zero, rotationOffset) + centerOffset;
 
-                            if (position.y < lowestPoint)
-                            {
-                                lowestPoint = position.y;
-                            }
+                                //Debug.Log(allPoints[lidarIndex].Points[pointIndex].X);
 
-                            var colorToRender = displays[lidarIndex].renderColor;
-                            if (Mathf.Abs(highestPoint - lowestPoint) > 0.001f)
-                            {
-                                float H;
-                                float S;
-                                float V;
-                                Color.RGBToHSV(colorToRender, out H, out S, out V);
-                                var p = (position.y - lowestPoint) / (highestPoint - lowestPoint);
-                                colorToRender = Color.HSVToRGB(H, p, p);
-                                colorToRender.a = displays[lidarIndex].renderColor.a;
-                            }
-
-                            if ((position - lastPos).sqrMagnitude > .1)
-                            {
-                                newParticles[particleIndex] = new ParticleSystem.Particle
+                                if (position.y > highestPoint)
                                 {
-                                    remainingLifetime = float.MaxValue,
-                                    position = position,
-                                    startSize = .5f,
-                                    startColor = colorToRender
-                                };
+                                    highestPoint = position.y;
+                                }
+
+                                if (position.y < lowestPoint)
+                                {
+                                    lowestPoint = position.y;
+                                }
+
+                                var colorToRender = displays[lidarIndex].renderColor;
+                                if (Mathf.Abs(highestPoint - lowestPoint) > 0.001f)
+                                {
+                                    float H;
+                                    float S;
+                                    float V;
+                                    Color.RGBToHSV(colorToRender, out H, out S, out V);
+                                    var p = (position.y - lowestPoint) / (highestPoint - lowestPoint);
+                                    colorToRender = Color.HSVToRGB(H, p, p);
+                                    colorToRender.a = displays[lidarIndex].renderColor.a;
+                                }
+
+                                //if ((position - lastPos).sqrMagnitude > .01)
+                                //{
+                                    newParticles[particleIndex] = new ParticleSystem.Particle
+                                    {
+                                        remainingLifetime = float.MaxValue,
+                                        position = position,
+                                        startSize = .5f,
+                                        startColor = colorToRender
+                                    };
+                                //}
+
+
+                                lastPos = position;
+                                particleIndex++;
                             }
-
-
-                            lastPos = position;
-                            particleIndex++;
                         }
+                        particles = newParticles;
                     }
-                    particles = newParticles;
+                    
                 }
                 catch (AnvelException e)
                 {
@@ -217,7 +227,7 @@ namespace CAVS.Anvel
                 }
                 catch (System.Exception e)
                 {
-                    Debug.LogFormat("{0}:{1}", e.GetType(), e.Message);
+                    Debug.LogErrorFormat("{0}:{1}", e.GetType(), e.Message);
                 }
             }
 

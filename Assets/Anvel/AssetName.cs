@@ -1,7 +1,7 @@
 ﻿
-namespace CAVS.ProjectOrganizer.Scenes.Showcase
+namespace CAVS.Anvel
 {
-    public static class AnvelAssetName
+    public static class AssetName
     {
         public static class Sensors
         {

@@ -9,11 +9,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         private AnvelControlService.Client client;
 
-        /// <summary>
-        /// Private so no one can directly create it, must use static methods.
-        /// </summary>
-        /// <param name="connection"></param>
-        private AnvelObject(AnvelControlService.Client connection, ObjectDescriptor descriptor, bool newlyCreated)
+        public AnvelObject(AnvelControlService.Client connection, ObjectDescriptor descriptor, bool newlyCreated)
         {
             client = connection;
             objectDescriptor = descriptor;

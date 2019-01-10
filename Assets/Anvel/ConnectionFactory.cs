@@ -17,6 +17,15 @@ namespace CAVS.Anvel
             return client;
         }
 
+        public static AnvelControlService.Client CreateConnection()
+        {
+            var transport = new TSocket("127.0.0.1", 9094);
+            var client = new AnvelControlService.Client(new TBinaryProtocol(transport));
+            transport.Open();
+            transport.TcpClient.NoDelay = true;
+            return client;
+        }
+
     }
 
 }
