@@ -44,10 +44,10 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                 Z = pos.y
             }, new AnvelApi.Quaternion
             {
-                X = rot.z * Mathf.Deg2Rad,
-                Y = -rot.x * Mathf.Deg2Rad,
-                Z = rot.y * Mathf.Deg2Rad,
-                W = rot.w * Mathf.Deg2Rad
+                X = rot.z ,
+                Y = -rot.x ,
+                Z = rot.y ,
+                W = rot.w 
             });
         }
 
