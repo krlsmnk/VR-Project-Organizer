@@ -1,9 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using CAVS.Anvel;
-using CAVS.Anvel.Lidar;
-using CAVS.Anvel.Vehicle;
 using AnvelApi;
 using CAVS.ProjectOrganizer.Scenes.Showcase;
 
@@ -27,6 +23,6 @@ public class ObjectCreator : MonoBehaviour {
 	public void UpdateTransformInAnvel() {
         Debug.Log("Anvel Transform Update");
         
-        obj.UpdateTransform(model.transform.position, model.transform.eulerAngles);
+        obj.UpdateTransform(model.transform.position, model.transform.rotation);
     }
 }
