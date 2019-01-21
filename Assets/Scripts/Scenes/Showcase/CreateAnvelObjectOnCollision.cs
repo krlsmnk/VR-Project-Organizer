@@ -6,7 +6,7 @@ using CAVS.Anvel;
 
 namespace CAVS.ProjectOrganizer.Scenes.Showcase
 {
-    public abstract class CreateAnvelObjectOnCollision : MonoBehaviour
+    public abstract class CreateAnvelObjectOnCollision : MonoBehaviour, ISelectable
     {
 
         private enum ObjCreationState
@@ -158,6 +158,16 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             {
                 objectWeArecontrolling.RemoveObject();
             }
+        }
+
+        public void Select()
+        {
+            
+        }
+
+        public void UnSelect()
+        {
+            
         }
     }
 

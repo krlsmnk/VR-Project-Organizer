@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CAVS.ProjectOrganizer.Scenes.Showcase
+namespace CAVS.Anvel
 {
     public class AnvelObjectManager
     {

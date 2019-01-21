@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using AnvelApi;
 
-namespace CAVS.ProjectOrganizer.Scenes.Showcase
+namespace CAVS.Anvel
 {
     public class AnvelObject
     {

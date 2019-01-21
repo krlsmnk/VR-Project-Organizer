@@ -19,10 +19,10 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
     {
 
         [SerializeField]
-        private GameObject rightHand;
+        private VRTK_ControllerEvents rightHand;
 
         [SerializeField]
-        private GameObject leftHand;
+        private VRTK_ControllerEvents leftHand;
 
         [SerializeField]
         private Pedistal pedistal;
@@ -128,6 +128,12 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             {
                 prosignServer.JoinRoom(roomUUID, delegate() { });
             }
+
+            new ControllerConfig(new List<PlayerControl>()
+            {
+                new GrabPlayerControl(),
+                new TeleportPlayerControl(),
+            }).Build(leftHand);
 
             sceneReference = prosignServer;
             sceneReference.SubscribeToUpdates(OnSceneUpdate);
