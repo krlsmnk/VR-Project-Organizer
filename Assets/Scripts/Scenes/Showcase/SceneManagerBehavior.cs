@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.UI;
 
 using CAVS.ProjectOrganizer.Interation;
 using CAVS.ProjectOrganizer.Project;
 using CAVS.ProjectOrganizer.Netowrking;
+using CAVS.ProjectOrganizer.Controls;
 
 using VRTK;
 
@@ -129,11 +131,15 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                 prosignServer.JoinRoom(roomUUID, delegate() { });
             }
 
-            new ControllerConfig(new List<PlayerControl>()
+            var config = new ControllerConfig(new List<PlayerControl>()
             {
                 new GrabPlayerControl(),
                 new TeleportPlayerControl(),
-            }).Build(leftHand);
+                new SelectPlayerControl(),
+            });
+
+            config.Build(leftHand);
+            config.Build(rightHand);
 
             sceneReference = prosignServer;
             sceneReference.SubscribeToUpdates(OnSceneUpdate);

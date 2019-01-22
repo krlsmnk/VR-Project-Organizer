@@ -3779,39 +3779,9 @@ Prefab:
       propertyPath: m_RootOrder
       value: 9
       objectReference: {fileID: 0}
-    - target: {fileID: 114174752807293048, guid: ae1836e1e2baebe4cae7bb668caaa130,
-        type: 2}
-      propertyPath: controllers.Array.data[0]
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 114174752807293048, guid: ae1836e1e2baebe4cae7bb668caaa130,
-        type: 2}
-      propertyPath: controllers.Array.data[1]
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 114174752807293048, guid: ae1836e1e2baebe4cae7bb668caaa130,
-        type: 2}
-      propertyPath: buttonName
-      value: Next
-      objectReference: {fileID: 0}
-    - target: {fileID: 65454822577378900, guid: ae1836e1e2baebe4cae7bb668caaa130,
-        type: 2}
-      propertyPath: m_Size.y
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 114174752807293048, guid: ae1836e1e2baebe4cae7bb668caaa130,
-        type: 2}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1571909568738598, guid: ae1836e1e2baebe4cae7bb668caaa130, type: 2}
       propertyPath: m_Name
       value: Lift Toggle
-      objectReference: {fileID: 0}
-    - target: {fileID: 114174752807293048, guid: ae1836e1e2baebe4cae7bb668caaa130,
-        type: 2}
-      propertyPath: alternativeActivationViaKey
-      value: 32
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ae1836e1e2baebe4cae7bb668caaa130, type: 2}
@@ -8019,6 +7989,23 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1245176092}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1290345839 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1288637042466948, guid: d4a01d01d33b0f745a34bfc5ea4e52ed,
+    type: 2}
+  m_PrefabInternal: {fileID: 847116008}
+--- !u!65 &1290345840
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1290345839}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.1, y: 0.1, z: 0.1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1332939928
 GameObject:
   m_ObjectHideFlags: 0
@@ -8184,6 +8171,18 @@ GameObject:
   m_PrefabParentObject: {fileID: 1905611960771496, guid: d4a01d01d33b0f745a34bfc5ea4e52ed,
     type: 2}
   m_PrefabInternal: {fileID: 847116008}
+--- !u!65 &1345709330
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1345709327}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.1, y: 0.1, z: 0.1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1397131830
 GameObject:
   m_ObjectHideFlags: 0
@@ -8944,7 +8943,6 @@ GameObject:
   - component: {fileID: 1930320285}
   - component: {fileID: 1930320284}
   - component: {fileID: 1930320283}
-  - component: {fileID: 1930320287}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: floor
@@ -9020,16 +9018,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!154 &1930320287
-TerrainCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1930320282}
-  m_Material: {fileID: 0}
-  m_Enabled: 1
-  m_TerrainData: {fileID: 0}
-  m_EnableTreeColliders: 1
 --- !u!1 &1982243253
 GameObject:
   m_ObjectHideFlags: 0

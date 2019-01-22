@@ -1,26 +1,26 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System;
 using VRTK;
 
+
 namespace CAVS.ProjectOrganizer.Interation
 {
 
-    public class ButtonBehavior : MonoBehaviour
+    public class ButtonBehavior : MonoBehaviour, ISelectable
     {
 
         private List<Action> subscribers;
 
         [SerializeField]
-        [Range(0.1f, 5f)]
-        private float minimumProximityForAnimation;
-
-        [SerializeField]
         private GameObject buttonPiece;
+
+        private Vector3 buttonPieceStartingPosition;
 
         [SerializeField]
         private GameObject proximityPiece;
+
+        private Material proximityPieceMaterial;
 
         /// <summary>
         /// If we want to immitate pressing the button without the controller
@@ -32,19 +32,23 @@ namespace CAVS.ProjectOrganizer.Interation
 
         private float lastButtonHit;
 
-        void Start(){
+        private void Awake()
+        {
+            subscribers = new List<Action>();
+        }
+
+        void Start()
+        {
             lastButtonHit = 0;
             buttonHitRefractory = 0.5f;
+            proximityPieceMaterial = proximityPiece.GetComponent<MeshRenderer>().material;
+            buttonPieceStartingPosition = buttonPiece.transform.position;
         }
 
         public void Subscribe(Action sub)
         {
             if (sub != null)
             {
-                if (subscribers == null)
-                {
-                    subscribers = new List<Action>();
-                }
                 subscribers.Add(sub);
             }
         }
@@ -52,92 +56,46 @@ namespace CAVS.ProjectOrganizer.Interation
 
         private void CallSubscribers()
         {
-            if(Time.time < lastButtonHit + buttonHitRefractory){
+            if (Time.time < lastButtonHit + buttonHitRefractory)
+            {
                 return;
             }
-            if (subscribers != null)
+
+            foreach (Action sub in subscribers)
             {
-                foreach (Action sub in subscribers)
-                {
-                    if (sub != null)
-                    {
-                        sub();
-                    }
-                }
+                sub?.Invoke();
             }
             lastButtonHit = Time.time;
         }
 
         void OnTriggerEnter(Collider other)
         {
-            proximityPiece.GetComponent<MeshRenderer>().material.color = Color.green;
-            GetComponent<BoxCollider>().size = new Vector3(0.6f, 3f, 0.6f);
-            buttonPiece.transform.Translate(Vector3.up / 15f);
-            CallSubscribers();
+            if (other.tag == "controller")
+            {
+                Select();
+            }
         }
 
         void OnTriggerExit(Collider other)
         {
-            GetComponent<BoxCollider>().size = new Vector3(0.6f, 2f, 0.6f);
-            buttonPiece.transform.Translate(Vector3.down / 15f);
-            proximityPiece.GetComponent<MeshRenderer>().material.color = Color.blue;
+            if (other.tag == "controller")
+            {
+                UnSelect();
+            }
         }
 
-
-        // Update is called once per frame
-        void Update()
+        public void Select()
         {
-            GameObject[] controllers = null;
-
-            if (Input.GetKeyDown(alternativeActivationViaKey))
-            {
-                CallSubscribers();
-            }
-            try
-            {
-                controllers = new GameObject[] {
-                    VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.LeftController).gameObject,
-                    VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.RightController).gameObject
-                };
-            }
-            catch (Exception e) { }
-            
-
-            if (controllers == null)
-            {
-                return;
-            }
-
-            GameObject closest = null;
-            float closestDistance = float.MaxValue;
-            foreach (GameObject controller in controllers)
-            {
-                if (controller == null)
-                {
-                    continue;
-                }
-                float dist = Vector3.Distance(controller.transform.position, this.buttonPiece.transform.position);
-                if (dist < closestDistance)
-                {
-                    closestDistance = dist;
-                    closest = controller;
-                }
-            }
-
-            Vector3 newProximityScale;
-            if (closestDistance <= minimumProximityForAnimation)
-            {
-                float scale = 1.1f - (closestDistance / minimumProximityForAnimation);
-                newProximityScale = new Vector3(scale, 1f, scale);
-            }
-            else
-            {
-                newProximityScale = Vector3.zero;
-            }
-            proximityPiece.transform.localScale = newProximityScale;
+            buttonPiece.transform.position = buttonPieceStartingPosition + (Vector3.down *.05f);
+            CallSubscribers();
+            proximityPieceMaterial.color = Color.green;
         }
 
-
+        public void UnSelect()
+        {
+            proximityPieceMaterial.color = Color.blue;
+            buttonPiece.transform.position = buttonPieceStartingPosition;
+        }
     }
 
 }

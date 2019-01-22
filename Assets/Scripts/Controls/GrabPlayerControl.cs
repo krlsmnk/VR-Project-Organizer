@@ -1,21 +1,26 @@
 ﻿using System;
 using VRTK;
 
-namespace CAVS.ProjectOrganizer.Scenes.Showcase
+namespace CAVS.ProjectOrganizer.Controls
 {
 
-    public class TeleportPlayerControl : PlayerControl
+    public class GrabPlayerControl : PlayerControl
     {
+
         public override Action Build(VRTK_ControllerEvents hand)
         {
-            var renderer = hand.gameObject.AddComponent<VRTK_BezierPointerRenderer>();
             var pointer = hand.gameObject.AddComponent<VRTK_Pointer>();
-            var teleport = hand.gameObject.AddComponent<VRTK_BasicTeleport>();
+            var renderer = hand.gameObject.AddComponent<VRTK_StraightPointerRenderer>();
+            var touch = hand.gameObject.AddComponent<VRTK_InteractTouch>();
+            var grab = hand.gameObject.AddComponent<VRTK_InteractGrab>();
 
+            grab.grabButton = VRTK_ControllerEvents.ButtonAlias.TriggerPress;
+            grab.interactTouch = touch;
             pointer.targetListPolicy = hand.GetComponent<VRTK_PolicyList>();
+            pointer.interactWithObjects = true;
             pointer.activateOnEnable = true;
             pointer.holdButtonToActivate = false;
-            pointer.enableTeleport = true;
+            pointer.enableTeleport = false;
             pointer.activationButton = VRTK_ControllerEvents.ButtonAlias.GripPress;
             pointer.selectionButton = VRTK_ControllerEvents.ButtonAlias.TriggerPress;
             pointer.pointerRenderer = renderer;
@@ -24,7 +29,8 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             {
                 UnityEngine.Object.Destroy(pointer);
                 UnityEngine.Object.Destroy(renderer);
-                UnityEngine.Object.Destroy(teleport);
+                UnityEngine.Object.Destroy(grab);
+                UnityEngine.Object.Destroy(touch);
             };
         }
     }

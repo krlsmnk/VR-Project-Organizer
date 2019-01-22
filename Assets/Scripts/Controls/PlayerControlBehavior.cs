@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using VRTK;
 
-namespace CAVS.ProjectOrganizer.Scenes.Showcase
+namespace CAVS.ProjectOrganizer.Controls
 {
 
     public class PlayerControlBehavior : MonoBehaviour

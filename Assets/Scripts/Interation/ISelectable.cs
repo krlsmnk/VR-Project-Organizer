@@ -1,5 +1,5 @@
 ﻿
-namespace CAVS.ProjectOrganizer.Scenes.Showcase
+namespace CAVS.ProjectOrganizer.Interation
 {
     public interface ISelectable 
     {

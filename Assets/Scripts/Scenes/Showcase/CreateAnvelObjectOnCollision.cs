@@ -4,6 +4,8 @@ using VRTK;
 using EliCDavis.UIGen;
 using CAVS.Anvel;
 
+using CAVS.ProjectOrganizer.Interation;
+
 namespace CAVS.ProjectOrganizer.Scenes.Showcase
 {
     public abstract class CreateAnvelObjectOnCollision : MonoBehaviour, ISelectable

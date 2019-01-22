@@ -3,7 +3,7 @@ using UnityEngine;
 using System;
 using VRTK;
 
-namespace CAVS.ProjectOrganizer.Scenes.Showcase
+namespace CAVS.ProjectOrganizer.Controls
 {
 
     public class ControllerConfig
@@ -38,21 +38,19 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             return controls.Contains(wieldable);
         }
 
-        public void Build( VRTK_ControllerEvents hand)
+        public void Build(VRTK_ControllerEvents hand)
         {
             if (hand == null)
             {
                 throw new Exception("VRTK Hand can not be null when building!");
             }
 
-
             var radial = UnityEngine.Object.Instantiate(Resources.Load("PlayerControl/RadialMenu") as GameObject, hand.transform);
-            radial.transform.localPosition = new Vector3(0, 0.0115f, -0.05f);
+            radial.transform.localPosition = new Vector3(0, 0.3f, -1f);
 
             PlayerControlBehavior.Initialize(hand, controls);
         }
 
-      
     }
 
 }

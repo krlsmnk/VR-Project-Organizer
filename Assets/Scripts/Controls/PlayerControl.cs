@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 
-namespace CAVS.ProjectOrganizer.Scenes.Showcase
+namespace CAVS.ProjectOrganizer.Controls
 {
     public abstract class PlayerControl
     {
