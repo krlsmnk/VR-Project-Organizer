@@ -15,8 +15,6 @@ namespace CAVS.ProjectOrganizer.Interation
         [SerializeField]
         private GameObject buttonPiece;
 
-        private Vector3 buttonPieceStartingPosition;
-
         [SerializeField]
         private GameObject proximityPiece;
 
@@ -42,7 +40,6 @@ namespace CAVS.ProjectOrganizer.Interation
             lastButtonHit = 0;
             buttonHitRefractory = 0.5f;
             proximityPieceMaterial = proximityPiece.GetComponent<MeshRenderer>().material;
-            buttonPieceStartingPosition = buttonPiece.transform.position;
         }
 
         public void Subscribe(Action sub)
@@ -72,7 +69,7 @@ namespace CAVS.ProjectOrganizer.Interation
         {
             if (other.tag == "controller")
             {
-                Select();
+                Select(other.gameObject);
             }
         }
 
@@ -80,21 +77,21 @@ namespace CAVS.ProjectOrganizer.Interation
         {
             if (other.tag == "controller")
             {
-                UnSelect();
+                UnSelect(other.gameObject);
             }
         }
 
-        public void Select()
+        public void Select(GameObject caller)
         {
-            buttonPiece.transform.position = buttonPieceStartingPosition + (Vector3.down *.05f);
-            CallSubscribers();
+            buttonPiece.transform.localScale = new Vector3(.75f, 2f, .75f);
             proximityPieceMaterial.color = Color.green;
+            CallSubscribers();
         }
 
-        public void UnSelect()
+        public void UnSelect(GameObject caller)
         {
             proximityPieceMaterial.color = Color.blue;
-            buttonPiece.transform.position = buttonPieceStartingPosition;
+            buttonPiece.transform.localScale = new Vector3(.75f, 3.5f, .75f);
         }
     }
 

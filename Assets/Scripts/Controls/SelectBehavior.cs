@@ -34,7 +34,7 @@ namespace CAVS.ProjectOrganizer.Controls
 
             if(selectable != null)
             {
-                selectable.UnSelect();
+                selectable.UnSelect(gameObject);
             }
             selectable = newSelectable;
         }
@@ -43,7 +43,7 @@ namespace CAVS.ProjectOrganizer.Controls
         {
             if (selectable != null)
             {
-                selectable.UnSelect();
+                selectable.UnSelect(gameObject);
             }
         }
 
@@ -51,7 +51,7 @@ namespace CAVS.ProjectOrganizer.Controls
         {
             if(selectable != null)
             {
-                selectable.Select();
+                selectable.Select(gameObject);
             }
         }
 

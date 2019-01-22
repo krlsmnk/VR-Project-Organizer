@@ -46,13 +46,14 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             {
                 newObj = Instantiate(Resources.Load<GameObject>("Lidar Sensor"));
                 newScript = newObj.AddComponent<CreateLidarOnCollision>();
-            } else if (anvelAsset.Equals(AssetName.Sensors.API_Camera))
+            }
+            else if (anvelAsset.Equals(AssetName.Sensors.API_Camera))
             {
                 newObj = Instantiate(Resources.Load<GameObject>("Camera Sensor"));
                 newScript = newObj.AddComponent<CreateCameraOnCollision>();
             }
 
-            if(newScript == null)
+            if (newScript == null)
             {
                 throw new System.Exception("Do not support: " + anvelAsset);
             }
@@ -64,7 +65,6 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
             newScript.interactableObject = newObj.AddComponent<VRTK_InteractableObject>();
             newScript.interactableObject.InteractableObjectUngrabbed += newScript.OnUngrabbed;
-            newScript.interactableObject.InteractableObjectGrabbed += newScript.OnGrabbed;
 
             newScript.parent = parent;
             newScript.connection = connection;
@@ -87,40 +87,15 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         {
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
-            if (uiView != null)
-            {
-                Destroy(uiView);
-            }
+
         }
 
-        private void OnGrabbed(object sender, InteractableObjectEventArgs e)
-        {
-            if (objCreationState != ObjCreationState.Created)
-            {
-                return;
-            }
-
-            var window = new Window(PropertyKeyForModifying(), new IElement[] {
-                new SliderElement(PropertyRangeForModifying().x, PropertyRangeForModifying().y, lastValueSeen, delegate(float x) {
-                    lastValueSeen = x;
-                    connection.SetProperty(objectSensorWeArecontrolling.ObjectDescriptor().ObjectKey, PropertyKeyForModifying(), ((int)x).ToString());
-                    Debug.Log("Sent value");
-                }, delegate(float x) { return x.ToString("0.00"); }) });
-
-            Vector3 position = transform.position + ((transform.rotation * new Vector3(.8f, .2f, 0)).normalized * .5f) ;
-
-            uiView =  new View(window).Build(position, UnityEngine.Quaternion.identity, Vector2.one / 2f);
-            uiView.transform.parent = transform;
-            uiView.transform.localRotation = UnityEngine.Quaternion.Euler(0, 180, 0);
-
-            uiView.AddComponent<VRTK_UICanvas>();
-        }
 
         private void OnCollisionEnter(Collision collision)
         {
             if (collision.transform.name == "Big Car")
             {
-                
+
                 if (objCreationState == ObjCreationState.NotCreated)
                 {
                     GetComponent<Collider>().isTrigger = true;
@@ -156,20 +131,58 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         private void OnDestroy()
         {
-            if(objectWeArecontrolling != null)
+            interactableObject.InteractableObjectUngrabbed -= OnUngrabbed;
+            if (objectWeArecontrolling != null)
             {
                 objectWeArecontrolling.RemoveObject();
             }
         }
 
-        public void Select()
+        private GameObject moveArrows = null; 
+
+        public void Select(GameObject caller)
         {
-            
+
+            if (uiView != null)
+            {
+                Destroy(uiView);
+            }
+
+            if (moveArrows != null)
+            {
+                Destroy(moveArrows);
+            }
+            else if (objCreationState == ObjCreationState.Created)
+            {
+                var window = new Window(PropertyKeyForModifying(), new IElement[] {
+                new SliderElement(PropertyRangeForModifying().x, PropertyRangeForModifying().y, lastValueSeen, delegate(float x) {
+                    lastValueSeen = x;
+                    connection.SetProperty(objectSensorWeArecontrolling.ObjectDescriptor().ObjectKey, PropertyKeyForModifying(), ((int)x).ToString());
+                    Debug.Log("Sent value");
+                }, delegate(float x) { return x.ToString("0.00"); }) });
+
+                Vector3 position = transform.position + ((transform.rotation * new Vector3(.8f, .2f, 0)).normalized * .5f);
+
+                uiView = new View(window).Build(position, UnityEngine.Quaternion.identity, Vector2.one / 2f);
+                uiView.transform.parent = transform;
+                uiView.transform.localRotation = UnityEngine.Quaternion.Euler(0, 180, 0);
+
+                uiView.AddComponent<VRTK_UICanvas>();
+
+                moveArrows = Instantiate(Resources.Load<GameObject>("Move Arrows"));
+                foreach(var arrow in moveArrows.GetComponentsInChildren<MoveArrowsInteraction>())
+                {
+                    arrow.SetObjectToControl(gameObject);
+                }
+                moveArrows.transform.position = transform.position;
+
+            }
+
         }
 
-        public void UnSelect()
+        public void UnSelect(GameObject caller)
         {
-            
+
         }
     }
 

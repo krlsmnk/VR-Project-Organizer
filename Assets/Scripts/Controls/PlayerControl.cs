@@ -9,10 +9,7 @@ namespace CAVS.ProjectOrganizer.Controls
 
         public abstract Action Build(VRTK_ControllerEvents hand);
 
-        public Texture2D GetIcon()
-        {
-            return Resources.Load<Texture2D>("PlayerControl/teleport-icon");
-        }
+        public abstract Texture2D GetIcon();
 
     }
 

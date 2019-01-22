@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 using VRTK;
 
 namespace CAVS.ProjectOrganizer.Controls
@@ -32,6 +33,11 @@ namespace CAVS.ProjectOrganizer.Controls
                 UnityEngine.Object.Destroy(grab);
                 UnityEngine.Object.Destroy(touch);
             };
+        }
+
+        public override Texture2D GetIcon()
+        {
+            return Resources.Load<Texture2D>("PlayerControl/Grab-icon");
         }
     }
 

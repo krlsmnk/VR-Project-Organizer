@@ -1,13 +1,9 @@
-﻿
-namespace CAVS.ProjectOrganizer.Interation
+﻿namespace CAVS.ProjectOrganizer.Interation
 {
     public interface ISelectable 
     {
+        void Select(UnityEngine.GameObject caller);
 
-        void Select();
-
-        void UnSelect();
-
+        void UnSelect(UnityEngine.GameObject caller);
     }
-
 }

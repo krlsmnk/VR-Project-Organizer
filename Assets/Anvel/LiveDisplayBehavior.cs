@@ -157,7 +157,6 @@ namespace CAVS.Anvel
                         // }
                     }
 
-                    Debug.Log(totalNumberOfPoints);
 
                     if (totalNumberOfPoints > 0)
                     {
@@ -173,7 +172,6 @@ namespace CAVS.Anvel
                                         (float)allPoints[lidarIndex].Points[pointIndex].X
                                     ) - offsets[lidarIndex], Vector3.zero, rotationOffset) + centerOffset;
 
-                                //Debug.Log(allPoints[lidarIndex].Points[pointIndex].X);
 
                                 if (position.y > highestPoint)
                                 {

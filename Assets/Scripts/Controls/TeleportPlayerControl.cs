@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 using VRTK;
 
 namespace CAVS.ProjectOrganizer.Controls
@@ -26,6 +27,11 @@ namespace CAVS.ProjectOrganizer.Controls
                 UnityEngine.Object.Destroy(renderer);
                 UnityEngine.Object.Destroy(teleport);
             };
+        }
+
+        public override Texture2D GetIcon()
+        {
+            return Resources.Load<Texture2D>("PlayerControl/Teleport-icon");
         }
     }
 
