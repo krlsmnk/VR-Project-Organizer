@@ -11,7 +11,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         [SerializeField]
         private Text pageDisplay;
 
-        private Item[] allCars;
+        private CarManager carManager;
 
         private GameObject[] carsBeingRendered;
 
@@ -23,16 +23,22 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         private int currentPage = 0;
 
-        public void SetCars(Item[] cars)
+        public void SetCars(CarManager carManager)
         {
-            if (cars == null)
+            if (carManager == null)
             {
                 throw new System.Exception("Trying to set cars to null");
             }
+
+            CarManager.Instance().OnGarageChange += OnGarageChange;
+            OnGarageChange(CarManager.Instance().Garage());
+        }
+
+        private void OnGarageChange(PictureItem[] cars)
+        {
             carsBeingRendered = new GameObject[width * height];
             currentPage = 0;
-            numberOfPages = Mathf.CeilToInt( ((float)cars.Length) / (width * height));
-            allCars = cars;
+            numberOfPages = Mathf.CeilToInt(((float)cars.Length) / (width * height));
             RenderPage();
         }
 
@@ -50,6 +56,8 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         private void RenderPage()
         {
             ClearCurrentCarsBeingRendered();
+
+            var allCars = CarManager.Instance().Garage();
 
             int itemsPerPage = width * height;
             int startingIndex = itemsPerPage * currentPage;

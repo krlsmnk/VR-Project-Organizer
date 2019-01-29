@@ -100,9 +100,13 @@ namespace CAVS.ProjectOrganizer.Controls
                 return;
             }
             pointer = gameObject.AddComponent<LineRenderer>();
-            pointer.positionCount = 2;
-            pointer.startWidth = .025f;
-            pointer.endWidth = .025f;
+            if(pointer != null)
+            {
+                pointer.positionCount = 2;
+                pointer.startWidth = .025f;
+                pointer.endWidth = .025f;
+            }
+            
         }
 
         private void TurnOffPointer()

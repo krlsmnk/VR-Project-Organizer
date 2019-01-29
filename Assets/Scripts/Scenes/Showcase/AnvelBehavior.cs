@@ -5,6 +5,8 @@ using CAVS.Anvel;
 using CAVS.Anvel.Lidar;
 using CAVS.Anvel.Vehicle;
 
+using CAVS.ProjectOrganizer.Project;
+using CAVS.ProjectOrganizer.SourceControl;
 
 namespace CAVS.ProjectOrganizer.Scenes.Showcase
 {
@@ -38,15 +40,32 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         [SerializeField]
         private int anvelPort;
 
+        private Repository repository;
+
+        private SensorManager sensorManager;
+
+        private PictureItem lastDisplayedCar;
+
         void InitializeNetworkMode()
         {
-            
+            repository = new Repository("Showcase");
+
             var connectionToken = new ClientConnectionToken();
 
             var connnnnn = ConnectionFactory.CreateConnection(connectionToken);
             var carReference = AnvelObject.CreateObject(connnnnn, "car", AssetName.Vehicles.GENERIC_4X4);
-            CreateAnvelObjectOnCollision.Build(AssetName.Sensors.API_Camera, new Vector3(-1, 1, -5.5f), carReference, connnnnn);
-            CreateAnvelObjectOnCollision.Build(AssetName.Sensors.API_3D_LIDAR, new Vector3(1, 1, -5.5f), carReference, connnnnn);
+
+            sensorManager = new SensorManager();
+
+            AnvelSensorBehavior.Build(AssetName.Sensors.API_Camera, new Vector3(-1, 1, -5.5f), carReference, connnnnn, sensorManager);
+            AnvelSensorBehavior.Build(AssetName.Sensors.API_3D_LIDAR, new Vector3(1, 1, -5.5f), carReference, connnnnn, sensorManager);
+
+
+            CarManager
+                .Instance()
+                .OnMainCarChange += OnMainCarChange;
+
+            OnMainCarChange(CarManager.Instance().GetMainCar());
 
             var display = gameObject.AddComponent<LiveDisplayBehavior>();
 
@@ -68,6 +87,24 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             }
 
             StartCoroutine(UpdateOffsetTick(display));
+        }
+
+        private void OnMainCarChange(PictureItem car)
+        {
+            if(lastDisplayedCar != null)
+            {
+                repository.SetArtifact(lastDisplayedCar.GetValue("id"), new Artifact(0, sensorManager.GetLidarConfigs(), sensorManager.GetCameraConfigs()));
+                repository.Commit();
+            }
+            if(car != null)
+            {
+                Artifact currentArtifact = repository.GetArtifact(car.GetValue("id"));
+                if (currentArtifact != null)
+                {
+                    sensorManager.SetupLidar(currentArtifact.LidarConfigs);
+                }
+            }
+            lastDisplayedCar = car;
         }
 
         void InitializeFilePlayback()
@@ -98,6 +135,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         private void OnApplicationQuit()
         {
             AnvelObjectManager.Instance.DeleteAllObjectsWeCreatedInAnvel();
+            OnMainCarChange(null);
         }
 
         IEnumerator UpdateOffsetTick(LiveDisplayBehavior displayBehavior)

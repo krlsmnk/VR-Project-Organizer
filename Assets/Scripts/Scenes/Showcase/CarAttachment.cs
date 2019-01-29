@@ -4,6 +4,9 @@ using CAVS.Anvel;
 
 namespace CAVS.ProjectOrganizer.Scenes.Showcase
 {
+    /// <summary>
+    /// TODO: Not sure if this is being used anymore
+    /// </summary>
     public class CarAttachment : MonoBehaviour
     {
         private bool attached;
