@@ -352,7 +352,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                 Destroy(currentCarGameObject);
             }
 
-            currentCarGameObject = CarFactory.MakeLargeToyCar(carToDisplay, float.Parse(carToDisplay.GetValue("id")) / (float)CarManager.Instance().GarageSize(), Vector3.zero, Quaternion.Euler(0, 90, 0));
+            currentCarGameObject = CarFactory.MakeBigCar(carToDisplay, float.Parse(carToDisplay.GetValue("id")) / (float)CarManager.Instance().GarageSize(), Vector3.zero, Quaternion.Euler(0, 90, 0));
             currentCarGameObject.transform.parent = liftCarPlacement.transform;
             currentCarGameObject.transform.localPosition = Vector3.zero;
         }

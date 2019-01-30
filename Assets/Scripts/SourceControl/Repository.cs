@@ -36,14 +36,9 @@ namespace CAVS.ProjectOrganizer.SourceControl
                 
                 foreach (var file in files)
                 {
-                    UnityEngine.Debug.Log(file);
                     using (StreamReader sr = new StreamReader(file))
                     using (JsonReader writer = new JsonTextReader(sr))
                     {
-                        UnityEngine.Debug.Log(file.Length);
-                        UnityEngine.Debug.Log(file);
-                        UnityEngine.Debug.Log(repoName);
-                        UnityEngine.Debug.Log(repoName.Length);
                         artifacts[file.Substring(repoName.Length + 1, file.Length - 6 - repoName.Length)] = serializer.Deserialize<Artifact>(writer);
                     }
                 }

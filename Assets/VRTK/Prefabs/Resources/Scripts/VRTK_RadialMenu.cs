@@ -51,8 +51,19 @@ namespace VRTK
         [Tooltip("Percentage of the menu the buttons should fill, 1.0 is a pie slice, 0.1 is a thin ring.")]
         [Range(0f, 1f)]
         public float buttonThickness = 0.5f;
+
         [Tooltip("The background colour of the buttons, default is white.")]
         public Color buttonColor = Color.white;
+
+        [Tooltip("The background colour of the buttons, default is white.")]
+        public Color buttonHoverColor = Color.grey;
+
+        [Tooltip("The background colour of the button when it is selected, default is blue.")]
+        public Color selectedColor = Color.blue;
+
+        [Tooltip("The background colour of the button when it is selected, default is blue.")]
+        public Color selectedHoverColor = Color.green;
+
         [Tooltip("The distance the buttons should move away from the centre. This creates space between the individual buttons.")]
         public float offsetDistance = 1;
         [Tooltip("The additional rotation of the Radial Menu.")]
@@ -286,6 +297,8 @@ namespace VRTK
             }
         }
 
+        int lastButtonInteractedWith = -1;
+
         //Turns and Angle and Event type into a button action
         protected virtual void InteractButton(float angle, ButtonEvent evt) //Can't pass ExecuteEvents as parameter? Unity gives error
         {
@@ -312,6 +325,20 @@ namespace VRTK
             {
                 ExecuteEvents.Execute(menuButtons[buttonID], pointer, ExecuteEvents.pointerDownHandler);
                 currentPress = buttonID;
+                var colors = menuButtons[buttonID].GetComponent<Button>().colors;
+                colors.normalColor = selectedColor;
+                colors.highlightedColor = selectedHoverColor;
+                menuButtons[buttonID].GetComponent<Button>().colors = colors;
+
+                if(lastButtonInteractedWith != -1)
+                {
+                    colors = menuButtons[lastButtonInteractedWith].GetComponent<Button>().colors;
+                    colors.normalColor = buttonColor;
+                    colors.highlightedColor = buttonHoverColor;
+                    menuButtons[lastButtonInteractedWith].GetComponent<Button>().colors = colors;
+                }
+
+                lastButtonInteractedWith = buttonID;
                 if (!executeOnUnclick)
                 {
                     buttons[buttonID].OnClick.Invoke();
