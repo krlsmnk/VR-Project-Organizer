@@ -272,6 +272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8857db21c2024e14f97b61ae49dfebbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  axisToControl: 2
 --- !u!114 &114607152338868426
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -283,6 +284,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8857db21c2024e14f97b61ae49dfebbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  axisToControl: 0
 --- !u!114 &114663874700955160
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -294,6 +296,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8857db21c2024e14f97b61ae49dfebbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  axisToControl: 1
 --- !u!136 &136089931366090466
 CapsuleCollider:
   m_ObjectHideFlags: 1

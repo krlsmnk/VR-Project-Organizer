@@ -40,6 +40,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         public static GameObject MakeBigCar(Item car, float color,  Vector3 position, Quaternion rotation)
         {
             GameObject carInstace = Object.Instantiate(Resources.Load<GameObject>("Big Car"));
+            carInstace.transform.name = "Big Car";
             carInstace.transform.position = position;
             carInstace.transform.rotation = rotation;
 

@@ -46,6 +46,9 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         private PictureItem lastDisplayedCar;
 
+        [SerializeField]
+        private Transform parentForSensors;
+
         void InitializeNetworkMode()
         {
             repository = new Repository("Showcase");
@@ -57,8 +60,8 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
             sensorManager = new SensorManager();
 
-            AnvelSensorBehavior.Build(AssetName.Sensors.API_Camera, new Vector3(-1, 1, -5.5f), carReference, connnnnn, sensorManager);
-            AnvelSensorBehavior.Build(AssetName.Sensors.API_3D_LIDAR, new Vector3(1, 1, -5.5f), carReference, connnnnn, sensorManager);
+            AnvelSensorBehavior.Build(AssetName.Sensors.API_Camera, new Vector3(-1, 1, -5.5f), carReference, connnnnn, sensorManager).transform.SetParent(parentForSensors);
+            AnvelSensorBehavior.Build(AssetName.Sensors.API_3D_LIDAR, new Vector3(1, 1, -5.5f), carReference, connnnnn, sensorManager).transform.SetParent(parentForSensors); ;
 
 
             CarManager
@@ -102,6 +105,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                 if (currentArtifact != null)
                 {
                     sensorManager.SetupLidar(currentArtifact.LidarConfigs);
+                    sensorManager.SetupCameras(currentArtifact.CameraConfigs);
                 }
             }
             lastDisplayedCar = car;
