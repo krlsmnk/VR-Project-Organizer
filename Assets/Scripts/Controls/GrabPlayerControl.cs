@@ -39,6 +39,21 @@ namespace CAVS.ProjectOrganizer.Controls
         {
             return Resources.Load<Texture2D>("PlayerControl/Grab-icon");
         }
+
+        //public override Action Build(VRTK_ControllerEvents hand)
+        //{
+        //    var behavior = SelectBehavior.Initialize(hand);
+
+        //    return delegate ()
+        //    {
+        //        UnityEngine.Object.Destroy(behavior);
+        //    };
+        //}
+
+        //public override Texture2D GetIcon()
+        //{
+        //    return Resources.Load<Texture2D>("PlayerControl/Grab-icon");
+        //}
     }
 
 }

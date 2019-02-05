@@ -1,72 +1,101 @@
 ﻿using UnityEngine;
 using VRTK;
-using CAVS.ProjectOrganizer.Interation;
 
 namespace CAVS.ProjectOrganizer.Controls
 {
-    public class SelectBehavior : MonoBehaviour
+
+    public class GrabControlBehavior : MonoBehaviour
     {
+        private class ObjectState
+        {
+            Rigidbody rigidbody;
+
+            RigidbodyConstraints rigidbodyConstraints;
+
+            Transform parent;
+
+            public ObjectState (GameObject gameObject)
+            {
+                rigidbody = gameObject.GetComponent<Rigidbody>();
+                if(rigidbody != null)
+                {
+                    rigidbodyConstraints = rigidbody.constraints;
+                }
+
+                parent = gameObject.transform.parent;
+            }
+
+            public void Restore(GameObject gameObject)
+            {
+                if(rigidbody != null)
+                {
+                    rigidbody.constraints = rigidbodyConstraints;
+                }
+
+                gameObject.transform.SetParent(parent);
+            }
+        }
 
         private LineRenderer pointer;
 
         private VRTK_ControllerEvents hand;
 
-        private ISelectable[] selectable;
+        private VRTK_InteractableObject interactableObject;
 
-        public static SelectBehavior Initialize(VRTK_ControllerEvents hand)
+        private ObjectState objectStateOnGrab;
+
+        public static GrabControlBehavior Initialize(VRTK_ControllerEvents hand)
         {
-            var newScript = hand.gameObject.AddComponent<SelectBehavior>();
+            var newScript = hand.gameObject.AddComponent<GrabControlBehavior>();
             newScript.TurnOnPointer();
             newScript.hand = hand;
-            newScript.selectable = null;
+            newScript.interactableObject = null;
             newScript.hand.GripPressed += newScript.Hand_GripPressed;
             newScript.hand.TriggerClicked += newScript.Hand_TriggerPressed;
             newScript.hand.TriggerUnclicked += newScript.Hand_TriggerReleased;
             return newScript;
         }
 
-        private void UpdateSelectable(ISelectable[] newSelectable)
+        private void UpdateInteractableObject(VRTK_InteractableObject newInteractable)
         {
-            if(newSelectable == selectable)
+            if (newInteractable == interactableObject)
             {
                 return;
             }
 
-            if(selectable != null)
-            {
-                foreach (var sel in selectable)
-                {
-                    sel.UnSelect(gameObject);
-                }
-            }
-            selectable = newSelectable;
+            interactableObject = newInteractable;
         }
 
         private void Hand_TriggerReleased(object sender, ControllerInteractionEventArgs e)
         {
-            if (selectable != null)
+            if (interactableObject != null)
             {
-                foreach (var sel in selectable)
-                {
-                    sel.UnSelect(gameObject);
-                }
+                objectStateOnGrab.Restore(interactableObject.gameObject);
+
+                interactableObject = null;
+                objectStateOnGrab = null;
             }
         }
 
         private void Hand_TriggerPressed(object sender, ControllerInteractionEventArgs e)
         {
-            if(selectable != null )
+            if (interactableObject != null)
             {
-                foreach (var sel in selectable)
+                objectStateOnGrab = new ObjectState(interactableObject.gameObject);
+
+                interactableObject.transform.SetParent(transform);
+                interactableObject.transform.position = transform.position;
+
+                if (interactableObject.GetComponent<Rigidbody>() != null)
                 {
-                    sel.Select(gameObject);
+                    interactableObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
                 }
             }
         }
 
         private void Hand_GripPressed(object sender, ControllerInteractionEventArgs e)
         {
-            if (PointsIsOn())
+            if (PointerIsOn())
             {
                 TurnOffPointer();
             }
@@ -85,19 +114,19 @@ namespace CAVS.ProjectOrganizer.Controls
                 RaycastHit hit;
                 if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
                 {
-                    UpdateSelectable(hit.transform.gameObject.GetComponents<ISelectable>());
+                    UpdateInteractableObject(hit.transform.gameObject.GetComponent<VRTK_InteractableObject>());
                     pointer.SetPosition(1, hit.point);
                 }
                 else
                 {
-                    UpdateSelectable(null);
+                    UpdateInteractableObject(null);
                     pointer.SetPosition(1, transform.position + (transform.rotation * Vector3.forward * 100));
                 }
             }
 
         }
 
-        private bool PointsIsOn()
+        private bool PointerIsOn()
         {
             return pointer != null;
         }
@@ -109,18 +138,18 @@ namespace CAVS.ProjectOrganizer.Controls
                 return;
             }
             pointer = gameObject.AddComponent<LineRenderer>();
-            if(pointer != null)
+            if (pointer != null)
             {
                 pointer.positionCount = 2;
                 pointer.startWidth = .025f;
                 pointer.endWidth = .025f;
             }
-            
+
         }
 
         private void TurnOffPointer()
         {
-            if (PointsIsOn() == false)
+            if (PointerIsOn() == false)
             {
                 return;
             }
@@ -129,16 +158,15 @@ namespace CAVS.ProjectOrganizer.Controls
 
         private void OnDestroy()
         {
-            if (PointsIsOn())
+            if (PointerIsOn())
             {
                 TurnOffPointer();
             }
-            UpdateSelectable(null);
+            UpdateInteractableObject(null);
             hand.GripPressed -= Hand_GripPressed;
             hand.TriggerClicked -= Hand_TriggerPressed;
             hand.TriggerUnclicked -= Hand_TriggerReleased;
         }
-
     }
 
 }

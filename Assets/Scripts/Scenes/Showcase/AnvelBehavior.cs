@@ -51,7 +51,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         void InitializeNetworkMode()
         {
-            repository = new Repository("Showcase");
+            repository = new Repository("ShowcaseRepository");
 
             var connectionToken = new ClientConnectionToken();
 
@@ -62,7 +62,6 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
             AnvelSensorBehavior.Build(AssetName.Sensors.API_Camera, new Vector3(-1, 1, -5.5f), carReference, connnnnn, sensorManager).transform.SetParent(parentForSensors);
             AnvelSensorBehavior.Build(AssetName.Sensors.API_3D_LIDAR, new Vector3(1, 1, -5.5f), carReference, connnnnn, sensorManager).transform.SetParent(parentForSensors); ;
-
 
             CarManager
                 .Instance()
