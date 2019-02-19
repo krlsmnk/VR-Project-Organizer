@@ -34,6 +34,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         void Start()
         {
+            currentState = LiftState.Idle;
             liftToggleButton.Subscribe(ToggleLift);
         }
 

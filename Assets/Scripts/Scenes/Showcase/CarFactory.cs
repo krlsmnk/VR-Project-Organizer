@@ -37,16 +37,12 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             return Object.Instantiate(carModel, position, rotation);
         }
 
-        public static GameObject MakeLargeToyCar(Item car, float color,  Vector3 position, Quaternion rotation)
+        public static GameObject MakeBigCar(Item car, float color,  Vector3 position, Quaternion rotation)
         {
-            GameObject carInstace = Object.Instantiate(GetToyReference());
+            GameObject carInstace = Object.Instantiate(Resources.Load<GameObject>("Big Car"));
             carInstace.transform.name = "Big Car";
             carInstace.transform.position = position;
             carInstace.transform.rotation = rotation;
-
-            Object.Destroy(carInstace.GetComponent<VRTK.GrabAttachMechanics.VRTK_FixedJointGrabAttach>());
-            Object.Destroy(carInstace.GetComponent<VRTK.VRTK_InteractableObject>());
-            carInstace.GetComponent<Rigidbody>().mass = 1000;
 
             var renders = carInstace.GetComponentsInChildren<MeshRenderer>();
             foreach (var render in renders)
@@ -64,7 +60,6 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                 float.Parse(car.GetValue("Height (in)")) / 56.7f,
                 float.Parse(car.GetValue("Length (in)")) / 170.1f
             ) * 18;
-            Object.Destroy(carInstace.GetComponentInChildren<Text>().transform.parent.gameObject);
             return carInstace;
         }
 

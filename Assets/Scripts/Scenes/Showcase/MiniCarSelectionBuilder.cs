@@ -1,7 +1,5 @@
 using UnityEngine;
 
-using CAVS.ProjectOrganizer.Project;
-
 namespace CAVS.ProjectOrganizer.Scenes.Showcase
 {
 
@@ -15,25 +13,21 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             return reference;
         }
 
-        Item[] cars;
+        CarManager carManager;
 
-        public MiniCarSelectionBuilder() {
-            cars = new Item[0];
+        public MiniCarSelectionBuilder(CarManager carManager) {
+            this.carManager = carManager;
         }
 
-        public MiniCarSelectionBuilder SetCars(Item[] cars){
-            this.cars = cars;
-            return this;
-        }
 
         public MiniCarSelectionBehavior Build(Vector3 position, Vector3 rotation) {
-            var instance = GameObject.Instantiate(GetReference(), position, Quaternion.Euler(rotation));
-            if(cars.Length <= 25) {
-                GameObject.Destroy(instance.transform.Find("Canvas").gameObject);
+            var instance = Object.Instantiate(GetReference(), position, Quaternion.Euler(rotation));
+            if(carManager.Garage().Length <= 25) {
+                Object.Destroy(instance.transform.Find("Canvas").gameObject);
             }
 
             var behavior = instance.GetComponent<MiniCarSelectionBehavior>() ;
-            behavior.SetCars(cars);
+            behavior.SetCars(carManager);
             return behavior;
         }
     }

@@ -1,13 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.UI;
 
 using CAVS.ProjectOrganizer.Interation;
 using CAVS.ProjectOrganizer.Project;
 using CAVS.ProjectOrganizer.Netowrking;
+using CAVS.ProjectOrganizer.Controls;
+
+using CAVS.ProjectOrganizer.SourceControl;
 
 using VRTK;
+
 
 namespace CAVS.ProjectOrganizer.Scenes.Showcase
 {
@@ -19,13 +24,10 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
     {
 
         [SerializeField]
-        private GameObject rightHand;
+        private VRTK_ControllerEvents rightHand;
 
         [SerializeField]
-        private GameObject leftHand;
-
-        [SerializeField]
-        private Pedistal pedistal;
+        private VRTK_ControllerEvents leftHand;
 
         /// <summary>
         /// The screens we're going to render the current car to
@@ -60,12 +62,6 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         /// Used for displaying the other players in the room
         /// </summary>
         private RoomDisplayBehavior roomDisplay;
-
-
-        /// <summary>
-        /// All the cars we're going to display information about. (Grabbed from the database)
-        /// </summary>
-        private PictureItem[] cars;
 
 
         /// <summary>
@@ -129,19 +125,37 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                 prosignServer.JoinRoom(roomUUID, delegate() { });
             }
 
+            var config = new ControllerConfig(new List<PlayerControl>()
+            {
+                new GrabPlayerControl(),
+                new TeleportPlayerControl(),
+                new SelectPlayerControl(),
+            });
+
+            config.Build(leftHand);
+            config.Build(rightHand);
+
             sceneReference = prosignServer;
             sceneReference.SubscribeToUpdates(OnSceneUpdate);
 
             nextButton.Subscribe(DisplayNextCar);
             previousButton.Subscribe(DisplayPreviousCar);
-            cars = ProjectFactory.BuildItemsFromCSV("Assets/Car_Dataset.csv", 7).SubArray(0, 25);
+
+            CarManager
+                .Instance()
+                .SetGarage(ProjectFactory.BuildItemsFromCSV("Assets/Car_Dataset.csv", 7).SubArray(0, 25));
+
+            CarManager
+                .Instance()
+                .OnMainCarChange += DisplayCar;
+
             DisplayNextCar();
-            new MiniCarSelectionBuilder()
-                .SetCars(cars)
+            new MiniCarSelectionBuilder(CarManager.Instance())
                 .Build(new Vector3(3, 0.77f, 4.5f), Vector3.zero);
-            pedistal.Subscribe(OnPedistalSelection);
+
             StartCoroutine(UpdatePlayerTransformOnServer());
             // graphControl.Initialize(this.PlotPointBuilder, cars);
+
         }
 
         private void OnSceneUpdate(Dictionary<string, object> update)
@@ -156,37 +170,24 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             }
         }
 
-        private void OnPedistalSelection(string selection)
-        {
-            // ID: 1  - Lexus CT 200h - 4dr Hatchback highdef
-            // ID: 44 - Lexus GS GS 300 - Sedan highdef
-            // ID: 68 - Lexus GS GS 350 - Sedan highdef (Made up)
-            // ID: 4  - Lexus CT 200h Premium - 4dr Hatchback (Made up)
-            int j;
-            if (int.TryParse(selection, out j))
-            {
-                carBeingDisplayedIndex = Mathf.Clamp(j - 1, 0, cars.Length);
-                UpdateCar(carBeingDisplayedIndex);
-            }
-        }
 
-        private GameObject PlotPointBuilder(Item item)
-        {
-            ItemBehaviour itemObj = item.Build();
-            itemObj.AddExamineEvent(this.OnPlotPointExamined);
-            itemObj.GetComponent<Rigidbody>().isKinematic = true;
-            return itemObj.gameObject;
-        }
+        //private GameObject PlotPointBuilder(Item item)
+        //{
+        //    ItemBehaviour itemObj = item.Build();
+        //    itemObj.AddExamineEvent(this.OnPlotPointExamined);
+        //    itemObj.GetComponent<Rigidbody>().isKinematic = true;
+        //    return itemObj.gameObject;
+        //}
 
-        private void OnPlotPointExamined(Item point, Collider collider)
-        {
-            int id = 0;
-            if (int.TryParse(point.GetValue("ID"), out id))
-            {
-                carBeingDisplayedIndex = id - 1;
-                UpdateCar(carBeingDisplayedIndex);
-            }
-        }
+        //private void OnPlotPointExamined(Item point, Collider collider)
+        //{
+        //    int id = 0;
+        //    if (int.TryParse(point.GetValue("ID"), out id))
+        //    {
+        //        carBeingDisplayedIndex = id - 1;
+        //        UpdateCar(carBeingDisplayedIndex);
+        //    }
+        //}
 
         /// <summary>
         /// Called by buttons placed in the scene
@@ -205,35 +206,33 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         }
 
 
-        private int carBeingDisplayedIndex = -1;
+        private int CarBeingDisplayedIndex()
+        {
+            if (CarManager.Instance().Garage() != null)
+            {
+                for (int i = 0; i < CarManager.Instance().Garage().Length; i++)
+                {
+                    if (CarManager.Instance().GetMainCar() == CarManager.Instance().Garage()[i])
+                    {
+                        return i;
+                    }
+                }
+            }
+
+            return -1;
+        }
 
         public void DisplayPreviousCar()
         {
-            // Make sure we even have cars...
-            if (cars == null)
-            {
-                return;
-            }
-
-            // Increment Index
-            carBeingDisplayedIndex = Mathf.Clamp(carBeingDisplayedIndex - 1, 0, this.cars.Length);
-
-            UpdateCar(carBeingDisplayedIndex);
+            var newIndex = Mathf.Clamp(CarBeingDisplayedIndex() - 1, 0, CarManager.Instance().Garage().Length);
+            CarManager.Instance().SetMainCar(CarManager.Instance().Garage()[newIndex]);
         }
 
 
         public void DisplayNextCar()
         {
-            // Make sure we even have cars...
-            if (cars == null)
-            {
-                return;
-            }
-
-            // Increment Index
-            carBeingDisplayedIndex = Mathf.Clamp(carBeingDisplayedIndex + 1, 0, this.cars.Length);
-
-            UpdateCar(carBeingDisplayedIndex);
+            var newIndex = Mathf.Clamp(CarBeingDisplayedIndex() + 1, 0, CarManager.Instance().Garage().Length);
+            CarManager.Instance().SetMainCar(CarManager.Instance().Garage()[newIndex]);
         }
 
         private IEnumerator UpdatePlayerTransformOnServer()
@@ -286,8 +285,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         {
             if (carChangeFromUpdate != -1)
             {
-                carBeingDisplayedIndex = carChangeFromUpdate;
-                DisplayCar(cars[carChangeFromUpdate]);
+                CarManager.Instance().SetMainCar(CarManager.Instance().Garage()[carChangeFromUpdate]);
                 carChangeFromUpdate = -1;
             }
         }
@@ -300,9 +298,6 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                     .AddEntry("selectedCar", index)
                     .Build());
             }
-
-
-            DisplayCar(cars[index]);
         }
 
         /// <summary>
@@ -312,6 +307,11 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         /// <param name="carToDisplay">Car to display info about</param>
         private void DisplayCar(PictureItem carToDisplay)
         {
+            if(carToDisplay == null)
+            {
+                return;
+            }
+
             // Update All The Screens
             if (carImageScreens != null)
             {
@@ -352,7 +352,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                 Destroy(currentCarGameObject);
             }
 
-            currentCarGameObject = CarFactory.MakeLargeToyCar(carToDisplay, float.Parse(carToDisplay.GetValue("id")) / (float)cars.Length, Vector3.zero, Quaternion.Euler(0, 90, 0));
+            currentCarGameObject = CarFactory.MakeBigCar(carToDisplay, float.Parse(carToDisplay.GetValue("id")) / (float)CarManager.Instance().GarageSize(), Vector3.zero, Quaternion.Euler(0, 90, 0));
             currentCarGameObject.transform.parent = liftCarPlacement.transform;
             currentCarGameObject.transform.localPosition = Vector3.zero;
         }
@@ -369,18 +369,18 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         /// can't keep up with higher quality models.
         /// </summary>
         /// <param name="newQuality"></param>
-        public void SetQuality(CarQuality newQuality)
-        {
-            // Don't do anything if we're not changing shit
-            if (newQuality == qualityToRender)
-            {
-                return;
-            }
+        //public void SetQuality(CarQuality newQuality)
+        //{
+        //    // Don't do anything if we're not changing shit
+        //    if (newQuality == qualityToRender)
+        //    {
+        //        return;
+        //    }
 
-            // Update what we're currently rendering.
-            qualityToRender = newQuality;
-            DisplayCar(cars[carBeingDisplayedIndex]);
-        }
+        //    // Update what we're currently rendering.
+        //    qualityToRender = newQuality;
+        //    DisplayCar(cars[carBeingDisplayedIndex]);
+        //}
 
 
     }
