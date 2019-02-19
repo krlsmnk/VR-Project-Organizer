@@ -11,7 +11,7 @@ namespace CAVS.ProjectOrganizer.Controls
         {
             var renderer = hand.gameObject.AddComponent<VRTK_BezierPointerRenderer>();
             var pointer = hand.gameObject.AddComponent<VRTK_Pointer>();
-            var teleport = hand.gameObject.AddComponent<VRTK_BasicTeleport>();
+            var teleport = hand.gameObject.AddComponent<VRTK_HeightAdjustTeleport>();
 
             pointer.targetListPolicy = hand.GetComponent<VRTK_PolicyList>();
             pointer.activateOnEnable = true;

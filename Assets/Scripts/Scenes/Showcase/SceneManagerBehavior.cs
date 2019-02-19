@@ -130,6 +130,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                 new GrabPlayerControl(),
                 new TeleportPlayerControl(),
                 new SelectPlayerControl(),
+                new TVPPlayerControl()
             });
 
             config.Build(leftHand);
