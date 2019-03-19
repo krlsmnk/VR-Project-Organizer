@@ -39,14 +39,14 @@ namespace KarlSmink.Teleporting
 
         private void Hand_TouchpadTouchEnd(object sender, ControllerInteractionEventArgs e)
         {
-            cameraToControl.Move(Vector3.zero);
+            cameraToControl.Move(Vector3.zero, Space.Self);
         }
 
         private void Hand_TouchpadPressed(object sender, ControllerInteractionEventArgs e)
         {
             if (hand.touchpadPressed)
             {
-                cameraToControl.Move(new Vector3(e.touchpadAxis.x, 0, e.touchpadAxis.y));
+                cameraToControl.Move(new Vector3(e.touchpadAxis.x, 0, e.touchpadAxis.y), Space.Self);
             }
         }
 

@@ -10,12 +10,14 @@ namespace CAVS.ProjectOrganizer.Controls
 
         public override Action Build(VRTK_ControllerEvents hand)
         {
+            var headset = VRTK_DeviceFinder.HeadsetTransform();
+
             var cameraToControl = KarlSmink.Teleporting.Util.BuildCamera(Vector3.zero, Quaternion.identity);
-            var portal = KarlSmink.Teleporting.Util.BuildPortal(cameraToControl.GetComponentInChildren<Camera>(), Vector3.zero, Quaternion.identity);
+            var portal = KarlSmink.Teleporting.Util.BuildPortal(cameraToControl.GetComponentInChildren<Camera>(), headset.transform.position + (headset.forward * 2), Quaternion.identity);
             var headsetCollision = GameObject.FindObjectOfType<VRTK_HeadsetCollision>();
             var teleBehavior = TeleportBehavior.Initialize(headsetCollision, 1.7f, cameraToControl.transform, portal);
 
-            var cameraBehavior = CameraBehavior.Initialize(cameraToControl, 10f, portal);
+            var cameraBehavior = CameraBehavior.Initialize(cameraToControl, 2f, portal);
             var control = TVPCameraControl.Initialize(hand, cameraBehavior);
 
             return delegate ()

@@ -34,8 +34,11 @@ namespace CAVS.ProjectOrganizer.Controls
 
         private Vector3 startingControllerLocation;
 
+        private Vector3 startingHeadsetForwardVector;
+
         private void Hand_TriggerClicked(object sender, ControllerInteractionEventArgs e)
         {
+            startingHeadsetForwardVector = VRTK_DeviceFinder.HeadsetTransform().transform.forward;
             startingControllerLocation = transform.position;
         }
 
@@ -48,10 +51,11 @@ namespace CAVS.ProjectOrganizer.Controls
         {
             if (hand.triggerClicked)
             {
-                cameraToControl.Move((transform.position - startingControllerLocation)/2);
-            } else
+                cameraToControl.Move((transform.position - startingControllerLocation).normalized - (startingHeadsetForwardVector.normalized / 2f), Space.World);
+            }
+            else
             {
-                cameraToControl.Move(Vector3.zero);
+                cameraToControl.Move(Vector3.zero, Space.Self);
             }
         }
 

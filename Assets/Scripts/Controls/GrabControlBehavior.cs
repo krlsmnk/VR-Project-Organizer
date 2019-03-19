@@ -14,10 +14,10 @@ namespace CAVS.ProjectOrganizer.Controls
 
             Transform parent;
 
-            public ObjectState (GameObject gameObject)
+            public ObjectState(GameObject gameObject)
             {
                 rigidbody = gameObject.GetComponent<Rigidbody>();
-                if(rigidbody != null)
+                if (rigidbody != null)
                 {
                     rigidbodyConstraints = rigidbody.constraints;
                 }
@@ -25,11 +25,12 @@ namespace CAVS.ProjectOrganizer.Controls
                 parent = gameObject.transform.parent;
             }
 
-            public void Restore(GameObject gameObject)
+            public void Restore(GameObject gameObject, Vector3 currentControllerVelocity)
             {
-                if(rigidbody != null)
+                if (rigidbody != null)
                 {
                     rigidbody.constraints = rigidbodyConstraints;
+                    rigidbody.velocity = currentControllerVelocity;
                 }
 
                 gameObject.transform.SetParent(parent);
@@ -43,6 +44,8 @@ namespace CAVS.ProjectOrganizer.Controls
         private VRTK_InteractableObject interactableObject;
 
         private ObjectState objectStateOnGrab;
+
+        private Vector3 controllerPositionLastFrame;
 
         public static GrabControlBehavior Initialize(VRTK_ControllerEvents hand)
         {
@@ -70,7 +73,15 @@ namespace CAVS.ProjectOrganizer.Controls
         {
             if (interactableObject != null)
             {
-                objectStateOnGrab.Restore(interactableObject.gameObject);
+                RaycastHit hit;
+                if (Physics.Raycast(transform.position + (transform.forward/4f), transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
+                {
+                    objectStateOnGrab.Restore(interactableObject.gameObject, Vector3.zero);
+                    interactableObject.transform.position = hit.point + (Vector3.up / 4f);
+                } else
+                {
+                    objectStateOnGrab.Restore(interactableObject.gameObject, (transform.position - controllerPositionLastFrame) / Time.deltaTime);
+                }
 
                 interactableObject = null;
                 objectStateOnGrab = null;
@@ -107,22 +118,31 @@ namespace CAVS.ProjectOrganizer.Controls
 
         void Update()
         {
-            if (pointer != null)
+            if (pointer == null)
             {
-                pointer.SetPosition(0, transform.position);
+                return;
+            }
 
-                RaycastHit hit;
-                if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
+            pointer.SetPosition(0, transform.position);
+
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position + (transform.forward / 4f), transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
+            {
+                if (objectStateOnGrab == null)
                 {
                     UpdateInteractableObject(hit.transform.gameObject.GetComponent<VRTK_InteractableObject>());
-                    pointer.SetPosition(1, hit.point);
                 }
-                else
+                pointer.SetPosition(1, hit.point);
+            }
+            else
+            {
+                if (objectStateOnGrab == null)
                 {
                     UpdateInteractableObject(null);
-                    pointer.SetPosition(1, transform.position + (transform.rotation * Vector3.forward * 100));
                 }
+                pointer.SetPosition(1, transform.position + (transform.rotation * Vector3.forward * 100));
             }
+            controllerPositionLastFrame = transform.position;
 
         }
 
@@ -133,7 +153,7 @@ namespace CAVS.ProjectOrganizer.Controls
 
         private void TurnOnPointer()
         {
-            if (pointer != null)
+            if (PointerIsOn())
             {
                 return;
             }

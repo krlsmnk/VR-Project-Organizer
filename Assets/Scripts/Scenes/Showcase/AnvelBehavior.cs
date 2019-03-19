@@ -61,7 +61,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             sensorManager = new SensorManager();
 
             AnvelSensorBehavior.Build(AssetName.Sensors.API_Camera, new Vector3(-1, 1, -5.5f), carReference, connnnnn, sensorManager).transform.SetParent(parentForSensors);
-            AnvelSensorBehavior.Build(AssetName.Sensors.API_3D_LIDAR, new Vector3(1, 1, -5.5f), carReference, connnnnn, sensorManager).transform.SetParent(parentForSensors); ;
+            AnvelSensorBehavior.Build(AssetName.Sensors.API_3D_LIDAR, new Vector3(1, 1, -5.5f), carReference, connnnnn, sensorManager).transform.SetParent(parentForSensors);
 
             CarManager
                 .Instance()
