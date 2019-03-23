@@ -244,7 +244,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -786655432
+  randomSeed: 1739272814
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -3911,7 +3911,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.0000009220466, y: -0.00000053935815}
+  m_AnchoredPosition: {x: -0.0000009220466, y: 0.000014278877}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &543881782
@@ -3966,6 +3966,120 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   center: {fileID: 243110815}
+--- !u!1001 &707421245
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4836291518417792, guid: 6df25c5ea8eff354980408ea33f63ddf, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -3.469942
+      objectReference: {fileID: 0}
+    - target: {fileID: 4836291518417792, guid: 6df25c5ea8eff354980408ea33f63ddf, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 2.37
+      objectReference: {fileID: 0}
+    - target: {fileID: 4836291518417792, guid: 6df25c5ea8eff354980408ea33f63ddf, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: -2.23
+      objectReference: {fileID: 0}
+    - target: {fileID: 4836291518417792, guid: 6df25c5ea8eff354980408ea33f63ddf, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4836291518417792, guid: 6df25c5ea8eff354980408ea33f63ddf, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4836291518417792, guid: 6df25c5ea8eff354980408ea33f63ddf, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4836291518417792, guid: 6df25c5ea8eff354980408ea33f63ddf, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4836291518417792, guid: 6df25c5ea8eff354980408ea33f63ddf, type: 2}
+      propertyPath: m_RootOrder
+      value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 114002197490029096, guid: 6df25c5ea8eff354980408ea33f63ddf,
+        type: 2}
+      propertyPath: controllerEvents
+      value: 
+      objectReference: {fileID: 847116010}
+    - target: {fileID: 54700675818951380, guid: 6df25c5ea8eff354980408ea33f63ddf,
+        type: 2}
+      propertyPath: m_Constraints
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114823043005690980, guid: 6df25c5ea8eff354980408ea33f63ddf,
+        type: 2}
+      propertyPath: disableWhenIdle
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114823043005690980, guid: 6df25c5ea8eff354980408ea33f63ddf,
+        type: 2}
+      propertyPath: useOverrideButton
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114823043005690980, guid: 6df25c5ea8eff354980408ea33f63ddf,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 6df25c5ea8eff354980408ea33f63ddf, type: 2}
+  m_IsPrefabParent: 0
+--- !u!1 &707421246 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1150591311252568, guid: 6df25c5ea8eff354980408ea33f63ddf,
+    type: 2}
+  m_PrefabInternal: {fileID: 707421245}
+--- !u!114 &707421247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 707421246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2491f22623fd6c24dbc55856e28ce717, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  disableWhenIdle: 0
+  touchHighlightColor: {r: 0, g: 0, b: 0, a: 0}
+  allowedTouchControllers: 0
+  ignoredColliders: []
+  isGrabbable: 0
+  holdButtonToGrab: 0
+  stayGrabbedOnTeleport: 0
+  validDrop: 1
+  grabOverrideButton: 0
+  allowedGrabControllers: 0
+  grabAttachMechanicScript: {fileID: 0}
+  secondaryGrabActionScript: {fileID: 0}
+  isUsable: 1
+  holdButtonToUse: 0
+  useOnlyIfGrabbed: 0
+  pointerActivatesUseAction: 0
+  useOverrideButton: 3
+  allowedUseControllers: 0
+  usingState: 0
+--- !u!114 &707421248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 707421246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64e104da36bd3b04b90c6ae969ac66dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  customColliderContainer: {fileID: 0}
 --- !u!1 &764930381
 GameObject:
   m_ObjectHideFlags: 0
@@ -8040,7 +8154,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2025932664}
   m_Direction: 2
   m_Value: 1
-  m_Size: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
