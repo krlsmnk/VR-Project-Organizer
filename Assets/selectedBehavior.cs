@@ -23,24 +23,35 @@ public class selectedBehavior: MonoBehaviour, ISelectable {
 	}
 
     public void Select(UnityEngine.GameObject caller) { 
-        Debug.Log("Selected");
+        //Debug.Log("Selected");                 
 
+            //see if another clone exists, if one does, remove it
+            try { 
+                    GameObject.Destroy(GameObject.Find("GhostClone"));                                        
+                }
+            catch { 
+                    Debug.Log("No clone found");
+                }
             
-            //Clone the selected object, place it with some offset to the original
-            //originalItemTransform = this.gameObject.transform;
-            //offsetTransform = originalItemTransform;
-            
-
             //Clone the selected object, place it with some offset to the controller
-            offsetTransform = caller.transform;
-            Vector3 newpos = offsetTransform.position;
-            newpos.z += -0.50f;
-            offsetTransform.position = newpos;
+            ghostClone = Instantiate(this.gameObject, caller.transform.position + (caller.transform.right *.5f), this.gameObject.transform.rotation);
+            
 
-            ghostClone = Instantiate(this.gameObject, offsetTransform.position, offsetTransform.rotation);
-            //ghostClone.transform.parent = caller.transform;
+            //rename object so we can define further behavior later
+            ghostClone.name = "GhostClone";
 
+            //Remove the ability to clone clones by removing the selectable script
+            Destroy(ghostClone.GetComponent<selectedBehavior>());
 
+            //Add the ability to modify the clone's transform so it will affect the original
+            this.gameObject.transform.parent = ghostClone.transform;
+            ghostClone.AddComponent<VRTK_InteractableObject>();
+            //I'm sure there's a better way to do this...
+            ghostClone.GetComponent<VRTK_InteractableObject>().isGrabbable = true;
+            ghostClone.GetComponent<VRTK_InteractableObject>().holdButtonToGrab = true;
+
+            //unfreeze the clone's rigidbody so it can be modified
+            ghostClone.GetComponent<Rigidbody>().constraints =  RigidbodyConstraints.None;
 
     }//end of select
 
