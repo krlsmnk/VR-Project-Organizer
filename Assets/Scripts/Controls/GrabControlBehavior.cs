@@ -12,10 +12,18 @@ namespace CAVS.ProjectOrganizer.Controls
 
             RigidbodyConstraints rigidbodyConstraints;
 
+            bool colliderIsEnabled;
+
             Transform parent;
 
             public ObjectState(GameObject gameObject)
             {
+                var col = gameObject.GetComponent<Collider>();
+                if (col != null)
+                {
+                    colliderIsEnabled = col.enabled;
+                }
+
                 rigidbody = gameObject.GetComponent<Rigidbody>();
                 if (rigidbody != null)
                 {
@@ -27,6 +35,12 @@ namespace CAVS.ProjectOrganizer.Controls
 
             public void Restore(GameObject gameObject, Vector3 currentControllerVelocity)
             {
+                var col = gameObject.GetComponent<Collider>();
+                if (col != null)
+                {
+                    col.enabled = colliderIsEnabled;
+                }
+
                 if (rigidbody != null)
                 {
                     rigidbody.constraints = rigidbodyConstraints;
@@ -43,6 +57,8 @@ namespace CAVS.ProjectOrganizer.Controls
 
         private VRTK_InteractableObject interactableObject;
 
+        private float distanceOfObjectFromController;
+
         private ObjectState objectStateOnGrab;
 
         private Vector3 controllerPositionLastFrame;
@@ -53,10 +69,31 @@ namespace CAVS.ProjectOrganizer.Controls
             newScript.TurnOnPointer();
             newScript.hand = hand;
             newScript.interactableObject = null;
+
             newScript.hand.GripPressed += newScript.Hand_GripPressed;
             newScript.hand.TriggerClicked += newScript.Hand_TriggerPressed;
             newScript.hand.TriggerUnclicked += newScript.Hand_TriggerReleased;
+            newScript.hand.TouchpadAxisChanged += newScript.TouchpadAxisChanged;
+
             return newScript;
+        }
+
+        private int DistanceToPrecision(float distance)
+        {
+            return Mathf.RoundToInt((Mathf.Log(Mathf.Abs(distance)) * -.8250389395f) + 2.075857104f);
+        }
+
+        private Vector3 Discritize(Vector3 pos, float distance)
+        {
+            
+        }   
+
+        private void TouchpadAxisChanged(object sender, ControllerInteractionEventArgs e)
+        {
+            if (interactableObject != null)
+            {
+                distanceOfObjectFromController = Mathf.Clamp(distanceOfObjectFromController + e.touchpadAxis.y, 0, 1000f);
+            }
         }
 
         private void UpdateInteractableObject(VRTK_InteractableObject newInteractable)
@@ -67,21 +104,14 @@ namespace CAVS.ProjectOrganizer.Controls
             }
 
             interactableObject = newInteractable;
+            distanceOfObjectFromController = Vector3.Distance(interactableObject.transform.position, transform.position);
         }
 
         private void Hand_TriggerReleased(object sender, ControllerInteractionEventArgs e)
         {
             if (interactableObject != null)
             {
-                RaycastHit hit;
-                if (Physics.Raycast(transform.position + (transform.forward/4f), transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
-                {
-                    objectStateOnGrab.Restore(interactableObject.gameObject, Vector3.zero);
-                    interactableObject.transform.position = hit.point + (Vector3.up / 4f);
-                } else
-                {
-                    objectStateOnGrab.Restore(interactableObject.gameObject, (transform.position - controllerPositionLastFrame) / Time.deltaTime);
-                }
+                objectStateOnGrab.Restore(interactableObject.gameObject, (transform.position - controllerPositionLastFrame) / Time.deltaTime);
 
                 interactableObject = null;
                 objectStateOnGrab = null;
@@ -97,9 +127,16 @@ namespace CAVS.ProjectOrganizer.Controls
                 interactableObject.transform.SetParent(transform);
                 interactableObject.transform.position = transform.position;
 
-                if (interactableObject.GetComponent<Rigidbody>() != null)
+                var col = gameObject.GetComponent<Collider>();
+                if (col != null)
                 {
-                    interactableObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+                    col.enabled = false;
+                }
+
+                var rb = interactableObject.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    rb.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
                 }
             }
         }
@@ -125,14 +162,17 @@ namespace CAVS.ProjectOrganizer.Controls
 
             pointer.SetPosition(0, transform.position);
 
+            float distanceForObject = distanceOfObjectFromController;
             RaycastHit hit;
-            if (Physics.Raycast(transform.position + (transform.forward / 4f), transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
             {
                 if (objectStateOnGrab == null)
                 {
                     UpdateInteractableObject(hit.transform.gameObject.GetComponent<VRTK_InteractableObject>());
                 }
                 pointer.SetPosition(1, hit.point);
+
+                distanceForObject = Mathf.Min(distanceForObject, hit.distance);
             }
             else
             {
@@ -143,6 +183,8 @@ namespace CAVS.ProjectOrganizer.Controls
                 pointer.SetPosition(1, transform.position + (transform.rotation * Vector3.forward * 100));
             }
             controllerPositionLastFrame = transform.position;
+
+            interactableObject.transform.position = transform.forward * distanceForObject;
 
         }
 
@@ -186,6 +228,7 @@ namespace CAVS.ProjectOrganizer.Controls
             hand.GripPressed -= Hand_GripPressed;
             hand.TriggerClicked -= Hand_TriggerPressed;
             hand.TriggerUnclicked -= Hand_TriggerReleased;
+            hand.TouchpadAxisChanged -= TouchpadAxisChanged;
         }
     }
 

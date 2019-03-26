@@ -23,7 +23,7 @@ namespace KarlSmink.Teleporting
                 throw new System.ArgumentException("We need a camera to control!");
             }
 
-            var newScript = hand.gameObject.AddComponent< CameraControl>();
+            var newScript = hand.gameObject.AddComponent<CameraControl>();
             newScript.hand = hand;
             newScript.hand.TouchpadAxisChanged += newScript.Hand_TouchpadPressed;
             newScript.hand.TouchpadTouchEnd += newScript.Hand_TouchpadTouchEnd;
