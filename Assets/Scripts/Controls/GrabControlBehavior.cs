@@ -61,7 +61,7 @@ namespace CAVS.ProjectOrganizer.Controls
 
         private ObjectState objectStateOnGrab;
 
-        private Vector3 controllerPositionLastFrame;
+        private Vector3 objectPositionLastFrame;
 
         public static GrabControlBehavior Initialize(VRTK_ControllerEvents hand)
         {
@@ -74,25 +74,49 @@ namespace CAVS.ProjectOrganizer.Controls
             newScript.hand.TriggerClicked += newScript.Hand_TriggerPressed;
             newScript.hand.TriggerUnclicked += newScript.Hand_TriggerReleased;
             newScript.hand.TouchpadAxisChanged += newScript.TouchpadAxisChanged;
+            newScript.hand.TouchpadTouchEnd += newScript.Hand_TouchpadTouchEnd;
 
             return newScript;
         }
 
+        private void Hand_TouchpadTouchEnd(object sender, ControllerInteractionEventArgs e)
+        {
+            lastTouchpadY = -666;
+        }
+
         private int DistanceToPrecision(float distance)
         {
-            return Mathf.RoundToInt((Mathf.Log(Mathf.Abs(distance)) * -.8250389395f) + 2.075857104f);
+            if (Mathf.Abs(distance) < .1f)
+            {
+                return 6;
+            }
+            return Mathf.RoundToInt((Mathf.Log(Mathf.Abs(distance)) * -1.3f) + 2.075857104f);
         }
 
         private Vector3 Discritize(Vector3 pos, float distance)
         {
-            
-        }   
+            var precision = DistanceToPrecision(distance);
+            Debug.LogFormat("precision: {0};", precision);
+
+            var precPow = Mathf.Pow(10, precision);
+            return new Vector3(
+                (Mathf.RoundToInt(pos.x * precPow) / precPow),
+                (Mathf.RoundToInt(pos.y * precPow) / precPow),
+                (Mathf.RoundToInt(pos.z * precPow) / precPow)
+            );
+        }
+
+        float lastTouchpadY = 0;
 
         private void TouchpadAxisChanged(object sender, ControllerInteractionEventArgs e)
         {
             if (interactableObject != null)
             {
-                distanceOfObjectFromController = Mathf.Clamp(distanceOfObjectFromController + e.touchpadAxis.y, 0, 1000f);
+                if (lastTouchpadY != -666)
+                {
+                    distanceOfObjectFromController = Mathf.Clamp(distanceOfObjectFromController + (e.touchpadAxis.y - lastTouchpadY), 0, 1000f);
+                }
+                lastTouchpadY = e.touchpadAxis.y;
             }
         }
 
@@ -104,14 +128,13 @@ namespace CAVS.ProjectOrganizer.Controls
             }
 
             interactableObject = newInteractable;
-            distanceOfObjectFromController = Vector3.Distance(interactableObject.transform.position, transform.position);
         }
 
         private void Hand_TriggerReleased(object sender, ControllerInteractionEventArgs e)
         {
             if (interactableObject != null)
             {
-                objectStateOnGrab.Restore(interactableObject.gameObject, (transform.position - controllerPositionLastFrame) / Time.deltaTime);
+                objectStateOnGrab.Restore(interactableObject.gameObject, ((interactableObject.transform.position - objectPositionLastFrame) / Time.deltaTime) * .2f);
 
                 interactableObject = null;
                 objectStateOnGrab = null;
@@ -120,14 +143,14 @@ namespace CAVS.ProjectOrganizer.Controls
 
         private void Hand_TriggerPressed(object sender, ControllerInteractionEventArgs e)
         {
-            if (interactableObject != null)
+            if (interactableObject != null && objectStateOnGrab == null)
             {
                 objectStateOnGrab = new ObjectState(interactableObject.gameObject);
-
+                distanceOfObjectFromController = Vector3.Distance(interactableObject.transform.position, transform.position);
                 interactableObject.transform.SetParent(transform);
                 interactableObject.transform.position = transform.position;
 
-                var col = gameObject.GetComponent<Collider>();
+                var col = interactableObject.GetComponent<Collider>();
                 if (col != null)
                 {
                     col.enabled = false;
@@ -182,10 +205,13 @@ namespace CAVS.ProjectOrganizer.Controls
                 }
                 pointer.SetPosition(1, transform.position + (transform.rotation * Vector3.forward * 100));
             }
-            controllerPositionLastFrame = transform.position;
 
-            interactableObject.transform.position = transform.forward * distanceForObject;
 
+            if (objectStateOnGrab != null)
+            {
+                objectPositionLastFrame = interactableObject.transform.position;
+                interactableObject.transform.position = Discritize((transform.forward * distanceForObject) + transform.position, distanceForObject);
+            }
         }
 
         private bool PointerIsOn()
@@ -224,11 +250,17 @@ namespace CAVS.ProjectOrganizer.Controls
             {
                 TurnOffPointer();
             }
+            if (interactableObject != null)
+            {
+                objectStateOnGrab.Restore(interactableObject.gameObject, ((interactableObject.transform.position - objectPositionLastFrame) / Time.deltaTime) * .2f);
+
+            }
             UpdateInteractableObject(null);
             hand.GripPressed -= Hand_GripPressed;
             hand.TriggerClicked -= Hand_TriggerPressed;
             hand.TriggerUnclicked -= Hand_TriggerReleased;
             hand.TouchpadAxisChanged -= TouchpadAxisChanged;
+            hand.TouchpadTouchEnd -= Hand_TouchpadTouchEnd;
         }
     }
 
