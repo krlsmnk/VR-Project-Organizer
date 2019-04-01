@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using VRTK;
+using CAVS.ProjectOrganizer.Interation;
 
 namespace CAVS.ProjectOrganizer.Controls
 {
@@ -15,6 +16,7 @@ namespace CAVS.ProjectOrganizer.Controls
             bool colliderIsEnabled;
 
             Transform parent;
+
 
             public ObjectState(GameObject gameObject)
             {
@@ -63,6 +65,9 @@ namespace CAVS.ProjectOrganizer.Controls
 
         private Vector3 objectPositionLastFrame;
 
+        private SnappingZoneBehavior[] snappingZones;
+
+
         public static GrabControlBehavior Initialize(VRTK_ControllerEvents hand)
         {
             var newScript = hand.gameObject.AddComponent<GrabControlBehavior>();
@@ -84,26 +89,31 @@ namespace CAVS.ProjectOrganizer.Controls
             lastTouchpadY = -666;
         }
 
-        private int DistanceToPrecision(float distance)
+
+        private Vector3 Discritize(Vector3 pos)
         {
-            if (Mathf.Abs(distance) < .1f)
+            var cleanedPos = pos;
+            foreach (var zone in snappingZones)
             {
-                return 6;
+                if (zone.InZone(pos))
+                {
+                    cleanedPos = zone.Discritize(cleanedPos);
+                }
             }
-            return Mathf.RoundToInt((Mathf.Log(Mathf.Abs(distance)) * -1.3f) + 2.075857104f);
+            return cleanedPos;
         }
 
-        private Vector3 Discritize(Vector3 pos, float distance)
+        private Quaternion Discritize(Quaternion rot, Vector3 pos)
         {
-            var precision = DistanceToPrecision(distance);
-            Debug.LogFormat("precision: {0};", precision);
-
-            var precPow = Mathf.Pow(10, precision);
-            return new Vector3(
-                (Mathf.RoundToInt(pos.x * precPow) / precPow),
-                (Mathf.RoundToInt(pos.y * precPow) / precPow),
-                (Mathf.RoundToInt(pos.z * precPow) / precPow)
-            );
+            var cleanedRot = rot;
+            foreach (var zone in snappingZones)
+            {
+                if (zone.InZone(pos))
+                {
+                    cleanedRot = zone.Discritize(cleanedRot);
+                }
+            }
+            return cleanedRot;
         }
 
         float lastTouchpadY = 0;
@@ -176,6 +186,11 @@ namespace CAVS.ProjectOrganizer.Controls
             }
         }
 
+        void Start()
+        {
+            snappingZones = GameObject.FindObjectsOfType<SnappingZoneBehavior>();
+        }
+
         void Update()
         {
             if (pointer == null)
@@ -210,7 +225,8 @@ namespace CAVS.ProjectOrganizer.Controls
             if (objectStateOnGrab != null)
             {
                 objectPositionLastFrame = interactableObject.transform.position;
-                interactableObject.transform.position = Discritize((transform.forward * distanceForObject) + transform.position, distanceForObject);
+                interactableObject.transform.position = Discritize((transform.forward * distanceForObject) + transform.position);
+                interactableObject.transform.rotation = Discritize(interactableObject.transform.rotation, interactableObject.transform.position);
             }
         }
 
