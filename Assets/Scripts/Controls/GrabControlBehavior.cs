@@ -113,7 +113,10 @@ namespace CAVS.ProjectOrganizer.Controls
 
         float currentTouchpadY = 0;
 
-        float frictionConstant = .1f;
+        /// <summary>
+        /// A value I played with a lot till I got something I liked
+        /// </summary>
+        float frictionConstant = 4f;
 
         float lastTimeAxisChanged;
 
@@ -129,8 +132,13 @@ namespace CAVS.ProjectOrganizer.Controls
         {
             if (interactableObject != null)
             {
+                if (currentTouchpadY != -666)
+                {
+                    distanceOfObjectFromController = Mathf.Clamp(distanceOfObjectFromController + (e.touchpadAxis.y - currentTouchpadY), 0, 1000f);
+                }
                 lastTouchpadY = currentTouchpadY;
                 currentTouchpadY = e.touchpadAxis.y;
+                
                 if (currentTouchpadY != -666 && lastTouchpadY != -666)
                 {
                     axisVelocity = (currentTouchpadY - lastTouchpadY)/Time.deltaTime;
@@ -232,11 +240,11 @@ namespace CAVS.ProjectOrganizer.Controls
 
             if (objectStateOnGrab != null)
             {
-                if (currentTouchpadY != -666)
+                if(hand.touchpadTouched == false)
                 {
                     distanceOfObjectFromController = Mathf.Clamp(distanceOfObjectFromController + (axisVelocity * Time.deltaTime), 0, 1000f);
-                    axisVelocity *= frictionConstant * Time.deltaTime;
                 }
+                axisVelocity *= 1f - (frictionConstant * Time.deltaTime);
 
                 objectPositionLastFrame = interactableObject.transform.position;
                 interactableObject.transform.position = Discritize((transform.forward * distanceForObject) + transform.position);
