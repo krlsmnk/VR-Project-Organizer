@@ -11,19 +11,23 @@ namespace CAVS.ProjectOrganizer.Interation
         [SerializeField]
         private Vector3 dimensions;
 
+        [SerializeField]
+        private Vector3 offset;
+
 		public bool InZone(Vector3 pos)
 		{
-			if (pos.x < transform.position.x - dimensions.x || pos.x > transform.position.x + dimensions.x)
+            Vector3 starting = transform.position + offset;
+			if (pos.x < starting.x - dimensions.x || pos.x > starting.x + dimensions.x)
             {
                 return false;
             }
 
-			if (pos.y < transform.position.y - dimensions.y || pos.y > transform.position.y + dimensions.y)
+			if (pos.y < starting.y - dimensions.y || pos.y > starting.y + dimensions.y)
             {
                 return false;
             }
 
-			if (pos.z < transform.position.z - dimensions.z || pos.z > transform.position.z + dimensions.z)
+			if (pos.z < starting.z - dimensions.z || pos.z > starting.z + dimensions.z)
             {
                 return false;
             }

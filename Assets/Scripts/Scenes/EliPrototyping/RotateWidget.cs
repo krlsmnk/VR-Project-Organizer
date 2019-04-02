@@ -24,8 +24,6 @@ namespace CAVS.ProjectOrganizer.Interation
 
         private Vector3 originalForward;
 
-        private Plane orientationPlane;
-
         [SerializeField]
         private AxisToControl axisToControl;
 
@@ -38,30 +36,7 @@ namespace CAVS.ProjectOrganizer.Interation
                 originalForward = transform.parent.forward;
                 float callerOriginalDistance = Vector3.Distance(transform.parent.position, controller.transform.position);
                 pointOriginallyHit = controller.transform.position + (controller.transform.forward * callerOriginalDistance);
-                switch (axisToControl)
-                {
-                    case AxisToControl.X:
-                        orientationPlane = new Plane(
-                            transform.parent.position + transform.parent.TransformDirection(Vector3.left),
-                            transform.parent.position + transform.parent.TransformDirection(Vector3.up),
-                            transform.parent.position
-                            );
-                        break;
-                    case AxisToControl.Y:
-                        orientationPlane = new Plane(
-                            transform.parent.position + transform.parent.TransformDirection(Vector3.left),
-                            transform.parent.position + transform.parent.TransformDirection(Vector3.up),
-                            transform.parent.position
-                            );
-                        break;
-                    case AxisToControl.Z:
-                        orientationPlane = new Plane(
-                            transform.parent.position + transform.parent.TransformDirection(Vector3.forward),
-                            transform.parent.position + transform.parent.TransformDirection(Vector3.up),
-                            transform.parent.position
-                            );
-                        break;
-                }
+
             }
             else
             {
@@ -81,41 +56,76 @@ namespace CAVS.ProjectOrganizer.Interation
 
         void FixedUpdate()
         {
-            if (controller != null)
+            if (controller == null)
             {
-                Ray ray = new Ray(controller.transform.position, controller.transform.forward);
-
-                float enter = 0.0f;
-                orientationPlane.Raycast(ray, out enter);
-
-                if (Mathf.Abs(enter) > 0)
-                {
-                    Vector3 posToSet = ray.GetPoint(enter) - pointOriginallyHit + originalArrowPosition;
-
-                    switch (axisToControl)
-                    {
-                        case AxisToControl.X:
-                            posToSet.y = originalArrowPosition.y;
-                            posToSet.z = originalArrowPosition.z;
-							transform.parent.Rotate(0, 0, Vector3.SignedAngle(transform.forward, posToSet.normalized, Vector3.right));
-                            break;
-                        case AxisToControl.Y:
-                            posToSet.x = originalArrowPosition.x;
-                            posToSet.z = originalArrowPosition.z;
-							transform.parent.Rotate(0, 0, Vector3.SignedAngle(transform.forward, posToSet.normalized, Vector3.up));
-                            break;
-                        case AxisToControl.Z:
-                            posToSet.y = originalArrowPosition.y;
-                            posToSet.x = originalArrowPosition.x;
-							transform.parent.Rotate(0, 0, Vector3.SignedAngle(transform.forward, posToSet.normalized, Vector3.forward));
-                            break;
-                    }
-
-
-
-                }
+                return;
             }
+
+            Plane orientationPlane;
+            switch (axisToControl)
+            {
+                case AxisToControl.X:
+                    orientationPlane = new Plane(
+                        transform.parent.position + transform.parent.TransformDirection(Vector3.right),
+                        transform.parent.position + transform.parent.TransformDirection(Vector3.up),
+                        transform.parent.position
+                        );
+                    break;
+                case AxisToControl.Y:
+                    orientationPlane = new Plane(
+                        transform.parent.position + transform.parent.TransformDirection(Vector3.left),
+                        transform.parent.position + transform.parent.TransformDirection(Vector3.up),
+                        transform.parent.position
+                        );
+                    break;
+                case AxisToControl.Z:
+                    orientationPlane = new Plane(
+                        transform.parent.position + transform.parent.TransformDirection(Vector3.forward),
+                        transform.parent.position + transform.parent.TransformDirection(Vector3.up),
+                        transform.parent.position
+                        );
+                    break;
+                default:
+                    throw new System.Exception("Why the fuck did you add a 4th axis for fucking movement");
+            }
+
+
+            Ray ray = new Ray(controller.transform.position, controller.transform.forward);
+            Debug.DrawRay(controller.transform.position, controller.transform.forward * 10, Color.blue);
+
+            float enter = 0.0f;
+            orientationPlane.Raycast(ray, out enter);
+
+            if (enter == 0)
+            {
+                return;
+            }
+            
+            Vector3 posToSet = ray.GetPoint(enter) ;
+
+            switch (axisToControl)
+            {
+                case AxisToControl.X:
+                    // posToSet.y = originalArrowPosition.y;
+                    // posToSet.z = originalArrowPosition.z;
+                    // transform.parent.Rotate(0, 0, Vector3.SignedAngle(transform.forward, posToSet.normalized, Vector3.right));
+                    break;
+                case AxisToControl.Y:
+                    posToSet.x = originalArrowPosition.x;
+                    posToSet.z = originalArrowPosition.z;
+                    // transform.parent.Rotate(0, 0, Vector3.SignedAngle(transform.forward, posToSet.normalized, Vector3.up));
+                    break;
+                case AxisToControl.Z:
+                    posToSet.y = originalArrowPosition.y;
+                    posToSet.x = originalArrowPosition.x;
+                    // transform.parent.Rotate(0, 0, Vector3.SignedAngle(transform.forward, posToSet.normalized, Vector3.forward));
+                    break;
+            }
+
+            transform.parent.LookAt(posToSet);
+
         }
 
     }
+    
 }

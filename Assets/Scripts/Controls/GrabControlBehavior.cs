@@ -17,7 +17,6 @@ namespace CAVS.ProjectOrganizer.Controls
 
             Transform parent;
 
-
             public ObjectState(GameObject gameObject)
             {
                 var col = gameObject.GetComponent<Collider>();
@@ -67,7 +66,6 @@ namespace CAVS.ProjectOrganizer.Controls
 
         private SnappingZoneBehavior[] snappingZones;
 
-
         public static GrabControlBehavior Initialize(VRTK_ControllerEvents hand)
         {
             var newScript = hand.gameObject.AddComponent<GrabControlBehavior>();
@@ -82,11 +80,6 @@ namespace CAVS.ProjectOrganizer.Controls
             newScript.hand.TouchpadTouchEnd += newScript.Hand_TouchpadTouchEnd;
 
             return newScript;
-        }
-
-        private void Hand_TouchpadTouchEnd(object sender, ControllerInteractionEventArgs e)
-        {
-            lastTouchpadY = -666;
         }
 
 
@@ -118,15 +111,30 @@ namespace CAVS.ProjectOrganizer.Controls
 
         float lastTouchpadY = 0;
 
+        float currentTouchpadY = 0;
+
+        float frictionConstant = .1f;
+
+        float lastTimeAxisChanged;
+
+        float axisVelocity = 0;
+
+        private void Hand_TouchpadTouchEnd(object sender, ControllerInteractionEventArgs e)
+        {
+            currentTouchpadY = -666;
+            lastTouchpadY = -666;
+        }
+
         private void TouchpadAxisChanged(object sender, ControllerInteractionEventArgs e)
         {
             if (interactableObject != null)
             {
-                if (lastTouchpadY != -666)
+                lastTouchpadY = currentTouchpadY;
+                currentTouchpadY = e.touchpadAxis.y;
+                if (currentTouchpadY != -666 && lastTouchpadY != -666)
                 {
-                    distanceOfObjectFromController = Mathf.Clamp(distanceOfObjectFromController + (e.touchpadAxis.y - lastTouchpadY), 0, 1000f);
+                    axisVelocity = (currentTouchpadY - lastTouchpadY)/Time.deltaTime;
                 }
-                lastTouchpadY = e.touchpadAxis.y;
             }
         }
 
@@ -224,6 +232,12 @@ namespace CAVS.ProjectOrganizer.Controls
 
             if (objectStateOnGrab != null)
             {
+                if (currentTouchpadY != -666)
+                {
+                    distanceOfObjectFromController = Mathf.Clamp(distanceOfObjectFromController + (axisVelocity * Time.deltaTime), 0, 1000f);
+                    axisVelocity *= frictionConstant * Time.deltaTime;
+                }
+
                 objectPositionLastFrame = interactableObject.transform.position;
                 interactableObject.transform.position = Discritize((transform.forward * distanceForObject) + transform.position);
                 interactableObject.transform.rotation = Discritize(interactableObject.transform.rotation, interactableObject.transform.position);
