@@ -6,7 +6,7 @@ namespace CAVS.ProjectOrganizer.Interation
     {
         private GameObject moveArrows = null;
 
-        public void Select(GameObject caller)
+        public void SelectPress(GameObject caller)
         {
 
             if (moveArrows != null)
@@ -26,10 +26,14 @@ namespace CAVS.ProjectOrganizer.Interation
 
         }
 
-        public void UnSelect(GameObject caller)
-        {
+        public void SelectUnpress(GameObject caller) { }
 
-        }
+        public void Hover(GameObject caller) { }
+
+        public void UnHover(GameObject caller) { }
+
+        public void UnSelect(GameObject caller) { }
+
     }
 
 }

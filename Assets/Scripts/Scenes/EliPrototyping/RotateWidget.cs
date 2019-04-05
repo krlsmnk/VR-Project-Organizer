@@ -27,32 +27,30 @@ namespace CAVS.ProjectOrganizer.Interation
         [SerializeField]
         private AxisToControl axisToControl;
 
-        public void Select(GameObject caller)
-        {
-            if (controller == null)
-            {
-                controller = caller;
-                originalArrowPosition = transform.parent.position;
-                originalForward = transform.parent.forward;
-                float callerOriginalDistance = Vector3.Distance(transform.parent.position, controller.transform.position);
-                pointOriginallyHit = controller.transform.position + (controller.transform.forward * callerOriginalDistance);
-
-            }
-            else
-            {
-                controller = null;
-            }
-
-        }
-
         public void SetObjectToControl(GameObject objectToControl)
         {
             this.objectToControl = objectToControl;
         }
 
-        public void UnSelect(GameObject caller)
+        public void SelectPress(GameObject caller)
         {
+            controller = caller;
+            originalArrowPosition = transform.parent.position;
+            originalForward = transform.parent.forward;
+            float callerOriginalDistance = Vector3.Distance(transform.parent.position, controller.transform.position);
+            pointOriginallyHit = controller.transform.position + (controller.transform.forward * callerOriginalDistance);
         }
+      
+        public void UnSelect(GameObject caller) { }
+
+        public void SelectUnpress(GameObject caller)
+        {
+            controller = null;
+        }
+
+        public void Hover(GameObject caller) { }
+
+        public void UnHover(GameObject caller) { }
 
         void FixedUpdate()
         {
@@ -100,8 +98,8 @@ namespace CAVS.ProjectOrganizer.Interation
             {
                 return;
             }
-            
-            Vector3 posToSet = ray.GetPoint(enter) ;
+
+            Vector3 posToSet = ray.GetPoint(enter);
 
             switch (axisToControl)
             {
@@ -126,6 +124,8 @@ namespace CAVS.ProjectOrganizer.Interation
 
         }
 
+
+
     }
-    
+
 }

@@ -65,6 +65,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
             newScript.rb = newObj.AddComponent<Rigidbody>();
             newScript.rb.useGravity = false;
+            newScript.rb.constraints = RigidbodyConstraints.FreezeAll;
 
             newScript.interactableObject = newObj.AddComponent<VRTK_InteractableObject>();
             newScript.interactableObject.InteractableObjectUngrabbed += newScript.OnUngrabbed;
@@ -140,7 +141,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         }
 
 
-        public void Select(GameObject caller)
+        public void SelectPress(GameObject caller)
         {
             if (uiView != null)
             {
@@ -167,10 +168,13 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             }
         }
 
-        public void UnSelect(GameObject caller)
-        {
+        public void UnSelect(GameObject caller) { }
 
-        }
+        public void SelectUnpress(GameObject caller) { }
+
+        public void Hover(GameObject caller) { }
+
+        public void UnHover(GameObject caller) { }
     }
 
 }

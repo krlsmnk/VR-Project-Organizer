@@ -69,7 +69,7 @@ namespace CAVS.ProjectOrganizer.Interation
         {
             if (other.tag == "controller")
             {
-                Select(other.gameObject);
+                SelectPress(other.gameObject);
             }
         }
 
@@ -77,22 +77,28 @@ namespace CAVS.ProjectOrganizer.Interation
         {
             if (other.tag == "controller")
             {
-                UnSelect(other.gameObject);
+                SelectUnpress(other.gameObject);
             }
         }
 
-        public void Select(GameObject caller)
+        public void SelectPress(GameObject caller)
         {
             buttonPiece.transform.localScale = new Vector3(.75f, 2f, .75f);
             proximityPieceMaterial.color = Color.green;
             CallSubscribers();
         }
 
-        public void UnSelect(GameObject caller)
+        public void SelectUnpress(GameObject caller)
         {
             proximityPieceMaterial.color = Color.blue;
             buttonPiece.transform.localScale = new Vector3(.75f, 3.5f, .75f);
         }
+
+        public void UnSelect(GameObject caller) { }
+
+        public void Hover(GameObject caller) { }
+
+        public void UnHover(GameObject caller) { }
     }
 
 }
