@@ -66,12 +66,15 @@ namespace CAVS.ProjectOrganizer.Controls
 
         private SnappingZoneBehavior[] snappingZones;
 
+        private VRTK_RadialMenu radialMenu;
+
         public static GrabControlBehavior Initialize(VRTK_ControllerEvents hand)
         {
             var newScript = hand.gameObject.AddComponent<GrabControlBehavior>();
             newScript.TurnOnPointer();
             newScript.hand = hand;
             newScript.interactableObject = null;
+            newScript.radialMenu = hand.gameObject.GetComponentInChildren<VRTK_RadialMenu>();
 
             newScript.hand.GripPressed += newScript.Hand_GripPressed;
             newScript.hand.TriggerClicked += newScript.Hand_TriggerPressed;
@@ -164,6 +167,7 @@ namespace CAVS.ProjectOrganizer.Controls
 
                 interactableObject = null;
                 objectStateOnGrab = null;
+                radialMenu.enabled = true;
             }
         }
 
@@ -175,6 +179,8 @@ namespace CAVS.ProjectOrganizer.Controls
                 distanceOfObjectFromController = Vector3.Distance(interactableObject.transform.position, transform.position);
                 interactableObject.transform.SetParent(transform);
                 interactableObject.transform.position = transform.position;
+
+                radialMenu.enabled = false;
 
                 var col = interactableObject.GetComponent<Collider>();
                 if (col != null)
@@ -263,7 +269,10 @@ namespace CAVS.ProjectOrganizer.Controls
             {
                 return;
             }
-            pointer = gameObject.AddComponent<LineRenderer>();
+            var pointerParent = new GameObject("Pointer Parent");
+            pointerParent.transform.SetParent(transform);
+            pointerParent.transform.localPosition = Vector3.zero;
+            pointer = pointerParent.AddComponent<LineRenderer>();
             if (pointer != null)
             {
                 pointer.positionCount = 2;
@@ -279,7 +288,7 @@ namespace CAVS.ProjectOrganizer.Controls
             {
                 return;
             }
-            Destroy(pointer);
+            Destroy(pointer.gameObject);
         }
 
         private void OnDestroy()

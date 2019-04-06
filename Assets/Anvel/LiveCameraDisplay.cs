@@ -25,7 +25,23 @@ namespace CAVS.Anvel
 			return display;
         }
 
-		void Start() {
+        public static LiveCameraDisplay Build(GameObject parent, ClientConnectionToken connectionToken, ObjectDescriptor camera)
+        {
+            LiveCameraDisplay display = parent.AddComponent<LiveCameraDisplay>();
+            display.client = ConnectionFactory.CreateConnection(connectionToken);
+            display.anvelCamera = camera;
+            return display;
+        }
+
+        public static LiveCameraDisplay Build(GameObject parent, ClientConnectionToken connectionToken, AnvelObject camera)
+        {
+            LiveCameraDisplay display = parent.AddComponent<LiveCameraDisplay>();
+            display.client = ConnectionFactory.CreateConnection(connectionToken);
+            display.anvelCamera = camera.ObjectDescriptor();
+            return display;
+        }
+
+        void Start() {
 			
             displayTexture = new Texture2D(640, 480, TextureFormat.RGBA32, false);
             GetComponent<Renderer>().material.mainTexture = displayTexture;

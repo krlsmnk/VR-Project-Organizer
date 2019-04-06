@@ -135,7 +135,10 @@ namespace CAVS.ProjectOrganizer.Controls
             {
                 return;
             }
-            pointer = gameObject.AddComponent<LineRenderer>();
+            var pointerParent = new GameObject("Pointer Parent");
+            pointerParent.transform.SetParent(transform);
+            pointerParent.transform.localPosition = Vector3.zero;
+            pointer = pointerParent.AddComponent<LineRenderer>();
             if (pointer != null)
             {
                 pointer.positionCount = 2;
@@ -151,7 +154,7 @@ namespace CAVS.ProjectOrganizer.Controls
             {
                 return;
             }
-            Destroy(pointer);
+            Destroy(pointer.gameObject);
         }
 
         private void OnDestroy()

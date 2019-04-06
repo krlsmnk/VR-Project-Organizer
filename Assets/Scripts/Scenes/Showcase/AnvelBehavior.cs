@@ -20,6 +20,9 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         }
 
         [SerializeField]
+        private GameObject cameraFeedDisplay;
+
+        [SerializeField]
         private GameObject objectForOffset;
 
         [SerializeField]
@@ -79,16 +82,24 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                     new Vector3(0, 90, 0)
                  );
 
-            if (drivingController != null)
-            {
-                VehicleControl.Build(drivingController, connectionToken, carReference.ObjectDescriptor());
-            }
-            else
-            {
-                Debug.LogWarning("No Driving Controller Assigned!");
-            }
-
+            //if (drivingController != null)
+            //{
+            //    VehicleControl.Build(drivingController, connectionToken, carReference.ObjectDescriptor());
+            //}
+            //else
+            //{
+            //    Debug.LogWarning("No Driving Controller Assigned!");
+            //}
+            BuildOverWorldCamera(connectionToken);
             StartCoroutine(UpdateOffsetTick(display));
+        }
+
+        private void BuildOverWorldCamera(ClientConnectionToken connectionToken)
+        {
+            var objectWeArecontrolling = AnvelObject.CreateObject(ConnectionFactory.CreateConnection(connectionToken), $"Camera - {Random.Range(0, 1000000)}", AssetName.Sensors.API_Camera);
+            objectWeArecontrolling.UpdateTransform(transform.localPosition, transform.localRotation);
+
+            LiveCameraDisplay.Build(cameraFeedDisplay, connectionToken, objectWeArecontrolling);
         }
 
         private void OnMainCarChange(PictureItem car)

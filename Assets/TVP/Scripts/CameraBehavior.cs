@@ -44,7 +44,6 @@ namespace KarlSmink.Teleporting
 
         void Start()
         {
-            Debug.Log(transform.name);
             rotatorScript = GetComponent<VRTK_TransformFollow>();
         }
 
