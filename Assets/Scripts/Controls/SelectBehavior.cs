@@ -30,6 +30,16 @@ namespace CAVS.ProjectOrganizer.Controls
 
         private void UpdateCurrentHovered(ISelectable[] newhover)
         {
+            if(newhover == null || newhover.Length == 0)
+            {
+                pointer.startColor = Color.red;
+                pointer.endColor = Color.red;
+            } else
+            {
+                pointer.startColor = Color.green;
+                pointer.endColor = Color.green;
+            }
+
             if (newhover == currentHover)
             {
                 return;
@@ -141,6 +151,9 @@ namespace CAVS.ProjectOrganizer.Controls
             pointer = pointerParent.AddComponent<LineRenderer>();
             if (pointer != null)
             {
+                pointer.material = new Material(Shader.Find("Sprites/Default"));
+                pointer.startColor = Color.red;
+                pointer.endColor = Color.red;
                 pointer.positionCount = 2;
                 pointer.startWidth = .025f;
                 pointer.endWidth = .025f;

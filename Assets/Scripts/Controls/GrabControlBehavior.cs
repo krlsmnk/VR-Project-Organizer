@@ -151,6 +151,16 @@ namespace CAVS.ProjectOrganizer.Controls
 
         private void UpdateInteractableObject(VRTK_InteractableObject newInteractable)
         {
+            if(newInteractable == null)
+            {
+                pointer.startColor = Color.grey;
+                pointer.endColor = Color.grey;
+            } else
+            {
+                pointer.startColor = Color.cyan;
+                pointer.endColor = Color.cyan;
+            }
+
             if (newInteractable == interactableObject)
             {
                 return;
@@ -282,6 +292,9 @@ namespace CAVS.ProjectOrganizer.Controls
             pointer = pointerParent.AddComponent<LineRenderer>();
             if (pointer != null)
             {
+                pointer.material = new Material(Shader.Find("Sprites/Default"));
+                pointer.startColor = Color.grey;
+                pointer.endColor = Color.grey;
                 pointer.positionCount = 2;
                 pointer.startWidth = .025f;
                 pointer.endWidth = .025f;

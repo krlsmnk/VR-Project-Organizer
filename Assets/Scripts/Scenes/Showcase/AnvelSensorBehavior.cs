@@ -11,12 +11,6 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
     public abstract class AnvelSensorBehavior : MonoBehaviour, ISelectable
     {
 
-        private enum ObjCreationState
-        {
-            NotCreated,
-            Created
-        };
-
         protected AnvelObject parent;
 
         protected AnvelControlService.Client connection;
@@ -29,7 +23,6 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         private VRTK_InteractableObject interactableObject;
 
-        private ObjCreationState objCreationState;
 
         private Vector3 lastPosition;
 
@@ -72,7 +65,6 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
             newScript.parent = parent;
             newScript.connection = connection;
-            newScript.objCreationState = ObjCreationState.NotCreated;
             newScript.lastPosition = newObj.transform.position;
             newScript.interactableObject.isGrabbable = true;
             newScript.objectWeArecontrolling = null;
@@ -98,10 +90,9 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             if (collision.transform.name == "Big Car")
             {
 
-                if (objCreationState == ObjCreationState.NotCreated)
+                if (objectWeArecontrolling == null)
                 {
                     GetComponent<Collider>().isTrigger = true;
-                    objCreationState = ObjCreationState.Created;
                     CreateApprorpiateAnvelObject();
                 }
 
@@ -121,7 +112,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         private void Update()
         {
             Vector3 currentPosition = transform.position;
-            if (objCreationState == ObjCreationState.Created)
+            if (objectWeArecontrolling != null)
             {
                 if ((currentPosition - lastPosition).Equals(Vector3.zero) == false)
                 {
@@ -148,7 +139,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                 Destroy(uiView);
             }
 
-            else if (objCreationState == ObjCreationState.Created)
+            else if (objectSensorWeArecontrolling != null)
             {
                 var window = new Window(PropertyKeyForModifying(), new IElement[] {
                 new SliderElement(PropertyRangeForModifying().x, PropertyRangeForModifying().y, lastValueSeen, delegate(float x) {
