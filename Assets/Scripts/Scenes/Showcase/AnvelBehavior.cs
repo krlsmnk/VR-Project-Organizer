@@ -20,7 +20,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         }
 
         [SerializeField]
-        private GameObject cameraFeedDisplay;
+        private InteractableScreen cameraFeedDisplay;
 
         [SerializeField]
         private GameObject objectForOffset;
@@ -96,10 +96,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         private void BuildOverWorldCamera(ClientConnectionToken connectionToken)
         {
-            var objectWeArecontrolling = AnvelObject.CreateObject(ConnectionFactory.CreateConnection(connectionToken), $"Camera - {Random.Range(0, 1000000)}", AssetName.Sensors.API_Camera);
-            objectWeArecontrolling.UpdateTransform(transform.localPosition, transform.localRotation);
-
-            LiveCameraDisplay.Build(cameraFeedDisplay, connectionToken, objectWeArecontrolling);
+            cameraFeedDisplay.Initialize(connectionToken);
         }
 
         private void OnMainCarChange(PictureItem car)

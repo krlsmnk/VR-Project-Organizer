@@ -167,7 +167,7 @@ namespace CAVS.ProjectOrganizer.Controls
 
                 interactableObject = null;
                 objectStateOnGrab = null;
-                radialMenu.enabled = true;
+                radialMenu.gameObject.SetActive(true);
             }
         }
 
@@ -177,10 +177,9 @@ namespace CAVS.ProjectOrganizer.Controls
             {
                 objectStateOnGrab = new ObjectState(interactableObject.gameObject);
                 distanceOfObjectFromController = Vector3.Distance(interactableObject.transform.position, transform.position);
-                interactableObject.transform.SetParent(transform);
                 interactableObject.transform.position = transform.position;
 
-                radialMenu.enabled = false;
+                radialMenu.gameObject.SetActive(false);
 
                 var col = interactableObject.GetComponent<Collider>();
                 if (col != null)
@@ -255,6 +254,14 @@ namespace CAVS.ProjectOrganizer.Controls
                 objectPositionLastFrame = interactableObject.transform.position;
                 interactableObject.transform.position = Discritize((transform.forward * distanceForObject) + transform.position);
                 interactableObject.transform.rotation = Discritize(interactableObject.transform.rotation, interactableObject.transform.position);
+
+                //InteractableScreen
+                var restrained = interactableObject as RestrainedInteractableObject;
+                if (restrained != null)
+                {
+                    interactableObject.transform.position = restrained.GetAvailablePositionFromDesired(interactableObject.transform.position, interactableObject.transform.rotation);
+                    interactableObject.transform.rotation = restrained.GetAvailableRotationFromDesired(interactableObject.transform.position, interactableObject.transform.rotation);
+                }
             }
         }
 
@@ -297,7 +304,7 @@ namespace CAVS.ProjectOrganizer.Controls
             {
                 TurnOffPointer();
             }
-            if (interactableObject != null)
+            if (interactableObject != null && objectStateOnGrab != null)
             {
                 objectStateOnGrab.Restore(interactableObject.gameObject, ((interactableObject.transform.position - objectPositionLastFrame) / Time.deltaTime) * .2f);
 
