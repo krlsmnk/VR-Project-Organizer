@@ -8,6 +8,10 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
     {
         protected override void CreateApprorpiateAnvelObject()
         {
+            if(objectWeArecontrolling != null)
+            {
+                return;
+            }
             string name = $"Lidar - {Random.Range(0, 1000000)}"; // Because anvel  won't allow two objects to have the same name, despite having two different keys
 
             var baseObj = connection.CreateObject(AssetName.Sensors.API_3D_LIDAR, name , parent.ObjectDescriptor().ObjectKey, new Point3(), new Euler(), false);
@@ -41,6 +45,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         {
             transform.localPosition = config.Position;
             transform.localEulerAngles = config.Rotation;
+            CreateApprorpiateAnvelObject();
             Debug.LogWarning("Lidar range is not being set from config!");
         }
     }
