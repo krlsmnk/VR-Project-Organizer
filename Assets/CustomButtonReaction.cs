@@ -71,13 +71,13 @@ public class CustomButtonReaction : MonoBehaviour {
                         if((cloneRigidBody.constraints & RigidbodyConstraints.FreezePositionX) == RigidbodyConstraints.FreezePositionX) 
                          {
                             // x-position is frozen, unfreeze it
-                            cloneRigidBody.constraints &= ~RigidbodyConstraints.FreezePositionX;
+                            cloneRigidBody.constraints ^= RigidbodyConstraints.FreezePositionX;
                             TurnThis(buttons[0], Color.green);
                          }
                         else
                         {
                             // x-position not frozen, freeze it
-                            cloneRigidBody.constraints &= RigidbodyConstraints.FreezePositionX;
+                            cloneRigidBody.constraints ^= RigidbodyConstraints.FreezePositionX;
                             TurnThis(buttons[0], Color.red);
                         }               
         }
@@ -86,13 +86,13 @@ public class CustomButtonReaction : MonoBehaviour {
                         if((cloneRigidBody.constraints & RigidbodyConstraints.FreezePositionY) == RigidbodyConstraints.FreezePositionY) 
                          {
                             //position is frozen, unfreeze it
-                            cloneRigidBody.constraints &= ~RigidbodyConstraints.FreezePositionY;
+                            cloneRigidBody.constraints ^= RigidbodyConstraints.FreezePositionY;
                             TurnThis(buttons[1], Color.green);
                          }
                         else
                         {
                             //position not frozen, freeze it
-                            cloneRigidBody.constraints &= RigidbodyConstraints.FreezePositionY;
+                            cloneRigidBody.constraints ^= RigidbodyConstraints.FreezePositionY;
                             TurnThis(buttons[1], Color.red);
                         }                      
         }
@@ -101,13 +101,13 @@ public class CustomButtonReaction : MonoBehaviour {
                         if((cloneRigidBody.constraints & RigidbodyConstraints.FreezePositionZ) == RigidbodyConstraints.FreezePositionZ) 
                          {
                             //position is frozen, unfreeze it
-                            cloneRigidBody.constraints &= ~RigidbodyConstraints.FreezePositionZ;
+                            cloneRigidBody.constraints ^= RigidbodyConstraints.FreezePositionZ;
                             TurnThis(buttons[2], Color.green);
                          }
                         else
                         {
                             //position not frozen, freeze it
-                            cloneRigidBody.constraints &= RigidbodyConstraints.FreezePositionZ;
+                            cloneRigidBody.constraints ^= RigidbodyConstraints.FreezePositionZ;
                             TurnThis(buttons[2], Color.red);
                         }                            
         }
@@ -116,13 +116,13 @@ public class CustomButtonReaction : MonoBehaviour {
                         if((cloneRigidBody.constraints & RigidbodyConstraints.FreezeRotationX) == RigidbodyConstraints.FreezeRotationX) 
                          {
                             //rotation is frozen, unfreeze it
-                            cloneRigidBody.constraints &= ~RigidbodyConstraints.FreezeRotationX;
+                            cloneRigidBody.constraints ^= RigidbodyConstraints.FreezeRotationX;
                             TurnThis(buttons[3], Color.green);
                          }
                         else
                         {
                             //rotation not frozen, freeze it
-                            cloneRigidBody.constraints &= RigidbodyConstraints.FreezeRotationX;
+                            cloneRigidBody.constraints ^= RigidbodyConstraints.FreezeRotationX;
                             TurnThis(buttons[3], Color.red);
                         }                       
         }
@@ -131,13 +131,13 @@ public class CustomButtonReaction : MonoBehaviour {
                         if((cloneRigidBody.constraints & RigidbodyConstraints.FreezeRotationY) == RigidbodyConstraints.FreezeRotationY) 
                          {
                             //rotation is frozen, unfreeze it
-                            cloneRigidBody.constraints &= ~RigidbodyConstraints.FreezeRotationY;
+                            cloneRigidBody.constraints ^= RigidbodyConstraints.FreezeRotationY;
                             TurnThis(buttons[4], Color.green);
                          }
                         else
                         {
                             //rotation not frozen, freeze it
-                            cloneRigidBody.constraints &= RigidbodyConstraints.FreezeRotationY;
+                            cloneRigidBody.constraints ^= RigidbodyConstraints.FreezeRotationY;
                             TurnThis(buttons[4], Color.red);
                         }              
         }
@@ -146,13 +146,13 @@ public class CustomButtonReaction : MonoBehaviour {
                         if((cloneRigidBody.constraints & RigidbodyConstraints.FreezeRotationZ) == RigidbodyConstraints.FreezeRotationZ) 
                          {
                             //rotation is frozen, unfreeze it
-                            cloneRigidBody.constraints &= ~RigidbodyConstraints.FreezeRotationZ;
+                            cloneRigidBody.constraints ^= RigidbodyConstraints.FreezeRotationZ;
                             TurnThis(buttons[5], Color.green);
                          }
                         else
                         {
                             //rotation not frozen, freeze it
-                            cloneRigidBody.constraints &= RigidbodyConstraints.FreezeRotationZ;
+                            cloneRigidBody.constraints ^= RigidbodyConstraints.FreezeRotationZ;
                             TurnThis(buttons[5], Color.red);
                         } 
         }
