@@ -47,6 +47,13 @@ public class CustomButtonReaction : MonoBehaviour {
                thisButton.colors = colors;            
         }
 
+        void ToggleThis(Button thisButton) {
+            ColorBlock colors = thisButton.colors;
+            if (colors.normalColor == Color.red) colors.normalColor = Color.green;
+            else colors.normalColor = Color.red;
+            thisButton.colors = colors;
+        }
+
         public void translateButton() { 
             //disable all existing constraints  
                     cloneRigidBody.constraints = RigidbodyConstraints.None;
@@ -66,95 +73,29 @@ public class CustomButtonReaction : MonoBehaviour {
                     cloneRigidBody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
                     TurnAll(posButtons, Color.red);            
         }
-        public void posx() { 
-            //check status of posX constraint
-                        if((cloneRigidBody.constraints & RigidbodyConstraints.FreezePositionX) == RigidbodyConstraints.FreezePositionX) 
-                         {
-                            // x-position is frozen, unfreeze it
-                            cloneRigidBody.constraints ^= RigidbodyConstraints.FreezePositionX;
-                            TurnThis(buttons[0], Color.green);
-                         }
-                        else
-                        {
-                            // x-position not frozen, freeze it
-                            cloneRigidBody.constraints ^= RigidbodyConstraints.FreezePositionX;
-                            TurnThis(buttons[0], Color.red);
-                        }               
+        public void posx() {         
+            cloneRigidBody.constraints ^= RigidbodyConstraints.FreezePositionX;
+            ToggleThis(buttons[0]);
         }
-        public void posy() { 
-            //check status of constraint
-                        if((cloneRigidBody.constraints & RigidbodyConstraints.FreezePositionY) == RigidbodyConstraints.FreezePositionY) 
-                         {
-                            //position is frozen, unfreeze it
-                            cloneRigidBody.constraints ^= RigidbodyConstraints.FreezePositionY;
-                            TurnThis(buttons[1], Color.green);
-                         }
-                        else
-                        {
-                            //position not frozen, freeze it
-                            cloneRigidBody.constraints ^= RigidbodyConstraints.FreezePositionY;
-                            TurnThis(buttons[1], Color.red);
-                        }                      
+        public void posy() {
+            cloneRigidBody.constraints ^= RigidbodyConstraints.FreezePositionY;
+            ToggleThis(buttons[1]);
         }
-        public void posz() { 
-            //check status of constraint
-                        if((cloneRigidBody.constraints & RigidbodyConstraints.FreezePositionZ) == RigidbodyConstraints.FreezePositionZ) 
-                         {
-                            //position is frozen, unfreeze it
-                            cloneRigidBody.constraints ^= RigidbodyConstraints.FreezePositionZ;
-                            TurnThis(buttons[2], Color.green);
-                         }
-                        else
-                        {
-                            //position not frozen, freeze it
-                            cloneRigidBody.constraints ^= RigidbodyConstraints.FreezePositionZ;
-                            TurnThis(buttons[2], Color.red);
-                        }                            
+        public void posz() {
+            cloneRigidBody.constraints ^= RigidbodyConstraints.FreezePositionZ;
+            ToggleThis(buttons[2]);
         }
-        public void rotx() { 
-            //check status of constraint
-                        if((cloneRigidBody.constraints & RigidbodyConstraints.FreezeRotationX) == RigidbodyConstraints.FreezeRotationX) 
-                         {
-                            //rotation is frozen, unfreeze it
-                            cloneRigidBody.constraints ^= RigidbodyConstraints.FreezeRotationX;
-                            TurnThis(buttons[3], Color.green);
-                         }
-                        else
-                        {
-                            //rotation not frozen, freeze it
-                            cloneRigidBody.constraints ^= RigidbodyConstraints.FreezeRotationX;
-                            TurnThis(buttons[3], Color.red);
-                        }                       
+        public void rotx() {
+            cloneRigidBody.constraints ^= RigidbodyConstraints.FreezeRotationX;
+            ToggleThis(buttons[3]);
         }
-        public void roty() { 
-           //check status of constraint
-                        if((cloneRigidBody.constraints & RigidbodyConstraints.FreezeRotationY) == RigidbodyConstraints.FreezeRotationY) 
-                         {
-                            //rotation is frozen, unfreeze it
-                            cloneRigidBody.constraints ^= RigidbodyConstraints.FreezeRotationY;
-                            TurnThis(buttons[4], Color.green);
-                         }
-                        else
-                        {
-                            //rotation not frozen, freeze it
-                            cloneRigidBody.constraints ^= RigidbodyConstraints.FreezeRotationY;
-                            TurnThis(buttons[4], Color.red);
-                        }              
+        public void roty() {
+            cloneRigidBody.constraints ^= RigidbodyConstraints.FreezeRotationY;
+            ToggleThis(buttons[4]);
         }
-        public void rotz() { 
-             //check status of constraint
-                        if((cloneRigidBody.constraints & RigidbodyConstraints.FreezeRotationZ) == RigidbodyConstraints.FreezeRotationZ) 
-                         {
-                            //rotation is frozen, unfreeze it
-                            cloneRigidBody.constraints ^= RigidbodyConstraints.FreezeRotationZ;
-                            TurnThis(buttons[5], Color.green);
-                         }
-                        else
-                        {
-                            //rotation not frozen, freeze it
-                            cloneRigidBody.constraints ^= RigidbodyConstraints.FreezeRotationZ;
-                            TurnThis(buttons[5], Color.red);
-                        } 
+        public void rotz() {
+            cloneRigidBody.constraints ^= RigidbodyConstraints.FreezeRotationZ;
+            ToggleThis(buttons[5]);
         }
 }
 }
