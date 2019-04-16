@@ -26,43 +26,55 @@ namespace CAVS.ProjectOrganizer.Interation
         [SerializeField]
         private AxisToControl axisToControl;
 
-        public void Select(GameObject caller)
+        public void SelectPress(GameObject caller)
         {
-            if(controller == null)
+            controller = caller;
+            originalArrowPosition = transform.parent.position;
+            float callerOriginalDistance = Vector3.Distance(transform.parent.position, controller.transform.position);
+            pointOriginallyHit = controller.transform.position + (controller.transform.forward * callerOriginalDistance);
+            switch (axisToControl)
             {
-                controller = caller;
-                originalArrowPosition = transform.parent.position;
-                float callerOriginalDistance = Vector3.Distance(transform.parent.position, controller.transform.position);
-                pointOriginallyHit = controller.transform.position + (controller.transform.forward * callerOriginalDistance);
-                switch (axisToControl)
-                {
-                    case AxisToControl.X:
-                        orientationPlane = new Plane(
-                            transform.parent.position + transform.parent.TransformDirection(Vector3.left),
-                            transform.parent.position + transform.parent.TransformDirection(Vector3.up),
-                            transform.parent.position
-                            );
-                        break;
-                    case AxisToControl.Y:
-                        orientationPlane = new Plane(
-                            transform.parent.position + transform.parent.TransformDirection(Vector3.left),
-                            transform.parent.position + transform.parent.TransformDirection(Vector3.up),
-                            transform.parent.position
-                            );
-                        break;
-                    case AxisToControl.Z:
-                        orientationPlane = new Plane(
-                            transform.parent.position + transform.parent.TransformDirection(Vector3.forward),
-                            transform.parent.position + transform.parent.TransformDirection(Vector3.up),
-                            transform.parent.position
-                            );
-                        break;
-                }
-            } else
-            {
-                controller = null;
+                case AxisToControl.X:
+                    orientationPlane = new Plane(
+                        transform.parent.position + transform.parent.TransformDirection(Vector3.left),
+                        transform.parent.position + transform.parent.TransformDirection(Vector3.up),
+                        transform.parent.position
+                        );
+                    break;
+                case AxisToControl.Y:
+                    orientationPlane = new Plane(
+                        transform.parent.position + transform.parent.TransformDirection(Vector3.left),
+                        transform.parent.position + transform.parent.TransformDirection(Vector3.up),
+                        transform.parent.position
+                        );
+                    break;
+                case AxisToControl.Z:
+                    orientationPlane = new Plane(
+                        transform.parent.position + transform.parent.TransformDirection(Vector3.forward),
+                        transform.parent.position + transform.parent.TransformDirection(Vector3.up),
+                        transform.parent.position
+                        );
+                    break;
             }
-            
+
+        }
+
+
+        public void UnSelect(GameObject caller)
+        {
+        }
+
+        public void SelectUnpress(GameObject caller)
+        {
+            controller = null;
+        }
+
+        public void Hover(GameObject caller)
+        {
+        }
+
+        public void UnHover(GameObject caller)
+        {
         }
 
         public void SetObjectToControl(GameObject objectToControl)
@@ -70,13 +82,9 @@ namespace CAVS.ProjectOrganizer.Interation
             this.objectToControl = objectToControl;
         }
 
-        public void UnSelect(GameObject caller)
-        {
-        }
-
         void FixedUpdate()
         {
-            if(controller != null)
+            if (controller != null)
             {
                 Ray ray = new Ray(controller.transform.position, controller.transform.forward);
 
@@ -107,11 +115,13 @@ namespace CAVS.ProjectOrganizer.Interation
                     objectToControl.transform.position = transform.parent.position;
 
                 }
-            } else
+            }
+            else
             {
                 transform.parent.position = objectToControl.transform.position;
             }
         }
+
 
     }
 

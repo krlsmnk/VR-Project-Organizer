@@ -20,6 +20,9 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         }
 
         [SerializeField]
+        private InteractableScreen cameraFeedDisplay;
+
+        [SerializeField]
         private GameObject objectForOffset;
 
         [SerializeField]
@@ -60,7 +63,10 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
             sensorManager = new SensorManager();
 
-            AnvelSensorBehavior.Build(AssetName.Sensors.API_Camera, new Vector3(-1, 1, -5.5f), carReference, connnnnn, sensorManager).transform.SetParent(parentForSensors);
+            var display = gameObject.AddComponent<LiveDisplayBehavior>();
+
+
+            //AnvelSensorBehavior.Build(AssetName.Sensors.API_Camera, new Vector3(-1, 1, -5.5f), carReference, connnnnn, sensorManager).transform.SetParent(parentForSensors);
             AnvelSensorBehavior.Build(AssetName.Sensors.API_3D_LIDAR, new Vector3(1, 1, -5.5f), carReference, connnnnn, sensorManager).transform.SetParent(parentForSensors);
 
             CarManager
@@ -69,7 +75,6 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
             OnMainCarChange(CarManager.Instance().GetMainCar());
 
-            var display = gameObject.AddComponent<LiveDisplayBehavior>();
 
             display.Initialize(
                     connectionToken,
@@ -79,16 +84,21 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                     new Vector3(0, 90, 0)
                  );
 
-            if (drivingController != null)
-            {
-                VehicleControl.Build(drivingController, connectionToken, carReference.ObjectDescriptor());
-            }
-            else
-            {
-                Debug.LogWarning("No Driving Controller Assigned!");
-            }
-
+            //if (drivingController != null)
+            //{
+            //    VehicleControl.Build(drivingController, connectionToken, carReference.ObjectDescriptor());
+            //}
+            //else
+            //{
+            //    Debug.LogWarning("No Driving Controller Assigned!");
+            //}
+            BuildOverWorldCamera(connectionToken);
             StartCoroutine(UpdateOffsetTick(display));
+        }
+
+        private void BuildOverWorldCamera(ClientConnectionToken connectionToken)
+        {
+            cameraFeedDisplay.Initialize(connectionToken);
         }
 
         private void OnMainCarChange(PictureItem car)

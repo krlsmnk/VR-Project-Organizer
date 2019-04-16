@@ -66,12 +66,15 @@ namespace CAVS.ProjectOrganizer.Controls
 
         private SnappingZoneBehavior[] snappingZones;
 
+        private VRTK_RadialMenu radialMenu;
+
         public static GrabControlBehavior Initialize(VRTK_ControllerEvents hand)
         {
             var newScript = hand.gameObject.AddComponent<GrabControlBehavior>();
             newScript.TurnOnPointer();
             newScript.hand = hand;
             newScript.interactableObject = null;
+            newScript.radialMenu = hand.gameObject.GetComponentInChildren<VRTK_RadialMenu>();
 
             newScript.hand.GripPressed += newScript.Hand_GripPressed;
             newScript.hand.TriggerClicked += newScript.Hand_TriggerPressed;
@@ -113,7 +116,10 @@ namespace CAVS.ProjectOrganizer.Controls
 
         float currentTouchpadY = 0;
 
-        float frictionConstant = .1f;
+        /// <summary>
+        /// A value I played with a lot till I got something I liked
+        /// </summary>
+        float frictionConstant = 4f;
 
         float lastTimeAxisChanged;
 
@@ -129,8 +135,13 @@ namespace CAVS.ProjectOrganizer.Controls
         {
             if (interactableObject != null)
             {
+                if (currentTouchpadY != -666)
+                {
+                    distanceOfObjectFromController = Mathf.Clamp(distanceOfObjectFromController + (e.touchpadAxis.y - currentTouchpadY), 0, 1000f);
+                }
                 lastTouchpadY = currentTouchpadY;
                 currentTouchpadY = e.touchpadAxis.y;
+                
                 if (currentTouchpadY != -666 && lastTouchpadY != -666)
                 {
                     axisVelocity = (currentTouchpadY - lastTouchpadY)/Time.deltaTime;
@@ -140,6 +151,16 @@ namespace CAVS.ProjectOrganizer.Controls
 
         private void UpdateInteractableObject(VRTK_InteractableObject newInteractable)
         {
+            if(newInteractable == null)
+            {
+                pointer.startColor = Color.grey;
+                pointer.endColor = Color.grey;
+            } else
+            {
+                pointer.startColor = Color.cyan;
+                pointer.endColor = Color.cyan;
+            }
+
             if (newInteractable == interactableObject)
             {
                 return;
@@ -156,6 +177,7 @@ namespace CAVS.ProjectOrganizer.Controls
 
                 interactableObject = null;
                 objectStateOnGrab = null;
+                radialMenu.gameObject.SetActive(true);
             }
         }
 
@@ -165,8 +187,9 @@ namespace CAVS.ProjectOrganizer.Controls
             {
                 objectStateOnGrab = new ObjectState(interactableObject.gameObject);
                 distanceOfObjectFromController = Vector3.Distance(interactableObject.transform.position, transform.position);
-                interactableObject.transform.SetParent(transform);
                 interactableObject.transform.position = transform.position;
+
+                radialMenu.gameObject.SetActive(false);
 
                 var col = interactableObject.GetComponent<Collider>();
                 if (col != null)
@@ -232,15 +255,23 @@ namespace CAVS.ProjectOrganizer.Controls
 
             if (objectStateOnGrab != null)
             {
-                if (currentTouchpadY != -666)
+                if(hand.touchpadTouched == false)
                 {
                     distanceOfObjectFromController = Mathf.Clamp(distanceOfObjectFromController + (axisVelocity * Time.deltaTime), 0, 1000f);
-                    axisVelocity *= frictionConstant * Time.deltaTime;
                 }
+                axisVelocity *= 1f - (frictionConstant * Time.deltaTime);
 
                 objectPositionLastFrame = interactableObject.transform.position;
                 interactableObject.transform.position = Discritize((transform.forward * distanceForObject) + transform.position);
                 interactableObject.transform.rotation = Discritize(interactableObject.transform.rotation, interactableObject.transform.position);
+
+                //InteractableScreen
+                var restrained = interactableObject as RestrainedInteractableObject;
+                if (restrained != null)
+                {
+                    interactableObject.transform.position = restrained.GetAvailablePositionFromDesired(interactableObject.transform.position, interactableObject.transform.rotation);
+                    interactableObject.transform.rotation = restrained.GetAvailableRotationFromDesired(interactableObject.transform.position, interactableObject.transform.rotation);
+                }
             }
         }
 
@@ -255,9 +286,15 @@ namespace CAVS.ProjectOrganizer.Controls
             {
                 return;
             }
-            pointer = gameObject.AddComponent<LineRenderer>();
+            var pointerParent = new GameObject("Pointer Parent");
+            pointerParent.transform.SetParent(transform);
+            pointerParent.transform.localPosition = Vector3.zero;
+            pointer = pointerParent.AddComponent<LineRenderer>();
             if (pointer != null)
             {
+                pointer.material = new Material(Shader.Find("Sprites/Default"));
+                pointer.startColor = Color.grey;
+                pointer.endColor = Color.grey;
                 pointer.positionCount = 2;
                 pointer.startWidth = .025f;
                 pointer.endWidth = .025f;
@@ -271,7 +308,7 @@ namespace CAVS.ProjectOrganizer.Controls
             {
                 return;
             }
-            Destroy(pointer);
+            Destroy(pointer.gameObject);
         }
 
         private void OnDestroy()
@@ -280,7 +317,7 @@ namespace CAVS.ProjectOrganizer.Controls
             {
                 TurnOffPointer();
             }
-            if (interactableObject != null)
+            if (interactableObject != null && objectStateOnGrab != null)
             {
                 objectStateOnGrab.Restore(interactableObject.gameObject, ((interactableObject.transform.position - objectPositionLastFrame) / Time.deltaTime) * .2f);
 

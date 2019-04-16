@@ -9,7 +9,7 @@ public class ControllerTest : MonoBehaviour {
 	RotateWidget selectable;
 
 	void Start () {
-		selectable.Select(gameObject);	
+		selectable.SelectPress(gameObject);	
 	}
 	
 }

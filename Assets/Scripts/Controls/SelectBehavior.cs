@@ -11,55 +11,92 @@ namespace CAVS.ProjectOrganizer.Controls
 
         private VRTK_ControllerEvents hand;
 
-        private ISelectable[] selectable;
+        private ISelectable[] currentSelectable;
+
+        private ISelectable[] currentHover;
 
         public static SelectBehavior Initialize(VRTK_ControllerEvents hand)
         {
             var newScript = hand.gameObject.AddComponent<SelectBehavior>();
             newScript.TurnOnPointer();
             newScript.hand = hand;
-            newScript.selectable = null;
+            newScript.currentSelectable = null;
+            newScript.currentHover = null;
             newScript.hand.GripPressed += newScript.Hand_GripPressed;
             newScript.hand.TriggerClicked += newScript.Hand_TriggerPressed;
             newScript.hand.TriggerUnclicked += newScript.Hand_TriggerReleased;
             return newScript;
         }
 
-        private void UpdateSelectable(ISelectable[] newSelectable)
+        private void UpdateCurrentHovered(ISelectable[] newhover)
         {
-            if(newSelectable == selectable)
+            if(newhover == null || newhover.Length == 0)
+            {
+                pointer.startColor = Color.red;
+                pointer.endColor = Color.red;
+            } else
+            {
+                pointer.startColor = Color.green;
+                pointer.endColor = Color.green;
+            }
+
+            if (newhover == currentHover)
             {
                 return;
             }
 
-            if(selectable != null)
+            if (currentHover != null)
             {
-                foreach (var sel in selectable)
+                foreach (var sel in currentHover)
                 {
-                    sel.UnSelect(gameObject);
+                    sel.UnHover(gameObject);
                 }
             }
-            selectable = newSelectable;
-        }
+            currentHover = newhover;
 
-        private void Hand_TriggerReleased(object sender, ControllerInteractionEventArgs e)
-        {
-            if (selectable != null)
+            if (currentHover != null)
             {
-                foreach (var sel in selectable)
+                foreach (var sel in currentHover)
                 {
-                    sel.UnSelect(gameObject);
+                    sel.Hover(gameObject);
                 }
             }
         }
 
         private void Hand_TriggerPressed(object sender, ControllerInteractionEventArgs e)
         {
-            if(selectable != null )
+            if (currentHover != currentSelectable)
             {
-                foreach (var sel in selectable)
+
+                if (currentSelectable != null)
                 {
-                    sel.Select(gameObject);
+                    foreach (var sel in currentSelectable)
+                    {
+                        sel.UnSelect(gameObject);
+                    }
+                }
+            }
+
+            if (currentHover == null)
+            {
+                return;
+            }
+
+            currentSelectable = currentHover;
+            foreach (var sel in currentSelectable)
+            {
+                sel.SelectPress(gameObject);
+            }
+
+        }
+
+        private void Hand_TriggerReleased(object sender, ControllerInteractionEventArgs e)
+        {
+            if (currentSelectable != null)
+            {
+                foreach (var sel in currentSelectable)
+                {
+                    sel.SelectUnpress(gameObject);
                 }
             }
         }
@@ -85,12 +122,12 @@ namespace CAVS.ProjectOrganizer.Controls
                 RaycastHit hit;
                 if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
                 {
-                    UpdateSelectable(hit.transform.gameObject.GetComponents<ISelectable>());
+                    UpdateCurrentHovered(hit.transform.gameObject.GetComponents<ISelectable>());
                     pointer.SetPosition(1, hit.point);
                 }
                 else
                 {
-                    UpdateSelectable(null);
+                    UpdateCurrentHovered(null);
                     pointer.SetPosition(1, transform.position + (transform.rotation * Vector3.forward * 100));
                 }
             }
@@ -108,14 +145,20 @@ namespace CAVS.ProjectOrganizer.Controls
             {
                 return;
             }
-            pointer = gameObject.AddComponent<LineRenderer>();
-            if(pointer != null)
+            var pointerParent = new GameObject("Pointer Parent");
+            pointerParent.transform.SetParent(transform);
+            pointerParent.transform.localPosition = Vector3.zero;
+            pointer = pointerParent.AddComponent<LineRenderer>();
+            if (pointer != null)
             {
+                pointer.material = new Material(Shader.Find("Sprites/Default"));
+                pointer.startColor = Color.red;
+                pointer.endColor = Color.red;
                 pointer.positionCount = 2;
                 pointer.startWidth = .025f;
                 pointer.endWidth = .025f;
             }
-            
+
         }
 
         private void TurnOffPointer()
@@ -124,7 +167,7 @@ namespace CAVS.ProjectOrganizer.Controls
             {
                 return;
             }
-            Destroy(pointer);
+            Destroy(pointer.gameObject);
         }
 
         private void OnDestroy()
@@ -133,7 +176,14 @@ namespace CAVS.ProjectOrganizer.Controls
             {
                 TurnOffPointer();
             }
-            UpdateSelectable(null);
+            UpdateCurrentHovered(null);
+            if (currentSelectable != null)
+            {
+                foreach (var sel in currentSelectable)
+                {
+                    sel.UnSelect(gameObject);
+                }
+            }
             hand.GripPressed -= Hand_GripPressed;
             hand.TriggerClicked -= Hand_TriggerPressed;
             hand.TriggerUnclicked -= Hand_TriggerReleased;
