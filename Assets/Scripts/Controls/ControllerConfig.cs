@@ -46,7 +46,7 @@ namespace CAVS.ProjectOrganizer.Controls
             }
 
             var radial = UnityEngine.Object.Instantiate(Resources.Load("PlayerControl/RadialMenu") as GameObject, hand.transform);
-            radial.transform.localPosition = new Vector3(0, .2f, 0);
+            radial.transform.localPosition = new Vector3(0, .05f, 0);
 
             PlayerControlBehavior.Initialize(hand, controls);
         }

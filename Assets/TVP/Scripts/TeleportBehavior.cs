@@ -14,9 +14,9 @@ namespace KarlSmink.Teleporting
         [SerializeField]
         private AudioClip teleportSound;
 
-        private Vector3 headsetPosition;
+        private Vector3 oldHeadsetPosition;
 
-        private Quaternion headsetRotation;
+        private Quaternion oldHeadsetRotation;
 
         [SerializeField]
         private GameObject portal;
@@ -40,7 +40,6 @@ namespace KarlSmink.Teleporting
             script.cameraBeingControlled = cameraBeingControlled;
 
             script.headsetCollision.HeadsetCollisionDetect += script.OnHeadsetCollisionDetect;
-            script.headsetCollision.HeadsetCollisionEnded += script.OnHeadsetCollisionEnded;
 
             return script;
         }
@@ -48,7 +47,6 @@ namespace KarlSmink.Teleporting
         void OnDestroy()
         {
             headsetCollision.HeadsetCollisionDetect -= new HeadsetCollisionEventHandler(OnHeadsetCollisionDetect);
-            headsetCollision.HeadsetCollisionEnded -= new HeadsetCollisionEventHandler(OnHeadsetCollisionEnded);
         }
 
         private void OnHeadsetCollisionDetect(object sender, HeadsetCollisionEventArgs e)
@@ -56,36 +54,23 @@ namespace KarlSmink.Teleporting
             playArea = VRTK_DeviceFinder.PlayAreaTransform();
             headset = VRTK_DeviceFinder.HeadsetTransform();
 
-            headsetPosition = headset.position;
-            headsetRotation = headset.rotation;
+            Vector3 playareaHeadsetOffset = headset.transform.position - playArea.transform.position;
 
-            playArea.position = cameraBeingControlled.position + cameraBeingControlled.forward;
-            playArea.position -= new Vector3(0f, 1.2f, 0f);
-            headset.position = playArea.position;
+            var headForwardCleaned = headset.forward;
+            headForwardCleaned.y = 0;
+            portal.transform.position = cameraBeingControlled.position - (headForwardCleaned.normalized);
+            portal.transform.LookAt(cameraBeingControlled.position - (headForwardCleaned.normalized * 4)); // 4 means nothing, we just have to go further than it's position
 
-            portal.transform.LookAt(headset);
-            portal.transform.position = new Vector3(portal.transform.position.x, headset.position.y + (4 * height), portal.transform.position.z);
-            portal.transform.Rotate(90, 0, 180);
+            var newHeadsetPosition = cameraBeingControlled.position + cameraBeingControlled.forward;
+
+            cameraBeingControlled.position = headset.position;
+            cameraBeingControlled.rotation = headset.rotation;
+
+            playArea.position = newHeadsetPosition - playareaHeadsetOffset;
+            headset.position = newHeadsetPosition;
 
             Util.PlaySoundEffect(teleportSound, transform.position);
         }
-
-        private void OnHeadsetCollisionEnded(object sender, HeadsetCollisionEventArgs e)
-        {
-            headset = VRTK_DeviceFinder.HeadsetTransform();
-            cameraBeingControlled.position = headsetPosition;
-            cameraBeingControlled.rotation = headsetRotation;
-
-            Transform tempPos = headset.transform;
-            tempPos.rotation = headset.rotation;
-            tempPos.Translate(Vector3.back * 0.1f);
-            tempPos.Rotate(0, 180, 0);
-
-            portal.transform.position = tempPos.position;
-            portal.transform.rotation = tempPos.rotation;
-        }
-
-        
 
     }
 }

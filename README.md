@@ -21,7 +21,7 @@ Topics to understand for the project:
 12. C# Naming/Styling conventions.
 13. C# [Namespaces](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/namespaces/) 
 14. LEARN THE REFACTOR TOOLS OF VISUAL STUDIOS. LET THE EDITOR WRITE THE CODE FOR YOU
-15. `string.Format()`
+15. string.Format()
 16. Avoid booleans for variables. Look into [enum](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/enum)s
 17. If you're going to be working with networking, look into [Docker](https://www.docker.com/). This is an amazing tool in itself that most tech companies have adopted in some form or fashion. It's worth learning if you don't know it yet.
 18. If you're working with UI-Gen project, or just want to get better at Unity, look into [Asset Bundles](https://docs.unity3d.com/Manual/AssetBundlesIntro.html). Resources.Load is honestly a horrible way of doing things but I kept it that way for sake of simplicity. Developing real games will require the use of asset bundles and careful planning on how you're going to use them, which is game specific.
@@ -30,12 +30,12 @@ Personal conventions on project:
 
 1. Any code goes in the Script folder.
 2. Create a folder for scripts per scene.
-3. Namespaces follow folder structure once inside Scripts folder, and are prepended with `CAVS.ProjectOrganizer`.
-    * For example, if a script is located under Scripts/Interaction, the namespace would then be `CAVS.ProjectOrganizer.Interaction`.
+3. Namespaces follow folder structure once inside Scripts folder, and are prepended with CAVS.ProjectOrganizer.
+    * For example, if a script is located under Scripts/Interaction, the namespace would then be CAVS.ProjectOrganizer.Interaction.
 4. Any class that inherits from MonoBehavior has their name appended with "Behavior".
-    * For example, If I see a class named `GameManagerBehavior`, I know it inherits from monobehavior and if I have an instance of it, it must exist in the scene.
-    * If the class is just named `GameManager`, then I know it does not inherit from monobehavior, and it's existance is not tied to the scene loaded.
-5. Each Scene will have their own `GameManagerBehavior` class that is attatched to a empty object in the scene named "__SCRIPTS\__".
+    * For example, If I see a class named GameManagerBehavior, I know it inherits from monobehavior and if I have an instance of it, it must exist in the scene.
+    * If the class is just named GameManager, then I know it does not inherit from monobehavior, and it's existance is not tied to the scene loaded.
+5. Each Scene will have their own GameManagerBehavior class that is attatched to a empty object in the scene named "SCRIPTS\".
 6. Avoid the use of tags as much as possible.
 
 RULES TO HOLD YOURSELF TO:
@@ -46,7 +46,7 @@ RULES TO HOLD YOURSELF TO:
 
 ### Constructors for Monobehavior
 
-Unity prevents classes who inherit from monobehaior from having their own constructors. This makes sense, as those types of scripts must be attatched to game objects. However it is annoying not having a nice function call that will automatically create one, while allowing you to set it's variables simultaniously. To get around this I have created a static method on certain MonoBehavior classes in which I desire that functionality called `Initialize()`. Some of these functions take extra parameters specific to the class. For example, this is what part of GrabBehaviorLooks like:
+Unity prevents classes who inherit from monobehaior from having their own constructors. This makes sense, as those types of scripts must be attatched to game objects. However it is annoying not having a nice function call that will automatically create one, while allowing you to set it's variables simultaniously. To get around this I have created a static method on certain MonoBehavior classes in which I desire that functionality called Initialize(). Some of these functions take extra parameters specific to the class. For example, this is what part of GrabBehaviorLooks like:
 
 ```C#
 using UnityEngine;
@@ -94,7 +94,7 @@ So what is this project? I think it's best explained in this graph:
 
 Our Goal is not clear, nor is our solution. So we have ourselves an [extreme project](https://en.wikipedia.org/wiki/Extreme_project_management) which means I've been having to do [extreme programming](https://en.wikipedia.org/wiki/Extreme_programming) (a poor job of it at that). If we had frequent communication with the client this project would have resembled more of an extreme one, but honestly the whole thing has felt like how [southpark determines property value](https://youtu.be/xGTIKTH28BY?t=368).
 
-Anyways what does this have to do with comments? With extreme programming and this project comes accepting that whatever you do can/will be discarded. Almost the entirity of the code under `Scripts/Project` (a lot) is no longer being used. Nor is any of the networking code I wrote is being used. Spending time commenting that code would have taken forever, and ultimately a waste of time.
+Anyways what does this have to do with comments? With extreme programming and this project comes accepting that whatever you do can/will be discarded. Almost the entirity of the code under Scripts/Project (a lot) is no longer being used. Nor is any of the networking code I wrote is being used. Spending time commenting that code would have taken forever, and ultimately a waste of time.
 
 More than just being a waste of time, there are very good arguments as to why you don't want to overly comment your code. It can be summarised as:
 
@@ -167,10 +167,9 @@ private static string CalculateHash(string input)
     return sb.ToString();
 }
 ```
+These functions work as black boxes. You don't really have to care about how the hash is being calculated, you just need to know that the function does that. And guess how you know the function does that? By it's name. Making any comments like I've done on it is fucking redundant and wastes time. Also this example is *code that is no longer being used in the project.*
 
-These functions work as black boxes. You don't really have to care about how the hash is being calculated, you just need to know that the function does that. And guess how you know the function does that? By it's name. Making any comments like I've done on it is fucking **redundant** and wastes time. Also this example is *code that is no longer being used in the project.*
-
-And probably the biggest reason not to leave comments in an extreme project: **things change**. I can change a function name by hitting `f2` and it'll be renamed throughout the entire project, keeping everything up to date. You know what won't change? The comment I left explaining it and what it does. The compiler doesn't care about my comments. It won't tell me when my comment is out of date, that I'm telling another developer a lie. The comment will just lay their unchanged cause that function edit was one of 20 I am going to be making that single commit. That commit is going to be 1 of 100s in the project. You know what will happen though? Another developer is going to come along and instead of reading the code itself, they will take the comment at face value and make assumptions that are no longer true. What comes next is a nice long debug session for something that could have been avoided if better naming of methods where employed.
+And probably the biggest reason not to leave comments in an extreme project: things change. I can change a function name by hitting f2 and it'll be renamed throughout the entire project, keeping everything up to date. You know what won't change? The comment I left explaining it and what it does. The compiler doesn't care about my comments. It won't tell me when my comment is out of date, that I'm telling another developer a lie. The comment will just lay their unchanged cause that function edit was one of 20 I am going to be making that single commit. That commit is going to be 1 of 100s in the project. You know what will happen though? Another developer is going to come along and instead of reading the code itself, they will take the comment at face value and make assumptions that are no longer true. What comes next is a nice long debug session for something that could have been avoided if better naming of methods where employed.
 
 There are still scenarios in which I comment my code. Unfortunatly, comments are sometimes necessary. They are especially important if you're building libraries for hundres/thousands of other developers to use. Libraries that have clear goals. Just, take away from this section:
 
@@ -188,13 +187,13 @@ Here are their repositories respectfully:
 3. [Anvel](https://github.com/EliCDavis/Anvel-To-Unity)
 4. [This project](https://github.com/EliCDavis/VR-Project-Organizer)
 
-Generally what you see in these smaller libraries' projects is that I've put everything under `Assets` into a subfolder called the name of the Project. So all code for Prosign is under `Assets/Prosign/Scripts` instead of `Assets/Scripts`. The reason for doing is for when I need to export this project as a unity package. Doing it this way makes it unpack into the main project as `Assets/Prosign`, instead of placing all the scripts under the main scripts folder. This keeps things nice and seperated.
+Generally what you see in these smaller libraries' projects is that I've put everything under Assets into a subfolder called the name of the Project. So all code for Prosign is under Assets/Prosign/Scripts instead of Assets/Scripts. The reason for doing is for when I need to export this project as a unity package. Doing it this way makes it unpack into the main project as Assets/Prosign, instead of placing all the scripts under the main scripts folder. This keeps things nice and seperated.
 
 ## Anvel
 
-Fundamental abstractions between Unity and Anvel exist in this repository. It is meant for dealing with basics such as establishing a connection with Anvel and managing objects in the Anvel world. When I first started coding this I made the assumption I should be trying to reuse the same connection as much as possible, so some functionality requires a `AnvelControlService.Client` object to work. However as I introduced multithreading into the project this kind of mindset actually made things worse not better. The reason is the multiple threads all try writing multple things to the same socket, causing very weird bugs that where un reporducable by nature. Once I realized that issue, future additions to the code base instead accepted `ClientConnectionToken` objects instead. These tokens keep up with the ip address and port anvel is running on that it needs to connect too. So if I wanted to create a lidar display, I would need to pass it a connection token instead a connection itself. The Lidar Display would then create it's own connection that it would use for recieving lidar data in a seperate thread. Having things set up this way is also advantageous because we can easily have one lidar sensor pull from one instance from anvel, and another lidar sensor pull from another seperate instance.
+Fundamental abstractions between Unity and Anvel exist in this repository. It is meant for dealing with basics such as establishing a connection with Anvel and managing objects in the Anvel world. When I first started coding this I made the assumption I should be trying to reuse the same connection as much as possible, so some functionality requires a AnvelControlService.Client object to work. However as I introduced multithreading into the project this kind of mindset actually made things worse not better. The reason is the multiple threads all try writing multple things to the same socket, causing very weird bugs that where un reporducable by nature. Once I realized that issue, future additions to the code base instead accepted ClientConnectionToken objects instead. These tokens keep up with the ip address and port anvel is running on that it needs to connect too. So if I wanted to create a lidar display, I would need to pass it a connection token instead a connection itself. The Lidar Display would then create it's own connection that it would use for recieving lidar data in a seperate thread. Having things set up this way is also advantageous because we can easily have one lidar sensor pull from one instance from anvel, and another lidar sensor pull from another seperate instance.
 
-I have created a wrapper for Anvel's `ObjectDescriptor` called `AnvelObject`. You can crate an `AnvelObject` from a `ObjectDescriptor` and it will allow you to do more Unity like things. For example, if you need to rotate the object inside of anvel, you can use Unity's quaternions and it will do the conversion for you. Creating instances of `AnvelObject` allows you to not have to worry about cleanup in the Anvel scene. When unity stops my code goes through
+I have created a wrapper for Anvel's ObjectDescriptor called AnvelObject. You can crate an AnvelObject from a ObjectDescriptor and it will allow you to do more Unity like things. For example, if you need to rotate the object inside of anvel, you can use Unity's quaternions and it will do the conversion for you. Creating instances of AnvelObject allows you to not have to worry about cleanup in the Anvel scene. When unity stops my code goes through
 Anvel and deletes everything that we have created.
 
 Something important I've learned about anvel is that one anvel "object" can have multiple "objects" attatched to it. For example even if you create a lidar sensor, you won't have access to the lidar sensor properties. You will have to then search for the properties. Example code below:
@@ -216,13 +215,14 @@ var baseObj = connection.CreateObject(
 // will then be able to set lidar specific properties
 var actualLidarSensor = connection.GetObjectDescriptorByTypeAndName("APILidar", name)
 ```
+
 The name "APILidar" cooresponds to the grouping of variables you see inside the anvel window. So if you where dealing with other variables you would look towards that group's name to get a referennce.
 
 ![anvelinfo](https://i.imgur.com/9emv3HT.png)
 
 Here's just a bunch of quicktips:
 
-1. Wrap anvel `ObjectDesctiptors` in `AnvelObject` to ensure cleanup
+1. Wrap anvel ObjectDesctiptors in AnvelObject to ensure cleanup
 2. When indoubt, look at their [Api Reference](https://wiki.anvelsim.com/3/index.php/EXTERNALAPI)
 3. If you're doing stuff like pulling sensor information, create multiple connections instead of reusing
 4. Anvel will error out if you try to create an object with a name that is already being used by another object.
@@ -251,7 +251,7 @@ The first default service in Prosign is called Hotel. Hotel supports group commu
 
 The other default service that exists is called Suitcase. Hotel does not buffer any messages sent. A guest entering a room does not receive any messages previously sent. Suitcase allows for key-value pairs to be set in the server. These values can be retrieved at any time. These key-value pairs will exist until cleared by setting the value to be nonexistent.
 
-Prosign, in the ecosystem of Golang, is just considered a library. Anyone can install and import it into their code to be used. This import allows someone to configure and extend the server how they like. Developers who wanted to create their own service would only have to implement the three functions of its interface. The `OnGuestArival` function is called by the server when a new guest connects. The `OnGuestDeparture` function is called by the server when a connection with the guest has ended. The `Forward` function is called when the server has determined the message from a guest is meant for that specific service. Services do not have to worry about networking so developing and testing them is trivial.
+Prosign, in the ecosystem of Golang, is just considered a library. Anyone can install and import it into their code to be used. This import allows someone to configure and extend the server how they like. Developers who wanted to create their own service would only have to implement the three functions of its interface. The OnGuestArival function is called by the server when a new guest connects. The OnGuestDeparture function is called by the server when a connection with the guest has ended. The Forward function is called when the server has determined the message from a guest is meant for that specific service. Services do not have to worry about networking so developing and testing them is trivial.
 
 ### Hosting yourself
 
@@ -261,9 +261,9 @@ Honestly you'll probably just want to contact me. Here it is anyway:
 2. Install [docker](https://www.docker.com/)
 3. Clone https://gitlab.com/prosign/prosign
 4. Edit docker-compose.yml to change the port you want it running on. For example if you want things to run on port 6666 you would change the line to: 3000:6666
-5. Run `docker-compose up -d`
+5. Run docker-compose up -d
 
-Once you've done all of this you're server should be running. To check on the status you can look into `docker logs`. You can check if the container is actually running by using `docker container ls`.
+Once you've done all of this you're server should be running. To check on the status you can look into docker logs. You can check if the container is actually running by using docker container ls.
 
 ## UI Gen
 
@@ -299,9 +299,9 @@ The showcase is pretty much the main scene of the entire project. It takes a lon
 
 #### Subsribing To Car Changes
 
-There's a lot of different components in the scene that care about the cars loaded. To keep up with all of this I have chosen to use a publisher subscriber pattern, similar to [Observer pattern](https://sourcemaking.com/design_patterns/observer). A `CarManager` uses both Singletons and events to accomplish this goal. If you are unfamiliar with either of those go back to step one of this document (Topics to understand for the project).
+There's a lot of different components in the scene that care about the cars loaded. To keep up with all of this I have chosen to use a publisher subscriber pattern, similar to [Observer pattern](https://sourcemaking.com/design_patterns/observer). A CarManager uses both Singletons and events to accomplish this goal. If you are unfamiliar with either of those go back to step one of this document (Topics to understand for the project).
 
-Basically, if you always want to stay updated on what is the main car that is currently loaded, then provide the `CarManager`  a anonymous function to call, which looks like this:
+Basically, if you always want to stay updated on what is the main car that is currently loaded, then provide the CarManager  a anonymous function to call, which looks like this:
 
 ```C#
 CarManager
@@ -312,15 +312,15 @@ CarManager
     };
 ```
 
-You can set the main car that is currently loaded through the `CarManager` class as well as subscribe to changes in the `Garage`. The `garage` just means all available cars that we can look at. Subscribing to the `garage` is sometimes useful for when the scene first starts up (in the case of the table of cars).
+You can set the main car that is currently loaded through the CarManager class as well as subscribe to changes in the Garage. The garage just means all available cars that we can look at. Subscribing to the garage is sometimes useful for when the scene first starts up (in the case of the table of cars).
 
 #### Changing Controls
 
 ![Control UML](https://i.imgur.com/OlCj5Au.png)
 
-The two important things to know if you want to create your own control is how `PlayerControl` and `PlayerControlBehavior` works. `PlayerControl` is an abstract class that has the function `Build` which takes a hand and returns an `action`. What you're custom control class should do is inherit from `PlayerControl` and implement this command. The action you return after building is responsible for un-doing everything your build command has done. When the user changes controls away from your's `PlayerControlBehavior` is going to call that action Build returned and it's going to expect everything to be removed. If you're unsucesful in cleaning things up that will easily result in bugs. Especially when it comes time to rebuild your control.
+The two important things to know if you want to create your own control is how PlayerControl and PlayerControlBehavior works. PlayerControl is an abstract class that has the function Build which takes a hand and returns an action. What you're custom control class should do is inherit from PlayerControl and implement this command. The action you return after building is responsible for un-doing everything your build command has done. When the user changes controls away from your's PlayerControlBehavior is going to call that action Build returned and it's going to expect everything to be removed. If you're unsucesful in cleaning things up that will easily result in bugs. Especially when it comes time to rebuild your control.
 
-An simple example of this process is the `GrabPlayerControl`:
+An simple example of this process is the GrabPlayerControl:
 
 ```C#
 public class GrabPlayerControl : PlayerControl
@@ -397,18 +397,18 @@ var config = new ControllerConfig(new List<PlayerControl>()
 config.Build(leftHand);
 ```
 
-Calling build will set up the VRTK Wheel radial, build all the icons, and select the first control passed in (`GrabPlayerControl` in this case). 
+Calling build will set up the VRTK Wheel radial, build all the icons, and select the first control passed in (GrabPlayerControl in this case). 
 
 ### "Source Control"
 
 When I talk about source control in this section, I am not speaking of git, but actually a custom program for making changes in lidar positioning persistant accross runs of the unity scene. Right now it only works for Lidar but can be easily extended to other sensors like the camera.
 
-A `repository` refers to a collection of configured cars. An `artifact` refers to a specific car's configuration. Each artifact is stored as it's own seperate file. Each repository is a folder of artifact files. Artifacts are stored as json to it's easy to open up and make changes or verify things are writing to disk correctly. Artifacts are a collection of sensor configurations.
+A repository refers to a collection of configured cars. An artifact refers to a specific car's configuration. Each artifact is stored as it's own seperate file. Each repository is a folder of artifact files. Artifacts are stored as json to it's easy to open up and make changes or verify things are writing to disk correctly. Artifacts are a collection of sensor configurations.
 
-The showcase has it's own `SensorManager` that takes these sensor configurations and maps them to the current sensors in the scene. Loading a new car causes artifacts to be loaded which then have their configurations applied to the sensors.
+The showcase has it's own SensorManager that takes these sensor configurations and maps them to the current sensors in the scene. Loading a new car causes artifacts to be loaded which then have their configurations applied to the sensors.
 
-To save changes to you're repository (changes to sensor configuations) you must call `Commit()`. Without this your changes will be lost. Currently commit is called whenever the car loaded changes.
+To save changes to you're repository (changes to sensor configuations) you must call Commit(). Without this your changes will be lost. Currently commit is called whenever the car loaded changes.
 
 ### Controlling The Display Of The Loaded Car
 
-If you want to change the lexus car model to something else, modify what `CarFactory.MakeBigCar()` returns.
+If you want to change the lexus car model to something else, modify what CarFactory.MakeBigCar() returns.

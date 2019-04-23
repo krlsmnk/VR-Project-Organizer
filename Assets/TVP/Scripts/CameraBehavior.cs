@@ -44,7 +44,6 @@ namespace KarlSmink.Teleporting
 
         void Start()
         {
-            Debug.Log(transform.name);
             rotatorScript = GetComponent<VRTK_TransformFollow>();
         }
 
@@ -65,14 +64,17 @@ namespace KarlSmink.Teleporting
 
         Vector3 moveDirection = Vector3.zero;
 
-        public void Move(Vector3 direction)
+        Space relativeSpace = Space.Self;
+
+        public void Move(Vector3 direction, Space relativeSpace)
         {
             moveDirection = direction;
+            this.relativeSpace = relativeSpace;
         }
 
         void Update()
         {
-            transform.Translate((moveDirection.normalized * cameraSpeed * Time.deltaTime));
+            transform.Translate(moveDirection.normalized * cameraSpeed * Time.deltaTime, relativeSpace);
         }
     }
 

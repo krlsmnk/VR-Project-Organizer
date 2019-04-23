@@ -37,17 +37,17 @@ namespace CAVS.Anvel
 
         public void UpdateTransform(Vector3 pos, UnityEngine.Quaternion rot)
         {
-            client.SetPoseRelQ(objectDescriptor.ObjectKey, new Point3
+            var cleanedRot = rot.eulerAngles * Mathf.Deg2Rad;
+            client.SetPoseRelE(objectDescriptor.ObjectKey, new Point3
             {
                 X = pos.z,
                 Y = -pos.x,
                 Z = pos.y
-            }, new AnvelApi.Quaternion
+            }, new Euler
             {
-                X = rot.z ,
-                Y = -rot.x ,
-                Z = rot.y ,
-                W = rot.w 
+                Roll = -cleanedRot.z, // positive is right banking
+                Pitch = cleanedRot.x, //positive is down
+                Yaw = cleanedRot.y //positive is left
             });
         }
 
