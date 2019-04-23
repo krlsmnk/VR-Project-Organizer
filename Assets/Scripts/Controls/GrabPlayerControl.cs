@@ -39,6 +39,7 @@ namespace CAVS.ProjectOrganizer.Controls
         {
             return Resources.Load<Texture2D>("PlayerControl/Grab-icon");
         }
+<<<<<<< Updated upstream
 
         //public override Action Build(VRTK_ControllerEvents hand)
         //{
@@ -54,6 +55,9 @@ namespace CAVS.ProjectOrganizer.Controls
         //{
         //    return Resources.Load<Texture2D>("PlayerControl/Grab-icon");
         //}
+=======
+       
+>>>>>>> Stashed changes
     }
 
 }

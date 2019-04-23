@@ -146,8 +146,12 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             {
                 Destroy(uiView);
             }
+<<<<<<< Updated upstream
 
             else if (objCreationState == ObjCreationState.Created)
+=======
+            else if (objectSensorWeArecontrolling != null)
+>>>>>>> Stashed changes
             {
                 var window = new Window(PropertyKeyForModifying(), new IElement[] {
                 new SliderElement(PropertyRangeForModifying().x, PropertyRangeForModifying().y, lastValueSeen, delegate(float x) {
