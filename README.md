@@ -42,6 +42,16 @@ RULES TO HOLD YOURSELF TO:
 1. Don't change existing libraries code unless absilutely necessary. IE: Don't change code under the VRTK folder. It's almost always possible to extend functionality in some way through options like inheritance. In the entire lifetime of the project I have had to make changes once.
 2. Be very very very very very very very thoughtful with your variable, function, and class naming. This proper naming servese as the best form of documentation.
 
+## How To Build
+
+Building and exporting the game goes like any normal unity project. However the showcase relies on data from a csv for the car data. Assuming you built the project under a folder `ProjectOrganizer`, you will need to place the csv data under:
+
+```
+ProjectOrganizer\ProjectOrganizer_Data\Resources
+```
+
+Upon launching the application you should have the cares appear. If they do not then you probably placed the csv in the wrong location.
+
 ## Some Tips
 
 ### Constructors for Monobehavior
