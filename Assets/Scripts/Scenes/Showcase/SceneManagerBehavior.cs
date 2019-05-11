@@ -125,7 +125,16 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                 prosignServer.JoinRoom(roomUUID, delegate() { });
             }
 
-            BuildRadialConfig();
+            var config = new ControllerConfig(new List<PlayerControl>()
+            {
+                new GrabPlayerControl(),
+                new TeleportPlayerControl(),
+                new SelectPlayerControl(),
+                new TVPPlayerControl()
+            });
+
+            config.Build(leftHand);
+            config.Build(rightHand);
 
             sceneReference = prosignServer;
             sceneReference.SubscribeToUpdates(OnSceneUpdate);
@@ -373,30 +382,6 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         //    qualityToRender = newQuality;
         //    DisplayCar(cars[carBeingDisplayedIndex]);
         //}
-
-        public void BuildRadialConfig()
-        {
-            var config = new ControllerConfig(new List<PlayerControl>()
-            {
-                new GrabPlayerControl(),
-                new TeleportPlayerControl(),
-                new SelectPlayerControl(),
-                new TVPPlayerControl()
-            });
-
-            config.Build(leftHand);
-            config.Build(rightHand);
-        }
-        public void BuildTVPConfig()
-        {
-            var config = new ControllerConfig(new List<PlayerControl>()
-            {
-                new TVPPlayerControl()
-            });
-
-            config.Build(leftHand);
-            config.Build(rightHand);
-        }
 
 
     }

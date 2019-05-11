@@ -13,7 +13,7 @@ namespace CAVS.ProjectOrganizer.Controls
             var headset = VRTK_DeviceFinder.HeadsetTransform();
 
             var cameraToControl = KarlSmink.Teleporting.Util.BuildCamera(Vector3.zero, Quaternion.identity);
-            var portal = KarlSmink.Teleporting.Util.BuildPortal(cameraToControl.GetComponentInChildren<Camera>(), headset.transform.position + (headset.forward * 4), Quaternion.identity);
+            var portal = KarlSmink.Teleporting.Util.BuildPortal(cameraToControl.GetComponentInChildren<Camera>(), headset.transform.position + (headset.forward * 2), Quaternion.identity);
             var headsetCollision = UnityEngine.Object.FindObjectOfType<VRTK_HeadsetCollision>();
             var teleBehavior = TeleportBehavior.Initialize(headsetCollision, 1.7f, cameraToControl.transform, portal);
 
