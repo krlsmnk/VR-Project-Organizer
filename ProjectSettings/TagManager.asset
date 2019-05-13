@@ -7,6 +7,8 @@ TagManager:
   - floor
   - node
   - controller
+  - broadcastPlane
+  - Portal
   layers:
   - Default
   - TransparentFX

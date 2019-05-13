@@ -27,6 +27,7 @@ namespace KarlSmink.Teleporting
             RenderTexture tex = new RenderTexture(2160, 1200, 24);
             var camera = Object.Instantiate(Resources.Load<GameObject>("Camera"), position, rotation);
             camera.GetComponentInChildren<Camera>().targetTexture = tex;
+            camera.tag = "broadcastPlane";
             return camera;
         }
 
@@ -34,6 +35,7 @@ namespace KarlSmink.Teleporting
         {
             var portal = Object.Instantiate(Resources.Load<GameObject>("Portal"), position, rotation);
             portal.GetComponentInChildren<MeshRenderer>().material.mainTexture = camera.targetTexture;
+            portal.tag = "broadcastPlane";
             return portal;
         }
 

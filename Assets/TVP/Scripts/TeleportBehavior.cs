@@ -50,7 +50,7 @@ namespace KarlSmink.Teleporting
         }
 
         private void OnHeadsetCollisionDetect(object sender, HeadsetCollisionEventArgs e)
-        {
+        {          
             playArea = VRTK_DeviceFinder.PlayAreaTransform();
             headset = VRTK_DeviceFinder.HeadsetTransform();
 

@@ -2,6 +2,7 @@
 using UnityEngine;
 using VRTK;
 using KarlSmink.Teleporting;
+using System.Collections.Generic;
 
 namespace CAVS.ProjectOrganizer.Controls
 {
@@ -10,10 +11,14 @@ namespace CAVS.ProjectOrganizer.Controls
 
         public override Action Build(VRTK_ControllerEvents hand)
         {
+            var playerControlBehaviorScript = UnityEngine.Object.FindObjectOfType<PlayerControlBehavior>();
+            playerControlBehaviorScript.killRadialMenu();
+            //hand = new VRTK_ControllerEvents();
+
             var headset = VRTK_DeviceFinder.HeadsetTransform();
 
             var cameraToControl = KarlSmink.Teleporting.Util.BuildCamera(Vector3.zero, Quaternion.identity);
-            var portal = KarlSmink.Teleporting.Util.BuildPortal(cameraToControl.GetComponentInChildren<Camera>(), headset.transform.position + (headset.forward * 4), Quaternion.identity);
+            var portal = KarlSmink.Teleporting.Util.BuildPortal(cameraToControl.GetComponentInChildren<Camera>(), headset.transform.position + (headset.forward * 6), Quaternion.identity);
             var headsetCollision = UnityEngine.Object.FindObjectOfType<VRTK_HeadsetCollision>();
             var teleBehavior = TeleportBehavior.Initialize(headsetCollision, 1.7f, cameraToControl.transform, portal);
 
@@ -28,6 +33,7 @@ namespace CAVS.ProjectOrganizer.Controls
                 UnityEngine.Object.Destroy(portal);
                 UnityEngine.Object.Destroy(control);
                 UnityEngine.Object.Destroy(teleBehavior);
+                playerControlBehaviorScript.rebuildMenu();
             };
         }
 
@@ -35,6 +41,7 @@ namespace CAVS.ProjectOrganizer.Controls
         {
             return Resources.Load<Texture2D>("PlayerControl/teleport-alternative-icon");
         }
+
     }
 
 }

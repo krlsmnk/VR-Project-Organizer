@@ -1,4 +1,4 @@
-﻿ using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -62,7 +62,31 @@ namespace CAVS.ProjectOrganizer.Controls
             cleanupCommand = controls[currentControlIndex].Build(hand);
         }
 
-
+/// <summary>
+/// Destroys the radial menu on the touchpad to free up controls for individual control schemes
+/// </summary>        
+        public void killRadialMenu()
+        {
+            Destroy(hand.gameObject.GetComponentInChildren<VRTK_RadialMenuController>());
+            Destroy(hand.gameObject.GetComponentInChildren<VRTK_RadialMenu>());
+            Destroy(hand.gameObject.GetComponentInChildren<PlayerControlBehavior>());
+            //Destroy(hand);
+        }
+/// <summary>
+/// Rebuilds the radial menu to allow for control switching again
+/// </summary>
+        public void rebuildMenu()
+        {
+            //Rebuild control selector
+            var config = new ControllerConfig(new List<PlayerControl>()
+            {
+                new GrabPlayerControl(),
+                new TeleportPlayerControl(),
+                new SelectPlayerControl(),
+                new TVPPlayerControl()
+            });
+            config.Build(hand);
+        }
     }
 
 }
