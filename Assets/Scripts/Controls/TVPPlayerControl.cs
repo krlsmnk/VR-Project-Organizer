@@ -7,10 +7,10 @@ using System.Collections.Generic;
 namespace CAVS.ProjectOrganizer.Controls
 {
     public class TVPPlayerControl : PlayerControl
-    {
-
+    {        
         public override Action Build(VRTK_ControllerEvents hand)
         {
+            
             var playerControlBehaviorScript = UnityEngine.Object.FindObjectOfType<PlayerControlBehavior>();
             playerControlBehaviorScript.killRadialMenu();
             //hand = new VRTK_ControllerEvents();
@@ -35,13 +35,12 @@ namespace CAVS.ProjectOrganizer.Controls
                 UnityEngine.Object.Destroy(teleBehavior);
                 playerControlBehaviorScript.rebuildMenu();
             };
-        }
+        }        
 
         public override Texture2D GetIcon()
         {
             return Resources.Load<Texture2D>("PlayerControl/teleport-alternative-icon");
         }
-
     }
 
 }

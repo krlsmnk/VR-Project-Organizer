@@ -9,6 +9,7 @@ TagManager:
   - controller
   - broadcastPlane
   - Portal
+  - TVPCamera
   layers:
   - Default
   - TransparentFX

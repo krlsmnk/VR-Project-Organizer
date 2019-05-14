@@ -24,11 +24,17 @@ namespace KarlSmink.Teleporting
 
         public static GameObject BuildCamera(Vector3 position, Quaternion rotation)
         {
+            GameObject existingCamera = GameObject.FindGameObjectWithTag("TVPCamera");
+
+            if (existingCamera == null) { 
             RenderTexture tex = new RenderTexture(2160, 1200, 24);
             var camera = Object.Instantiate(Resources.Load<GameObject>("Camera"), position, rotation);
             camera.GetComponentInChildren<Camera>().targetTexture = tex;
-            camera.tag = "broadcastPlane";
+            camera.tag = "TVPCamera";
             return camera;
+            }
+
+            return existingCamera;
         }
 
         public static GameObject BuildPortal(Camera camera, Vector3 position, Quaternion rotation)

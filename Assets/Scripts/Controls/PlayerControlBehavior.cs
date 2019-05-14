@@ -5,12 +5,11 @@ using UnityEngine.Events;
 using VRTK;
 
 namespace CAVS.ProjectOrganizer.Controls
-{
-
+{    
     public class PlayerControlBehavior : MonoBehaviour
     {
         private int currentControlIndex;
-
+        public int currentWeaponIndex;
         private List<PlayerControl> controls;
 
         private Action cleanupCommand;
@@ -46,13 +45,14 @@ namespace CAVS.ProjectOrganizer.Controls
 
         private UnityAction BuildWeaponChangeCallback(int weaponIndex)
         {
+            currentWeaponIndex = weaponIndex;
             return delegate ()
             {
                 SwitchToControl(weaponIndex);
             };
         }
 
-        private void SwitchToControl(int weaponIndex)
+        public void SwitchToControl(int weaponIndex)
         {
             if (currentControlIndex > -1)
             {
@@ -62,14 +62,22 @@ namespace CAVS.ProjectOrganizer.Controls
             cleanupCommand = controls[currentControlIndex].Build(hand);
         }
 
-/// <summary>
-/// Destroys the radial menu on the touchpad to free up controls for individual control schemes
-/// </summary>        
+        /// <summary>
+        /// Destroys the radial menu on the touchpad to free up controls for individual control schemes
+        /// </summary>        
         public void killRadialMenu()
         {
+            var icons = FindObjectsOfType<Texture2D>();
+            foreach (Texture2D thisIcon in icons)
+            {
+                Destroy(thisIcon);
+            }
             Destroy(hand.gameObject.GetComponentInChildren<VRTK_RadialMenuController>());
             Destroy(hand.gameObject.GetComponentInChildren<VRTK_RadialMenu>());
-            Destroy(hand.gameObject.GetComponentInChildren<PlayerControlBehavior>());
+
+            hand.gameObject.GetComponentInChildren<PlayerControlBehavior>().enabled = false;
+            //Destroy(hand.gameObject.GetComponentInChildren<PlayerControlBehavior>());
+
             //Destroy(hand);
         }
 /// <summary>
@@ -77,6 +85,7 @@ namespace CAVS.ProjectOrganizer.Controls
 /// </summary>
         public void rebuildMenu()
         {
+            hand.gameObject.GetComponentInChildren<PlayerControlBehavior>().enabled = true;
             //Rebuild control selector
             var config = new ControllerConfig(new List<PlayerControl>()
             {
@@ -85,8 +94,10 @@ namespace CAVS.ProjectOrganizer.Controls
                 new SelectPlayerControl(),
                 new TVPPlayerControl()
             });
-            config.Build(hand);
+            config.Build(hand);            
         }
+
+
     }
 
 }

@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using VRTK;
 using KarlSmink.Teleporting;
+using System.Linq;
 
 namespace CAVS.ProjectOrganizer.Controls
 {
     public class TVPCameraControl : MonoBehaviour
     {
-
+        private static VRTK_ControllerEvents thisHand;
         private VRTK_ControllerEvents hand;
         private CameraBehavior cameraToControl;
         private SteamVR_TrackedObject trackedObj;
@@ -18,6 +20,9 @@ namespace CAVS.ProjectOrganizer.Controls
 
         public static TVPCameraControl Initialize(VRTK_ControllerEvents hand, CameraBehavior cameraToControl)
         {
+            cleanupWheel();
+
+            thisHand = hand;
             if (hand == null)
             {
                 throw new ArgumentException("Unable to find VRTK Controller Events");
@@ -74,6 +79,11 @@ namespace CAVS.ProjectOrganizer.Controls
         /// </summary>
         private void Hand_GripPressed(object sender, ControllerInteractionEventArgs e)
         {
+            //var newScript = thisHand.gameObject.GetComponent<PlayerControlBehavior>();
+            //newScript.SwitchToControl(0);
+            //newScript.SwitchToControl(newScript.currentWeaponIndex);
+
+            cleanupOldPortals();
             OnDestroy();
         }
 
@@ -107,7 +117,7 @@ namespace CAVS.ProjectOrganizer.Controls
         private void Hand_TriggerAxisChanged()
         {
             float triggerAxis = hand.GetTriggerAxis();
-            cameraToControl.Move((Vector3.forward * triggerAxis).normalized, Space.Self);
+            cameraToControl.Move((Vector3.forward * triggerAxis * 4).normalized, Space.Self);
         }
 
 
@@ -133,23 +143,7 @@ namespace CAVS.ProjectOrganizer.Controls
             hand.GripPressed -= Hand_GripPressed;
             hand.TouchpadPressed -= Hand_TouchpadPressed;
             hand.TouchpadReleased -= Hand_TouchpadReleased;
-            hand.TriggerTouchEnd -= Hand_TriggerTouchEnd;
-
-            GameObject[] portals = GameObject.FindGameObjectsWithTag("broadcastPlane");           
-            foreach (GameObject thisPortal in portals)
-            {
-                Destroy(thisPortal);
-            }
-            portals = GameObject.FindGameObjectsWithTag("Portal");
-            foreach (GameObject thisPortal in portals)
-            {
-                Destroy(thisPortal);
-            }
-            Texture2D[] icons = GameObject.FindObjectsOfType<Texture2D>();
-            foreach (Texture2D thisIcon in icons)
-            {
-                Destroy(thisIcon);
-            }
+            hand.TriggerTouchEnd -= Hand_TriggerTouchEnd;                        
 
             var config = new ControllerConfig(new List<PlayerControl>()
             {
@@ -159,6 +153,54 @@ namespace CAVS.ProjectOrganizer.Controls
                 new TVPPlayerControl()
             });
             config.Build(hand);
+        }
+
+        private static void cleanupOldPortals()
+        {
+            try
+            {
+                GameObject[] oldPortals = GameObject.FindGameObjectsWithTag("Portal");
+                foreach (GameObject thisPortal in oldPortals)
+                {
+                    UnityEngine.Object.Destroy(thisPortal);
+                }
+                /*
+                oldPortals = GameObject.FindGameObjectsWithTag("broadcastPlane");
+                foreach (GameObject thisPortal in oldPortals)
+                {
+                    thisPortal.SetActive(false);
+                    //UnityEngine.Object.Destroy(thisPortal);
+                } 
+                */
+            }
+            catch
+            {
+                Debug.Log("Catch: No old portals to destroy");
+            }
+        }
+
+        private static void cleanupWheel()
+        {
+            var objects = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == "RadialMenu(Clone)");
+            foreach (var thisObject in objects)
+            {
+                UnityEngine.Object.Destroy(thisObject);
+            }
+            Sprite[] icons = FindObjectsOfType<Sprite>();
+            foreach (Sprite thisIcon in icons)
+            {
+                UnityEngine.Object.Destroy(thisIcon);
+            }
+            Button[] buttons = FindObjectsOfType<Button>();
+            foreach (Button thisIcon in buttons)
+            {
+                UnityEngine.Object.Destroy(thisIcon);
+            }
+            Texture2D[] textures = FindObjectsOfType<Texture2D>();
+            foreach (Texture2D thisIcon in textures)
+            {
+                UnityEngine.Object.Destroy(thisIcon);
+            }
         }
     }
 }
