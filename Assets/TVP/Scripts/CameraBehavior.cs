@@ -17,7 +17,11 @@ namespace KarlSmink.Teleporting
 
         private VRTK_TransformFollow rotatorScript;
 
+        private static VRTK_TransformFollow footstepOffsetScript;
+
         private Transform headset;
+
+        private static GameObject footstepOffset;
 
         public static CameraBehavior Initialize(GameObject cameraObj, float cameraSpeed, GameObject portal)
         {
@@ -28,12 +32,22 @@ namespace KarlSmink.Teleporting
             script.theFollowScript.gameObjectToFollow = VRTK_DeviceFinder.HeadsetTransform().gameObject;
             script.theFollowScript.followsRotation = true;
             script.theFollowScript.followsPosition = true;
-
+            
             script.rotatorScript = cameraObj.AddComponent<VRTK_TransformFollow>();
             script.rotatorScript.gameObjectToChange = cameraObj;
             script.rotatorScript.gameObjectToFollow = script.theFollowScript.gameObjectToFollow;
             script.rotatorScript.followsRotation = true;
             script.rotatorScript.followsPosition = false;
+
+            //CNG
+            footstepOffset = new GameObject("FootstepOffset");
+            cameraObj.gameObject.transform.parent = footstepOffset.transform;
+            footstepOffsetScript = footstepOffset.AddComponent<VRTK_TransformFollow>();
+            footstepOffsetScript.gameObjectToFollow = script.theFollowScript.gameObjectToFollow;
+            footstepOffsetScript.gameObjectToChange = footstepOffsetScript.gameObject;
+            footstepOffsetScript.followsRotation = false;
+            footstepOffsetScript.followsPosition = true;
+
 
             script.cameraSpeed = cameraSpeed;
             script.originalCameraSpeed = cameraSpeed;
