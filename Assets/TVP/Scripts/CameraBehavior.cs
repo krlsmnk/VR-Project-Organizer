@@ -7,7 +7,7 @@ namespace KarlSmink.Teleporting
     public class CameraBehavior : MonoBehaviour
     {
         [SerializeField]
-        private float cameraSpeed;
+        private float cameraSpeed, originalCameraSpeed;
 
         [SerializeField]
         private AudioClip lockSound, unlockSound, summonCamera;
@@ -36,6 +36,7 @@ namespace KarlSmink.Teleporting
             script.rotatorScript.followsPosition = false;
 
             script.cameraSpeed = cameraSpeed;
+            script.originalCameraSpeed = cameraSpeed;
             script.lockSound = Resources.Load<AudioClip>("lock window");
             script.unlockSound = Resources.Load<AudioClip>("unlock window");
             script.summonCamera = Resources.Load<AudioClip>("camera summon");
@@ -68,6 +69,13 @@ namespace KarlSmink.Teleporting
 
         public void Move(Vector3 direction, Space relativeSpace)
         {
+            cameraSpeed = originalCameraSpeed;
+            moveDirection = direction;
+            this.relativeSpace = relativeSpace;
+        }
+        public void Move(Vector3 direction, Space relativeSpace, float newSpeed)
+        {
+            cameraSpeed = newSpeed;
             moveDirection = direction;
             this.relativeSpace = relativeSpace;
         }

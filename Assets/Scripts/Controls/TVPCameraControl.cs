@@ -117,7 +117,7 @@ namespace CAVS.ProjectOrganizer.Controls
         private void Hand_TriggerAxisChanged()
         {
             float triggerAxis = hand.GetTriggerAxis();
-            cameraToControl.Move((Vector3.forward * triggerAxis * 4).normalized, Space.Self);
+            cameraToControl.Move((Vector3.forward).normalized, Space.Self, (triggerAxis * 4));
         }
 
 
