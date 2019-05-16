@@ -30,6 +30,7 @@ namespace KarlSmink.Teleporting
             RenderTexture tex = new RenderTexture(2160, 1200, 24);
             var camera = Object.Instantiate(Resources.Load<GameObject>("Camera"), position, rotation);
             camera.GetComponentInChildren<Camera>().targetTexture = tex;
+            camera.GetComponentInChildren<Camera>().cullingMask = 1 << 0;
             camera.tag = "TVPCamera";
             return camera;
             }

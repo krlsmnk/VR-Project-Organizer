@@ -87,6 +87,8 @@ namespace CAVS.ProjectOrganizer.Controls
         {
             hand.gameObject.GetComponentInChildren<PlayerControlBehavior>().enabled = true;
             //Rebuild control selector
+            //CNG
+            /*
             var config = new ControllerConfig(new List<PlayerControl>()
             {
                 new GrabPlayerControl(),
@@ -95,6 +97,7 @@ namespace CAVS.ProjectOrganizer.Controls
                 new TVPPlayerControl()
             });
             config.Build(hand);            
+            */
         }
 
 

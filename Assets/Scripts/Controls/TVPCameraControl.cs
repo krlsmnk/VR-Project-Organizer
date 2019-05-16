@@ -10,6 +10,7 @@ namespace CAVS.ProjectOrganizer.Controls
 {
     public class TVPCameraControl : MonoBehaviour
     {
+        private static TVPPlayerControl cleaner;
         private static VRTK_ControllerEvents thisHand;
         private VRTK_ControllerEvents hand;
         private CameraBehavior cameraToControl;
@@ -18,9 +19,10 @@ namespace CAVS.ProjectOrganizer.Controls
         private Valve.VR.EVRButtonId trigger = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
         //private SteamVR_Controller.Device controller { get { return SteamVR_Controller.Input((int)trackedObj.index); } }
 
-        public static TVPCameraControl Initialize(VRTK_ControllerEvents hand, CameraBehavior cameraToControl)
+        public static TVPCameraControl Initialize(VRTK_ControllerEvents hand, CameraBehavior cameraToControl, TVPPlayerControl cleanup)
         {
-            cleanupWheel();
+            cleaner = cleanup;
+            cleanupWheel();            
 
             thisHand = hand;
             if (hand == null)
@@ -79,12 +81,10 @@ namespace CAVS.ProjectOrganizer.Controls
         /// </summary>
         private void Hand_GripPressed(object sender, ControllerInteractionEventArgs e)
         {
-            //var newScript = thisHand.gameObject.GetComponent<PlayerControlBehavior>();
-            //newScript.SwitchToControl(0);
-            //newScript.SwitchToControl(newScript.currentWeaponIndex);
-
-            cleanupOldPortals();
-            OnDestroy();
+            cleaner.cleanup();
+            //CNG
+            //cleanupOldPortals();
+            //OnDestroy();
         }
 
         private void Hand_TouchpadPressed(object sender, ControllerInteractionEventArgs e)
@@ -162,16 +162,19 @@ namespace CAVS.ProjectOrganizer.Controls
                 GameObject[] oldPortals = GameObject.FindGameObjectsWithTag("Portal");
                 foreach (GameObject thisPortal in oldPortals)
                 {
-                    UnityEngine.Object.Destroy(thisPortal);
+                    //UnityEngine.Object.Destroy(thisPortal);
+                    thisPortal.SetActive(false);
                 }
-                /*
+                //CNG
                 oldPortals = GameObject.FindGameObjectsWithTag("broadcastPlane");
                 foreach (GameObject thisPortal in oldPortals)
                 {
-                    thisPortal.SetActive(false);
-                    //UnityEngine.Object.Destroy(thisPortal);
-                } 
-                */
+                    if(thisPortal.gameObject.name == "Portal(Clone)" && thisPortal.transform.childCount==0)
+                    {
+                        //Destroy(thisPortal);
+                        thisPortal.SetActive(false);
+                    }                                                
+                }
             }
             catch
             {

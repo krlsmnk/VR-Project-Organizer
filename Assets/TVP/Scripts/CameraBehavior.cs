@@ -23,7 +23,7 @@ namespace KarlSmink.Teleporting
         {
             var script = cameraObj.AddComponent<CameraBehavior>();
 
-            script.theFollowScript = portal.AddComponent<VRTK_TransformFollow>();
+            script.theFollowScript = portal.AddComponent<VRTK_TransformFollow>();            
             script.theFollowScript.gameObjectToChange = portal;
             script.theFollowScript.gameObjectToFollow = VRTK_DeviceFinder.HeadsetTransform().gameObject;
             script.theFollowScript.followsRotation = true;
@@ -51,7 +51,7 @@ namespace KarlSmink.Teleporting
         public bool ToggleLock()
         {
             Util.PlaySoundEffect(theFollowScript.enabled ? lockSound : unlockSound, transform.position);
-            rotatorScript.enabled = !theFollowScript.enabled;
+            //CNG rotatorScript.enabled = !theFollowScript.enabled;
             theFollowScript.enabled = !theFollowScript.enabled;
             return theFollowScript.enabled;
         }
@@ -76,6 +76,7 @@ namespace KarlSmink.Teleporting
         {
             transform.Translate(moveDirection.normalized * cameraSpeed * Time.deltaTime, relativeSpace);
         }
+
     }
 
 }
