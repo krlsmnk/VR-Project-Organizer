@@ -3925,7 +3925,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.0000009220466, y: 0.000014826158}
+  m_AnchoredPosition: {x: -0.0000009220466, y: 0.000020401198}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &543881782
@@ -7497,7 +7497,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1b8e82161abc454a9ad1182a62bf2be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraFeedDisplay: {fileID: 1796158319}
+  cameraFeedDisplay: {fileID: 0}
   objectForOffset: {fileID: 1011164478}
   drivingController: {fileID: 1345709327}
   startup: 0
@@ -7724,6 +7724,7 @@ GameObject:
   - component: {fileID: 925936629}
   - component: {fileID: 925936628}
   - component: {fileID: 925936634}
+  - component: {fileID: 925936635}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -7771,7 +7772,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: d925ab2c6ffabc843a4fec3236a14d99, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7853,6 +7854,17 @@ MonoBehaviour:
   useOverrideButton: 0
   allowedUseControllers: 0
   usingState: 0
+--- !u!114 &925936635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 925936627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 079b60f54f08b334288c1466f851e545, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1011164478 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1389930903116070, guid: a90e900725f7aba448bd0e37af2a2e7a,
@@ -8054,8 +8066,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2025932665}
   m_HandleRect: {fileID: 2025932664}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.99999994
+  m_Value: 0
+  m_Size: 0.9999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
