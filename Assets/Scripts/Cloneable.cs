@@ -11,13 +11,20 @@ namespace CAVS.ProjectOrganizer.Interation
     {
         private GhostClone GhostScript;
         private Transform originalItemTransform, offsetTransform;
-        private GameObject thisClonable;
+        private GameObject thisClonable, globalGhostScript;
 
         // Use this for initialization
         void Start()
         {
+            globalGhostScript = new GameObject();
+            thisClonable = this.gameObject; 
             GhostScript = FindObjectOfType<GhostClone>();
-            if (GhostScript == null) GhostScript = new GhostClone();
+            if (GhostScript == null)
+            {                 
+                GhostScript = globalGhostScript.AddComponent<GhostClone>();                
+            }
+            Debug.Log(GhostScript.gameObject.name);
+
         }
         // Update is called once per frame
         void Update()
@@ -33,22 +40,24 @@ namespace CAVS.ProjectOrganizer.Interation
         public void SelectPress(GameObject caller)
         {
             //Debug.Log("Selected");
+            //Debug.Log(thisClonable.name);
+            //Debug.Log(caller.name);
             GhostScript.createGC(thisClonable, caller.transform);
         }
 
         public void SelectUnpress(GameObject caller)
         {
-            Debug.Log("SelectUnpress");
+            //Debug.Log("SelectUnpress");
         }
 
         public void Hover(GameObject caller)
         {
-            Debug.Log("Hover");
+            //Debug.Log("Hover");
         }
 
         public void UnHover(GameObject caller)
         {
-            Debug.Log("UnHover");
+            //Debug.Log("UnHover");
         }
     }
 }//end of namespace

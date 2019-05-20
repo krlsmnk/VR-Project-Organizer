@@ -12,14 +12,23 @@ namespace VRTK
         {
 
             private VRTK_InteractableObject InteractObjScript;
-            private GameObject thisClone, clonable;
+            private GameObject thisClone, clonable, globalCanvasScript;
             private DICanvas DICanvasScript;
 
             // Use this for initialization
             void Start()
             {
+                thisClone = new GameObject();
+                clonable = new GameObject();
+                globalCanvasScript = new GameObject();
+
+                //CNG
                 DICanvasScript = FindObjectOfType<DICanvas>();
-                if (DICanvasScript == null) DICanvasScript = new DICanvas();
+                if (DICanvasScript == null)
+                {
+                    DICanvasScript = globalCanvasScript.AddComponent<DICanvas>();
+                }
+                Debug.Log(DICanvasScript.gameObject.name);
             }
 
             // Update is called once per frame
@@ -52,6 +61,14 @@ namespace VRTK
 
             public void setupGC(GameObject targetClonable, GameObject myClone)
             {
+                //CNG
+                DICanvasScript = FindObjectOfType<DICanvas>();
+                if (DICanvasScript == null)
+                {
+                    DICanvasScript = globalCanvasScript.AddComponent<DICanvas>();
+                }
+                //Debug.Log(DICanvasScript.gameObject.name);
+
                 //Assign GameObject references
                 clonable = targetClonable;
                 thisClone = myClone;
@@ -91,7 +108,7 @@ namespace VRTK
                 InteractObjScript.isGrabbable = true;
                 InteractObjScript.stayGrabbedOnTeleport = true;
                 InteractObjScript.touchHighlightColor = Color.yellow;
-                InteractObjScript.grabOverrideButton = VRTK_ControllerEvents.ButtonAlias.TriggerPress;
+                InteractObjScript.grabOverrideButton = VRTK_ControllerEvents.ButtonAlias.GripPress;
             }
         }//end of class
     }//end of CAVS namespace

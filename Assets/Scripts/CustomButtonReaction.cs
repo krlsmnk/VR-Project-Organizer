@@ -20,7 +20,7 @@
             buttonEvents = GetComponent<VRTK_Button_UnityEvents>();
             if (buttonEvents == null)
             {
-                buttonEvents = gameObject.AddComponent<VRTK_Button_UnityEvents>();
+                buttonEvents = this.gameObject.AddComponent<VRTK_Button_UnityEvents>();
             }
             //buttonEvents.OnPushed.AddListener(handlePush);
 

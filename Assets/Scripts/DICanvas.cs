@@ -11,7 +11,7 @@ public class DICanvas : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+        thisCanvas = new GameObject();
 	}
 	
 	// Update is called once per frame
@@ -20,12 +20,16 @@ public class DICanvas : MonoBehaviour {
 	}
 
     public void createDICanvas(GameObject gClone, Transform spawnLocation) {
+        //Debug.Log(gClone.name + spawnLocation.gameObject.name); //CNG
+        
         //Instantiate the canvas at the target position
         thisCanvas = (GameObject)Instantiate(Resources.Load("DistanceInteractionCanvas"));
         thisCanvas.transform.position = spawnLocation.forward;
 
         //copy this script, and attach it to the canvas
         thisCanvas.AddComponent<DICanvas>();
+
+        //thisCanvas.AddComponent<CustomButtonReaction>(); //CNG
 
         //continue setup from the new script (which is ON the canvas), rather than this one, which hangs out in the scene
         thisCanvas.GetComponent<DICanvas>().setupDICanvas(gClone, thisCanvas);
@@ -42,11 +46,13 @@ public class DICanvas : MonoBehaviour {
         thisCanvas.tag = "temporary";
 
         //Hook up the buttons so they reference the correct constraints
-        setupButtons();
+        setupButtons(thisCanvas);
     }
 
-    private void setupButtons()
+    private void setupButtons(GameObject myCanvas)
     {
+        thisCanvas = myCanvas;
+
         //Get the script that has the OnClick methods for the buttons, so we can assign them
         CustomButtonReaction ButtonScript = thisCanvas.GetComponent<CustomButtonReaction>();               
         //Tell the button script which RidgidBody it will be modifying
