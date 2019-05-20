@@ -22,8 +22,9 @@ public class selectedBehavior: MonoBehaviour, ISelectable {
 		
 	}
 
-    public void Select(UnityEngine.GameObject caller) { 
-        //Debug.Log("Selected");                 
+        public void Select(UnityEngine.GameObject hand)
+        {
+            //Debug.Log("Selected");                 
 
             //see if another clone exists, if one does, remove it
             try { 
@@ -34,7 +35,7 @@ public class selectedBehavior: MonoBehaviour, ISelectable {
                 }
             
             //Clone the selected object, place it with some offset to the controller
-            ghostClone = Instantiate(this.gameObject, caller.transform.position + (caller.transform.right *.5f), this.gameObject.transform.rotation);
+            ghostClone = Instantiate(this.gameObject, hand.transform.position + (hand.transform.forward *.5f), this.gameObject.transform.rotation);
             
 
             //rename object so we can define further behavior later
@@ -53,7 +54,7 @@ public class selectedBehavior: MonoBehaviour, ISelectable {
             //unfreeze the clone's rigidbody so it can be modified
             ghostClone.GetComponent<Rigidbody>().constraints =  RigidbodyConstraints.None;
 
-    }//end of select
+        }//end of select
 
     public void UnSelect(UnityEngine.GameObject caller) { 
         //Debug.Log("UnSelected");

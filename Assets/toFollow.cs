@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class toFollow : MonoBehaviour {
 
-public Transform followThis;
+    public Transform followThis;
     private Vector3 offset;
  
     void Start()

@@ -1,14 +1,15 @@
-﻿namespace VRTK.Examples
-{
+﻿    namespace VRTK.Examples
+    { 
+    using System;
     using UnityEngine;
     using UnityEngine.UI;
     using UnityEventHelper;
 
 
-public class CustomButtonReaction : MonoBehaviour {
+    public class CustomButtonReaction : MonoBehaviour {
 
         public Button[] buttons = new Button[6];
-        private Button[] rotButtons, posButtons = new Button[3];
+        private Button[] rotButtons = new Button[3], posButtons = new Button[3];
 
         public Rigidbody cloneRigidBody;
         private VRTK_Button_UnityEvents buttonEvents;
@@ -60,11 +61,12 @@ public class CustomButtonReaction : MonoBehaviour {
                     TurnAll(buttons, Color.green);
                     //disallow rotations
                     cloneRigidBody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
-                    //TurnAll(rotButtons, Color.red); // doesn't work???
-                    TurnThis(buttons[3], Color.red);
-                    TurnThis(buttons[4], Color.red);
-                    TurnThis(buttons[5], Color.red);    
+                    TurnAll(rotButtons, Color.red); //CNG
+                    //TurnThis(buttons[3], Color.red);
+                    //TurnThis(buttons[4], Color.red);
+                    //TurnThis(buttons[5], Color.red);    
         }
+
         public void rotateButton() { 
             //disable all existing constraints  
                     cloneRigidBody.constraints = RigidbodyConstraints.None;                                                                                                                                                                                           
@@ -96,6 +98,14 @@ public class CustomButtonReaction : MonoBehaviour {
         public void rotz() {
             cloneRigidBody.constraints ^= RigidbodyConstraints.FreezeRotationZ;
             ToggleThis(buttons[5]);
+        }
+
+        public void destroyButton() {
+            GameObject[] temporary = GameObject.FindGameObjectsWithTag("temporary");
+            foreach (GameObject thisTemp in temporary)
+            {
+                Destroy(thisTemp);
+            }
         }
 }
 }
