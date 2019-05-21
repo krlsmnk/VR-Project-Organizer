@@ -20,17 +20,22 @@ public class DICanvas : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if(this.gameObject != null && headsetTransform != null) transform.rotation = Quaternion.LookRotation(transform.position - headsetTransform.position);
+        if (this.gameObject != null && headsetTransform != null) {
+            transform.rotation = new Quaternion(transform.rotation.x, Quaternion.LookRotation(transform.position - headsetTransform.position).y, transform.rotation.z, transform.rotation.w);
+            //transform.rotation = Quaternion.LookRotation(transform.position - headsetTransform.position);
+            //transform.rotation = new Quaternion(0, transform.rotation.y, 0, transform.rotation.w);
+        } 
         //gameObject.transform.LookAt(headsetTransform);
 	}
 
     void LateUpdate()
     {
-        transform.rotation = new Quaternion(transform.rotation.w, transform.rotation.x, 0, transform.rotation.z);
+        
     }
 
     public void createDICanvas(GameObject gClone, Transform spawnLocation) {
         //Debug.Log(gClone.name + spawnLocation.gameObject.name); //CNG
+        headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
 
         //"There can be only one."
         cleanupOldWindows();

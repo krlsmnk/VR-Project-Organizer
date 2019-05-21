@@ -23,6 +23,7 @@ namespace VRTK
             private VRTK_InteractTouch handTouch;
             private VRTK_FixedJointGrabAttach FixJointScript;
             private Transform headsetTransform;
+            private VRTK_ObjectFollow followPositionScript, followRotationScript;
 
             // Use this for initialization
             void Start()
@@ -59,6 +60,8 @@ namespace VRTK
             /// <param name="spawnLocation"></param>
             public void createGC(GameObject targetClonable, Transform spawnLocation)
             {
+                headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
+
                 //"There can be only one."
                 cleanupOldClones();
 
