@@ -4,7 +4,7 @@
     using UnityEngine;
     using UnityEngine.UI;
     using UnityEventHelper;
-
+    using VRTK.CAVS.ProjectOrganizer.Interation;
 
     public class CustomButtonReaction : MonoBehaviour {
 
@@ -104,6 +104,7 @@
             GameObject[] temporary = GameObject.FindGameObjectsWithTag("temporary");
             foreach (GameObject thisTemp in temporary)
             {
+                if (thisTemp.GetComponent<GhostClone>() != null) thisTemp.GetComponent<GhostClone>().releaseChildren();
                 Destroy(thisTemp);
             }
         }

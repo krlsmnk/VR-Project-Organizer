@@ -44,6 +44,14 @@ namespace CAVS.ProjectOrganizer.Interation
         [SerializeField, Range(1, 10)]
         private float coolDown;
 
+        public GameObject getLeftController() {
+            return leftController;
+        }
+        public GameObject getRightController()
+        {
+            return rightController;
+        }
+
         // OnCollision not working
         void Update()
         {

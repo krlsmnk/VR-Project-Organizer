@@ -23,7 +23,7 @@ namespace CAVS.ProjectOrganizer.Interation
             {                 
                 GhostScript = globalGhostScript.AddComponent<GhostClone>();                
             }
-            Debug.Log(GhostScript.gameObject.name);
+            //Debug.Log(GhostScript.gameObject.name);
 
         }
         // Update is called once per frame

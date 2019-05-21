@@ -3,28 +3,42 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using VRTK;
 using VRTK.Examples;
 
 public class DICanvas : MonoBehaviour {
 
     private GameObject ghostClone, thisCanvas;
+    private Transform headsetTransform;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         thisCanvas = new GameObject();
-	}
+        headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
-		
+        if(this.gameObject != null && headsetTransform != null) transform.rotation = Quaternion.LookRotation(transform.position - headsetTransform.position);
+        //gameObject.transform.LookAt(headsetTransform);
 	}
+
+    void LateUpdate()
+    {
+        transform.rotation = new Quaternion(transform.rotation.w, transform.rotation.x, 0, transform.rotation.z);
+    }
 
     public void createDICanvas(GameObject gClone, Transform spawnLocation) {
         //Debug.Log(gClone.name + spawnLocation.gameObject.name); //CNG
-        
+
+        //"There can be only one."
+        cleanupOldWindows();
+
         //Instantiate the canvas at the target position
         thisCanvas = (GameObject)Instantiate(Resources.Load("DistanceInteractionCanvas"));
         thisCanvas.transform.position = spawnLocation.forward;
+        thisCanvas.transform.position = new Vector3(thisCanvas.transform.position.x, headsetTransform.position.y, thisCanvas.transform.position.z);
 
         //copy this script, and attach it to the canvas
         thisCanvas.AddComponent<DICanvas>();
@@ -33,6 +47,15 @@ public class DICanvas : MonoBehaviour {
 
         //continue setup from the new script (which is ON the canvas), rather than this one, which hangs out in the scene
         thisCanvas.GetComponent<DICanvas>().setupDICanvas(gClone, thisCanvas);
+    }
+
+    private void cleanupOldWindows()
+    {
+        GameObject[] temporary = GameObject.FindGameObjectsWithTag("temporary");
+        foreach (GameObject thisTemp in temporary)
+        {
+            if (thisTemp.GetComponent<DICanvas>() != null) Destroy(thisTemp);
+        }
     }
 
     private void setupDICanvas(GameObject gClone, GameObject myCanvas)
