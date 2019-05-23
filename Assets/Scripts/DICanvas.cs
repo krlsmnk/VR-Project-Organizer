@@ -10,6 +10,7 @@ public class DICanvas : MonoBehaviour {
 
     private GameObject ghostClone, thisCanvas;
     private Transform headsetTransform;
+    private VRTK_InteractableObject IOScript;
 
     // Use this for initialization
     void Start () {
@@ -42,8 +43,19 @@ public class DICanvas : MonoBehaviour {
 
         //Instantiate the canvas at the target position
         thisCanvas = (GameObject)Instantiate(Resources.Load("DistanceInteractionCanvas"));
-        thisCanvas.transform.position = spawnLocation.forward;
+        thisCanvas.transform.position = spawnLocation.position;
         thisCanvas.transform.position = new Vector3(thisCanvas.transform.position.x, headsetTransform.position.y, thisCanvas.transform.position.z);
+
+        //CNG
+        //Add IOScript to the canvas so it can be grabbed
+        IOScript = thisCanvas.AddComponent<VRTK_InteractableObject>();
+        IOScript.isGrabbable = true;
+        IOScript.holdButtonToGrab = true;
+        IOScript.stayGrabbedOnTeleport = true;
+        IOScript.allowedGrabControllers = VRTK_InteractableObject.AllowedController.Both;
+        IOScript.disableWhenIdle = false;
+        IOScript.touchHighlightColor = Color.cyan;
+        IOScript.isKinematic = true;
 
         //copy this script, and attach it to the canvas
         thisCanvas.AddComponent<DICanvas>();
@@ -60,6 +72,11 @@ public class DICanvas : MonoBehaviour {
         foreach (GameObject thisTemp in temporary)
         {
             if (thisTemp.GetComponent<DICanvas>() != null) Destroy(thisTemp);
+        }
+        VRTK_Button[] buttons = GameObject.FindObjectsOfType<VRTK_Button>();
+        foreach (VRTK_Button thisButton in buttons)
+        {
+            if (thisButton.gameObject == null) Destroy(thisButton);
         }
     }
 

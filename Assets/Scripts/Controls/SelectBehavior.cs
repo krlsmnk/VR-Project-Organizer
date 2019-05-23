@@ -103,6 +103,8 @@ namespace CAVS.ProjectOrganizer.Controls
 
         private void Hand_GripPressed(object sender, ControllerInteractionEventArgs e)
         {
+            //CNG
+            /*
             if (PointsIsOn())
             {
                 TurnOffPointer();
@@ -111,6 +113,7 @@ namespace CAVS.ProjectOrganizer.Controls
             {
                 TurnOnPointer();
             }
+            */
         }
 
         void Update()

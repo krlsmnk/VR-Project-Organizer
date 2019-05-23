@@ -151,6 +151,8 @@ namespace CAVS.ProjectOrganizer.Controls
 
         private void UpdateInteractableObject(VRTK_InteractableObject newInteractable)
         {
+            //CNG if (pointer == null) pointer = new LineRenderer();
+
             if(newInteractable == null)
             {
                 pointer.startColor = Color.grey;
@@ -207,6 +209,8 @@ namespace CAVS.ProjectOrganizer.Controls
 
         private void Hand_GripPressed(object sender, ControllerInteractionEventArgs e)
         {
+            //CNG
+            /*
             if (PointerIsOn())
             {
                 TurnOffPointer();
@@ -215,6 +219,7 @@ namespace CAVS.ProjectOrganizer.Controls
             {
                 TurnOnPointer();
             }
+            */
         }
 
         void Start()

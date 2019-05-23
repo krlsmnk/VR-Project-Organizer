@@ -23,7 +23,6 @@ namespace VRTK
             private VRTK_InteractTouch handTouch;
             private VRTK_FixedJointGrabAttach FixJointScript;
             private Transform headsetTransform;
-            private VRTK_ObjectFollow followPositionScript, followRotationScript;
 
             // Use this for initialization
             void Start()
@@ -70,16 +69,42 @@ namespace VRTK
                 thisClone = Instantiate(targetClonable, spawnLocation.forward, spawnLocation.rotation);
                 thisClone.transform.position = new Vector3(thisClone.transform.position.x, headsetTransform.position.y, thisClone.transform.position.z);
                 thisClone.transform.rotation = targetClonable.transform.rotation;
-                thisClone.transform.localScale = targetClonable.transform.localScale;
+                thisClone.transform.localScale = targetClonable.transform.localScale;                
 
-                //Make the clone more transparent to distinguish it
-                var trans = 0.5f;
-                var col = thisClone.GetComponent<Renderer>().material.color;                
-                col.a = trans;
-
+                //CNG PARENTING CHANGED TO ObjectFollow
+                /*
                 //set thisClone as parent so it will affect the clonable
                 clonable.transform.SetParent(thisClone.transform, false);
                 //clonable.transform.parent = thisClone.transform;
+                */
+
+                //Make empty for the ObjectFollow scripts
+                GameObject followObject = new GameObject("PositionOffset");
+                followObject.transform.position = clonable.transform.position;
+                followObject.tag = "temporary";
+
+                //attach positionFollow script to positionOffset object targeting GClone, affecting the clonable                
+                VRTK_TransformFollow followPositionScript = followObject.AddComponent<VRTK_TransformFollow>();                
+                followPositionScript.gameObjectToChange = followObject;
+                followPositionScript.gameObjectToFollow = thisClone;
+                followPositionScript.followsPosition = true;
+                followPositionScript.followsRotation = false;
+
+                //set the parent of the cloneable = positionOffset object
+                //scaling fix: manual
+                Transform scaleFix = fixScaling(clonable);                
+                clonable.transform.SetParent(followObject.transform, false);
+                clonable.transform.localScale = new Vector3(scaleFix.localScale.x, scaleFix.localScale.y, scaleFix.localScale.z);
+                thisClone.transform.localScale = new Vector3(scaleFix.localScale.x, scaleFix.localScale.y, scaleFix.localScale.z);
+                Debug.Log(scaleFix.ToString());
+
+                //add objectFollow(rotation) affecting the clonable targeting GClone
+                VRTK_TransformFollow followRotationScript = followObject.AddComponent<VRTK_TransformFollow>();
+                followRotationScript.gameObjectToChange = clonable;
+                followRotationScript.gameObjectToFollow = thisClone;
+                followRotationScript.followsPosition = false;
+                followRotationScript.followsRotation = true;
+
 
                 //copy this script, and attach it to the clone
                 thisClone.AddComponent<GhostClone>();
@@ -88,17 +113,29 @@ namespace VRTK
                 thisClone.GetComponent<GhostClone>().setupGC(clonable, thisClone);
             }
 
+            private Transform fixScaling(GameObject clonable)
+            {
+                Transform scaleFix = new GameObject().transform;
+                scaleFix.localScale = new Vector3(clonable.transform.localScale.x, clonable.transform.localScale.y, clonable.transform.localScale.z);
+                return scaleFix;
+            }
+
             private void cleanupOldClones()
             {
                 GameObject[] temporary = GameObject.FindGameObjectsWithTag("temporary");
                 foreach (GameObject thisTemp in temporary)
                 {
                     if (thisTemp.GetComponent<GhostClone>() != null) Destroy(thisTemp);
+                    if (thisTemp.GetComponent<VRTK_TransformFollow>() != null) {
+                        Transform[] children = thisTemp.GetComponentsInChildren<Transform>();
+                        foreach (Transform thisChild in children) thisChild.SetParent(null);
+                        Destroy(thisTemp);
+                    } 
                 }
             }
 
             public void setupGC(GameObject targetClonable, GameObject myClone)
-            {
+            {                
                 //CNG
                 DICanvasScript = FindObjectOfType<DICanvas>();
                 if (DICanvasScript == null)
@@ -110,6 +147,11 @@ namespace VRTK
                 //Assign GameObject references
                 clonable = targetClonable;
                 thisClone = myClone;
+
+                //Make the clone more transparent to distinguish it
+                var trans = 0.3f;
+                var col = thisClone.GetComponent<Renderer>().material.color;
+                col.a = trans;
 
                 //set tag and name so we can clean it up, find it later, and distinguish it in the editor
                 thisClone.name = clonable.name + "(Ghost Clone)";
@@ -141,8 +183,8 @@ namespace VRTK
             }
 
             internal void releaseChildren()
-            {
-                clonable.transform.parent = null;
+            {                
+                clonable.transform.SetParent(null);                
             }
 
             private void setupInteractScript(VRTK_InteractableObject IOScript, VRTK_ChildOfControllerGrabAttach GScript, VRTK_ControllerEvents CEvents)

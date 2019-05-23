@@ -12,10 +12,11 @@ namespace CAVS.ProjectOrganizer.Interation
         private GhostClone GhostScript;
         private Transform originalItemTransform, offsetTransform;
         private GameObject thisClonable, globalGhostScript;
+        private VRTK_ControllerEvents Hand;
 
         // Use this for initialization
         void Start()
-        {
+        {            
             globalGhostScript = new GameObject();
             thisClonable = this.gameObject; 
             GhostScript = FindObjectOfType<GhostClone>();
@@ -39,10 +40,12 @@ namespace CAVS.ProjectOrganizer.Interation
 
         public void SelectPress(GameObject caller)
         {
+            Hand = GameObject.FindObjectOfType<VRTK_ControllerEvents>(); //CNG
             //Debug.Log("Selected");
             //Debug.Log(thisClonable.name);
             //Debug.Log(caller.name);
-            GhostScript.createGC(thisClonable, caller.transform);
+            //CNG GhostScript.createGC(thisClonable, caller.transform);
+            GhostScript.createGC(thisClonable, Hand.transform);
         }
 
         public void SelectUnpress(GameObject caller)
