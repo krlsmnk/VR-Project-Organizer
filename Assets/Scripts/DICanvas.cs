@@ -17,6 +17,12 @@ public class DICanvas : MonoBehaviour {
         thisCanvas = new GameObject();
         headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
 
+        VRTK_Button[] buttons = GameObject.FindObjectsOfType<VRTK_Button>();
+        foreach (VRTK_Button thisButton in buttons)
+        {
+            if (thisButton.gameObject == null) Destroy(thisButton);
+        }
+
     }
 	
 	// Update is called once per frame

@@ -1,5 +1,6 @@
 ﻿    namespace VRTK.Examples
-    { 
+    {
+    using global::CAVS.ProjectOrganizer.Interation;
     using System;
     using UnityEngine;
     using UnityEngine.UI;
@@ -101,6 +102,9 @@
         }
 
         public void destroyButton() {
+            Cloneable[] clonables = FindObjectsOfType<Cloneable>();
+            foreach (Cloneable thisCloneable in clonables) thisCloneable.gameObject.transform.SetParent(null);
+
             GameObject[] temporary = GameObject.FindGameObjectsWithTag("temporary");
             foreach (GameObject thisTemp in temporary)
             {

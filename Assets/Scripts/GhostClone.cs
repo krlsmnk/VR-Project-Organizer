@@ -212,7 +212,10 @@ namespace VRTK
                 }
                 if (handTouch == null) handTouch = Hand.gameObject.GetComponent<VRTK_InteractTouch>();
                 if (handTouch == null) handTouch = Hand.gameObject.AddComponent<VRTK_InteractTouch>();
-                
+                VRTK_TrackObjectGrabAttach attachBehavior = Hand.gameObject.AddComponent<VRTK_TrackObjectGrabAttach>();
+                attachBehavior.precisionGrab = true;
+                InteractObjScript.grabAttachMechanicScript = attachBehavior;
+
                 GrabScript = Hand.gameObject.GetComponent<VRTK_InteractGrab>();
                 if (GrabScript== null) GrabScript = Hand.gameObject.AddComponent<VRTK_InteractGrab>();
 
