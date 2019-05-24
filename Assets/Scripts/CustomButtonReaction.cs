@@ -61,7 +61,7 @@
                     cloneRigidBody.constraints = RigidbodyConstraints.None;
                     TurnAll(buttons, Color.green);
                     //disallow rotations
-                    cloneRigidBody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+                    cloneRigidBody.constraints = RigidbodyConstraints.FreezeRotation;
                     TurnAll(rotButtons, Color.red); //CNG
                     //TurnThis(buttons[3], Color.red);
                     //TurnThis(buttons[4], Color.red);
@@ -73,7 +73,7 @@
                     cloneRigidBody.constraints = RigidbodyConstraints.None;                                                                                                                                                                                           
                     TurnAll(buttons, Color.green);
                     //disallow translations
-                    cloneRigidBody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ;
+                    cloneRigidBody.constraints = RigidbodyConstraints.FreezePosition;
                     TurnAll(posButtons, Color.red);            
         }
         public void posx() {         

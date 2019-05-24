@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using VRTK;
+using VRTK.CAVS.ProjectOrganizer.Interation;
 using VRTK.Examples;
 
 public class DICanvas : MonoBehaviour {
@@ -11,11 +12,13 @@ public class DICanvas : MonoBehaviour {
     private GameObject ghostClone, thisCanvas;
     private Transform headsetTransform;
     private VRTK_InteractableObject IOScript;
+    public GameObject affectedClone;
+    public RigidbodyConstraints RBConstraints;
 
     // Use this for initialization
     void Start () {
-        thisCanvas = new GameObject();
-        headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
+        if(thisCanvas == null) thisCanvas = new GameObject();
+        if(headsetTransform == null) headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
 
         VRTK_Button[] buttons = GameObject.FindObjectsOfType<VRTK_Button>();
         foreach (VRTK_Button thisButton in buttons)
@@ -31,8 +34,19 @@ public class DICanvas : MonoBehaviour {
             transform.rotation = new Quaternion(transform.rotation.x, Quaternion.LookRotation(transform.position - headsetTransform.position).y, transform.rotation.z, transform.rotation.w);
             //transform.rotation = Quaternion.LookRotation(transform.position - headsetTransform.position);
             //transform.rotation = new Quaternion(0, transform.rotation.y, 0, transform.rotation.w);
-        } 
+        }
         //gameObject.transform.LookAt(headsetTransform);
+
+        /*
+        if (ghostClone != null && ghostClone.GetComponent<Rigidbody>() != null)
+        {
+            affectedClone = ghostClone;
+            Rigidbody RigBody = ghostClone.GetComponent<Rigidbody>();
+            RBConstraints = RigBody.constraints;
+
+            if (ghostClone.GetComponent<GhostClone>().RBConstraints != RBConstraints) ghostClone.GetComponent<GhostClone>().RBConstraints = RBConstraints;
+        }
+        */
 	}
 
     void LateUpdate()
@@ -141,6 +155,7 @@ public class DICanvas : MonoBehaviour {
                     thisButton.onClick.AddListener(ButtonScript.destroyButton);
                     break;
                 default:
+                    Debug.Log("Button without valid name.");
                     break;
             }            
         }

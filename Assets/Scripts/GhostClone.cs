@@ -15,26 +15,27 @@ namespace VRTK
         {
 
             private VRTK_InteractableObject InteractObjScript;
-            private VRTK_ChildOfControllerGrabAttach GrabAttachScript;
+            //CNG private VRTK_ChildOfControllerGrabAttach GrabAttachScript;
+            private VRTK_FixedJointGrabAttach GrabAttachScript;
+
             private GameObject thisClone, clonable, globalCanvasScript;
             private DICanvas DICanvasScript;
             private VRTK_ControllerEvents Hand;
             private VRTK_InteractGrab GrabScript;
             private VRTK_InteractTouch handTouch;
-            private VRTK_FixedJointGrabAttach FixJointScript;
             private Transform headsetTransform;
-
+            
             // Use this for initialization
             void Start()
             {
-                headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
-                thisClone = new GameObject();
-                clonable = new GameObject();
-                GrabScript = new VRTK_InteractGrab();
-                Hand = GameObject.FindObjectOfType<VRTK_ControllerEvents>(); //CNG
-                handTouch = GameObject.FindObjectOfType<VRTK_InteractTouch>();
-                globalCanvasScript = new GameObject();
-                FixJointScript = new VRTK_FixedJointGrabAttach();
+                if(headsetTransform == null) headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
+                if(thisClone == null) thisClone = new GameObject();
+                if(clonable == null) clonable = new GameObject();
+                if(GrabScript == null) GrabScript = new VRTK_InteractGrab();
+                if(Hand == null)Hand = GameObject.FindObjectOfType<VRTK_ControllerEvents>(); //CNG
+                if(handTouch == null)handTouch = GameObject.FindObjectOfType<VRTK_InteractTouch>();
+                if(globalCanvasScript == null) globalCanvasScript = new GameObject();
+                if(GrabAttachScript == null) GrabAttachScript = new VRTK_FixedJointGrabAttach();
 
                 //CNG
                 DICanvasScript = FindObjectOfType<DICanvas>();
@@ -43,13 +44,20 @@ namespace VRTK
                     DICanvasScript = globalCanvasScript.AddComponent<DICanvas>();
                 }
                 //Debug.Log(DICanvasScript.gameObject.name);
+
+                VRTK_Button[] buttons = GameObject.FindObjectsOfType<VRTK_Button>();
+                foreach (VRTK_Button thisButton in buttons)
+                {
+                    if (thisButton.gameObject == null) Destroy(thisButton);
+                }
+
             }
 
             // Update is called once per frame
             void Update()
-            {
-
+            {                
             }
+
 
             /// <summary>
             /// This function is called by the object which can be cloned.
@@ -163,7 +171,9 @@ namespace VRTK
 
                 //Give grab attach if doesn't have
                 InteractObjScript = thisClone.GetComponent<VRTK_InteractableObject>();
-                GrabAttachScript = thisClone.GetComponent<VRTK_ChildOfControllerGrabAttach>();
+                //CNG GrabAttachScript = thisClone.GetComponent<VRTK_ChildOfControllerGrabAttach>();
+                GrabAttachScript = thisClone.GetComponent<VRTK_FixedJointGrabAttach>();
+                
                 
                 Hand = GameObject.FindObjectOfType<VRTK_ControllerEvents>(); //CNG
                 //Finish script setup
@@ -176,7 +186,10 @@ namespace VRTK
 
                 //Unfreeze the rigidbody so it can be modified
                 thisClone.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+                thisClone.GetComponent<Rigidbody>().useGravity = false;
                 thisClone.GetComponent<Rigidbody>().isKinematic = true;
+
+
 
                 //Create the canvas which will let us modify the constraints on this clone
                 DICanvasScript.createDICanvas(thisClone, thisClone.transform);
@@ -187,52 +200,53 @@ namespace VRTK
                 clonable.transform.SetParent(null);                
             }
 
-            private void setupInteractScript(VRTK_InteractableObject IOScript, VRTK_ChildOfControllerGrabAttach GScript, VRTK_ControllerEvents CEvents)
+            private void setupInteractScript(VRTK_InteractableObject IOScript, VRTK_FixedJointGrabAttach GScript, VRTK_ControllerEvents CEvents)
             {
                 if (IOScript == null)
-                {
-                    //create new script, then continue               
+                {              
                     InteractObjScript = thisClone.AddComponent<VRTK_InteractableObject>();
                 }
+                else InteractObjScript = IOScript;
                 if (GScript == null)
-                {
-                    //create new script, then continue               
-                    GrabAttachScript = thisClone.AddComponent<VRTK_ChildOfControllerGrabAttach>();
+                {            
+                    GrabAttachScript = thisClone.AddComponent<VRTK_FixedJointGrabAttach>();
                 }
+                else GrabAttachScript = GScript;
                 if (CEvents == null)
                 {
-                    /*
-                    GameObject newHand = GameObject.FindObjectOfType<GrabControlBehavior>().gameObject;
-                    //create new script, then continue                    
-                    Hand = newHand.GetComponent<VRTK_ControllerEvents>();
-                    if(Hand==null) Hand = newHand.AddComponent<VRTK_ControllerEvents>();
-                    */
                     Debug.Log("Created new Controller Events");
                     Hand = new VRTK_ControllerEvents();
                 }
+                else Hand = CEvents;
+
                 if (handTouch == null) handTouch = Hand.gameObject.GetComponent<VRTK_InteractTouch>();
                 if (handTouch == null) handTouch = Hand.gameObject.AddComponent<VRTK_InteractTouch>();
-                VRTK_TrackObjectGrabAttach attachBehavior = Hand.gameObject.AddComponent<VRTK_TrackObjectGrabAttach>();
-                attachBehavior.precisionGrab = true;
-                InteractObjScript.grabAttachMechanicScript = attachBehavior;
-
+                
                 GrabScript = Hand.gameObject.GetComponent<VRTK_InteractGrab>();
                 if (GrabScript== null) GrabScript = Hand.gameObject.AddComponent<VRTK_InteractGrab>();
+                GrabScript.grabButton = VRTK_ControllerEvents.ButtonAlias.GripPress;
+                GrabScript.controllerEvents = Hand;
 
+                GrabAttachScript.precisionGrab = true;
+
+                InteractObjScript.grabAttachMechanicScript = GrabAttachScript;
                 InteractObjScript.holdButtonToGrab = true;
                 InteractObjScript.isGrabbable = true;
                 InteractObjScript.stayGrabbedOnTeleport = true;
                 InteractObjScript.touchHighlightColor = Color.yellow;
-                InteractObjScript.grabOverrideButton = VRTK_ControllerEvents.ButtonAlias.GripPress;              
-
-                GrabAttachScript.precisionGrab = true;
-                if(FixJointScript == null) FixJointScript = new VRTK_FixedJointGrabAttach();
-                FixJointScript.precisionGrab = true;               
-                InteractObjScript.grabAttachMechanicScript = FixJointScript;
-
-                GrabScript.grabButton = VRTK_ControllerEvents.ButtonAlias.GripPress;
-                GrabScript.controllerEvents = Hand; 
+                InteractObjScript.grabOverrideButton = VRTK_ControllerEvents.ButtonAlias.GripPress;                                                                           
             }
-        }//end of class
+
+            void OnCollisionEnter(Collision collision)
+            {
+                Debug.Log("Collision Detected");
+                if (collision.gameObject.tag == "controller")
+                {
+                    Debug.Log("Collision == Controller");
+                    Physics.IgnoreCollision(this.gameObject.GetComponent<Collider>(), collision.gameObject.GetComponent<Collider>());
+                }
+            }
+
+            }//end of class
     }//end of CAVS namespace
 }//end of VRTK namespace

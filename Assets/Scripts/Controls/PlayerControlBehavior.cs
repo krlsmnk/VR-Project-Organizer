@@ -16,9 +16,17 @@ namespace CAVS.ProjectOrganizer.Controls
 
         private VRTK_ControllerEvents hand;
 
-        public static PlayerControlBehavior Initialize(VRTK_ControllerEvents hand, List<PlayerControl> controls)
+        public PlayerControlBehavior Initialize(VRTK_ControllerEvents hand, List<PlayerControl> controls)
         {
-            var newScript = hand.gameObject.AddComponent<PlayerControlBehavior>();
+            PlayerControlBehavior newScript;
+            if (hand.gameObject.GetComponent<PlayerControlBehavior>() == null)
+            {
+                newScript = hand.gameObject.AddComponent<PlayerControlBehavior>();             
+            }
+            else
+            {
+                newScript = hand.gameObject.GetComponent<PlayerControlBehavior>();
+            }
 
             newScript.currentControlIndex = -1;
             newScript.hand = hand;
