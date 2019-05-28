@@ -16,12 +16,15 @@ using VRTK;
 
 namespace CAVS.ProjectOrganizer.Scenes.Showcase
 {
-
+    
     /// <summary>
     /// Meant managing the entire carshowcase scene.
     /// </summary>
     public class SceneManagerBehavior : MonoBehaviour
     {
+        public bool skipShowcase = false;
+        public bool Point_Click, TVP = false;
+        public Transform headsetNullfix;
 
         [SerializeField]
         private VRTK_ControllerEvents rightHand;
@@ -107,11 +110,12 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         private void Awake()
         {
-            roomDisplay = gameObject.GetComponent<RoomDisplayBehavior>();
+            if(!skipShowcase)roomDisplay = gameObject.GetComponent<RoomDisplayBehavior>();
         }
 
         void Start()
         {
+            if (!skipShowcase) { 
             var prosignServer = new ProsignAdapterNetworkRoom("videogamedev.club", 3000);
             Netowrking.RoomPanel.Builder.Build(new Vector3(3.5f, 2.1f, 5.5f), Quaternion.Euler(14.7f, 27.6f, 3.1f), prosignServer);
             if(createRoomOnStartup)
@@ -123,9 +127,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             } else if (roomUUID != null && roomUUID != "")
             {
                 prosignServer.JoinRoom(roomUUID, delegate() { });
-            }
-
-            BuildRadialConfig();
+            }            
 
             sceneReference = prosignServer;
             sceneReference.SubscribeToUpdates(OnSceneUpdate);
@@ -146,12 +148,22 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                 .Build(new Vector3(3, 0.77f, 4.5f), Vector3.zero);
 
             StartCoroutine(UpdatePlayerTransformOnServer());
-            // graphControl.Initialize(this.PlotPointBuilder, cars);
+                // graphControl.Initialize(this.PlotPointBuilder, cars);
+            }
+
+            if(!TVP && !Point_Click)BuildRadialConfig();
+            if (Point_Click) BuildPointClickConfig();
+            if (TVP)
+            {
+                if(headsetNullfix!= null)BuildTVPConfig();
+            }
+
 
         }
 
         private void OnSceneUpdate(Dictionary<string, object> update)
         {
+            if (!skipShowcase) { 
             if (update.ContainsKey("carUpdate"))
             {
                 carChangeFromUpdate = (int)update["carUpdate"];
@@ -159,6 +171,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             else
             {
                 roomDisplay.UpdatePuppets(new ShowcaseData(update).UsersInScene());
+            }
             }
         }
 
@@ -392,6 +405,17 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             var config = new ControllerConfig(new List<PlayerControl>()
             {
                 new TVPPlayerControl()
+            });
+
+            config.Build(leftHand);
+            config.Build(rightHand);
+        }
+
+        public void BuildPointClickConfig()
+        {
+            var config = new ControllerConfig(new List<PlayerControl>()
+            {
+                new TeleportPlayerControl()
             });
 
             config.Build(leftHand);

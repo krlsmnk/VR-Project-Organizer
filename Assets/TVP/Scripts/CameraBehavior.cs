@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using CAVS.ProjectOrganizer.Scenes.Showcase;
+using UnityEngine;
 using VRTK;
 
 namespace KarlSmink.Teleporting
@@ -29,7 +30,8 @@ namespace KarlSmink.Teleporting
 
             script.theFollowScript = portal.AddComponent<VRTK_TransformFollow>();            
             script.theFollowScript.gameObjectToChange = portal;
-            script.theFollowScript.gameObjectToFollow = VRTK_DeviceFinder.HeadsetTransform().gameObject;
+            if (VRTK_DeviceFinder.HeadsetTransform().gameObject == null) script.theFollowScript.gameObjectToFollow = GameObject.FindObjectOfType<SceneManagerBehavior>().headsetNullfix.gameObject;
+            else script.theFollowScript.gameObjectToFollow = VRTK_DeviceFinder.HeadsetTransform().gameObject;            
             script.theFollowScript.followsRotation = true;
             script.theFollowScript.followsPosition = true;
             

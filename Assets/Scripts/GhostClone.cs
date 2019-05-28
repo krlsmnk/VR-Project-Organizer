@@ -227,7 +227,8 @@ namespace VRTK
                 GrabScript.grabButton = VRTK_ControllerEvents.ButtonAlias.GripPress;
                 GrabScript.controllerEvents = Hand;
 
-                GrabAttachScript.precisionGrab = true;
+                GrabAttachScript.precisionGrab = false;
+                GrabAttachScript.breakForce = 999999;
 
                 InteractObjScript.grabAttachMechanicScript = GrabAttachScript;
                 InteractObjScript.holdButtonToGrab = true;
