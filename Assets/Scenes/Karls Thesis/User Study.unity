@@ -5272,7 +5272,6 @@ MonoBehaviour:
   skipShowcase: 1
   Point_Click: 0
   TVP: 1
-  headsetNullfix: {fileID: 2014949224}
   rightHand: {fileID: 847116009}
   leftHand: {fileID: 847116010}
   carImageScreens:
@@ -5314,7 +5313,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 855a2b3c15949834b8d3461f994cf54e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  headsetTransform: {fileID: 2014949224}
+  spawnDistance: 3
 --- !u!1 &767668919
 GameObject:
   m_ObjectHideFlags: 0
@@ -6269,7 +6268,7 @@ GameObject:
   - component: {fileID: 868794764}
   m_Layer: 0
   m_Name: Floor
-  m_TagString: Untagged
+  m_TagString: floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7978,7 +7977,7 @@ GameObject:
   - component: {fileID: 1101157962}
   m_Layer: 0
   m_Name: Floor
-  m_TagString: Untagged
+  m_TagString: floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11602,7 +11601,7 @@ GameObject:
   - component: {fileID: 1636865718}
   m_Layer: 0
   m_Name: Floor
-  m_TagString: Untagged
+  m_TagString: floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

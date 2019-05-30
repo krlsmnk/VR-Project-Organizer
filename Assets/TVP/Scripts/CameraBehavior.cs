@@ -29,9 +29,8 @@ namespace KarlSmink.Teleporting
             var script = cameraObj.AddComponent<CameraBehavior>();
 
             script.theFollowScript = portal.AddComponent<VRTK_TransformFollow>();            
-            script.theFollowScript.gameObjectToChange = portal;
-            if (VRTK_DeviceFinder.HeadsetTransform().gameObject == null) script.theFollowScript.gameObjectToFollow = GameObject.FindObjectOfType<SceneManagerBehavior>().headsetNullfix.gameObject;
-            else script.theFollowScript.gameObjectToFollow = VRTK_DeviceFinder.HeadsetTransform().gameObject;            
+            script.theFollowScript.gameObjectToChange = portal;            
+            script.theFollowScript.gameObjectToFollow = VRTK_DeviceFinder.HeadsetTransform().gameObject;            
             script.theFollowScript.followsRotation = true;
             script.theFollowScript.followsPosition = true;
             
