@@ -12,44 +12,31 @@ public class targetHUD : MonoBehaviour
     private GameObject HUDGamObj;
     private Canvas HUDCanvas;
     private pushOrder nextTarget;
-    private Transform headsetTransform;
-    public float spawnDistance = 3f;
-
-
-    void Awake()
-    {
-        VRTK_SDKManager.instance.AddBehaviourToToggleOnLoadedSetupChange(this);
-    }
-    void OnDestroy()
-    {
-        VRTK_SDKManager.instance.RemoveBehaviourToToggleOnLoadedSetupChange(this);
-    }
-
+    public Transform headsetTransform;
+   
     // Use this for initialization
-    void OnEnable()
-    {       
+    void Start()
+    {
+        //headset = new GameObject("HeadsetTransform");
+
         nextTarget = GameObject.FindObjectOfType<pushOrder>();
 
-        headsetTransform = VRTK_DeviceFinder.HeadsetTransform();        
-       
+        if (headsetTransform == null) headsetTransform = VRTK_DeviceFinder.HeadsetTransform();        
+        if (headsetTransform == null) headsetTransform = VRTK_DeviceFinder.DeviceTransform(VRTK_DeviceFinder.Devices.Headset);
+        //if (headsetTransform == null) headsetTransform = Camera.main.transform;
+        if (headsetTransform == null) headsetTransform = GameObject.FindObjectOfType<SteamVR_Camera>().transform;
+
         createCanvas();
 
-        //Empty gameobject follows Headset's position and rotation
-        GameObject offset = new GameObject("Offset");
+        GameObject offset = new GameObject();
+        offset.transform.position = headsetTransform.forward;
+        offset.transform.SetParent(headsetTransform);
+
         followScript = new VRTK_TransformFollow();
-        followScript.gameObjectToChange = offset;
-        followScript.gameObjectToFollow = headsetTransform.gameObject;
+        followScript.gameObjectToChange = HUDGamObj;
+        followScript.gameObjectToFollow = offset;
         followScript.followsPosition = true;
         followScript.followsRotation = true;
-
-        //Put the HUD in front of the headset        
-        Vector3 playerPos = headsetTransform.position;
-        Vector3 playerDirection = headsetTransform.forward;        
-        Vector3 spawnPos = playerPos + playerDirection * spawnDistance;
-
-        //Make the HUD child of the offset object, so it will receive transform updates from it
-        HUDGamObj.transform.position = spawnPos;
-        HUDGamObj.transform.SetParent(offset.transform);
 
     }
 
@@ -60,16 +47,16 @@ public class targetHUD : MonoBehaviour
         RectTransform rectTransform;
 
         // Canvas
-        HUDGamObj = new GameObject("HUDCanvas");       
+        HUDGamObj = new GameObject();
+        HUDGamObj.name = "HUDCanvas";
         HUDCanvas = HUDGamObj.AddComponent<Canvas>();
 
-        //CNG
         HUDCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
         HUDGamObj.AddComponent<CanvasScaler>();
         HUDGamObj.AddComponent<GraphicRaycaster>();
 
         // Text
-        myText = new GameObject("myText");
+        myText = new GameObject();
         myText.transform.parent = HUDGamObj.transform;
 
         text = myText.AddComponent<Text>();

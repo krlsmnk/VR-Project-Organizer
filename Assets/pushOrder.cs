@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using VRTK;
 
 public class pushOrder : MonoBehaviour {
     public GameObject nextMural;
@@ -11,15 +10,8 @@ public class pushOrder : MonoBehaviour {
     private targetHUD theTargetHUD;
 
 
-    void Awake() {
-        VRTK_SDKManager.instance.AddBehaviourToToggleOnLoadedSetupChange(this);
-    }
-    void OnDestroy() {
-        VRTK_SDKManager.instance.RemoveBehaviourToToggleOnLoadedSetupChange(this);
-    }
-
 	// Use this for initialization
-	void OnEnable () {
+	void Start () {
         murals = GameObject.FindGameObjectWithTag("mural").GetComponentsInChildren<mural>();
         nextMural = murals[0].gameObject;
         muralNum = 0;

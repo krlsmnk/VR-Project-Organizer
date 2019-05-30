@@ -23,7 +23,8 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
     public class SceneManagerBehavior : MonoBehaviour
     {
         public bool skipShowcase = false;
-        public bool Point_Click, TVP = false;        
+        public bool Point_Click, TVP = false;
+        public Transform headsetNullfix;
 
         [SerializeField]
         private VRTK_ControllerEvents rightHand;
@@ -107,62 +108,57 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         /// </summary>
         int carChangeFromUpdate = -1;
 
-        void Awake()
+        private void Awake()
         {
-            VRTK_SDKManager.instance.AddBehaviourToToggleOnLoadedSetupChange(this);
-            if (!skipShowcase) roomDisplay = gameObject.GetComponent<RoomDisplayBehavior>();
-        }
-        void OnDestroy()
-        {
-            VRTK_SDKManager.instance.RemoveBehaviourToToggleOnLoadedSetupChange(this);
+            if(!skipShowcase)roomDisplay = gameObject.GetComponent<RoomDisplayBehavior>();
         }
 
-        void Start() {
-            if (!skipShowcase)
+        void Start()
+        {
+            if (!skipShowcase) { 
+            var prosignServer = new ProsignAdapterNetworkRoom("videogamedev.club", 3000);
+            Netowrking.RoomPanel.Builder.Build(new Vector3(3.5f, 2.1f, 5.5f), Quaternion.Euler(14.7f, 27.6f, 3.1f), prosignServer);
+            if(createRoomOnStartup)
             {
-                var prosignServer = new ProsignAdapterNetworkRoom("videogamedev.club", 3000);
-                Netowrking.RoomPanel.Builder.Build(new Vector3(3.5f, 2.1f, 5.5f), Quaternion.Euler(14.7f, 27.6f, 3.1f), prosignServer);
-                if (createRoomOnStartup)
+                prosignServer.CreateRoom("Auto Room", delegate(string id)
                 {
-                    prosignServer.CreateRoom("Auto Room", delegate (string id)
-                    {
-                        Debug.LogFormat("Room Id: {0}", id);
-                    });
-                }
-                else if (roomUUID != null && roomUUID != "")
-                {
-                    prosignServer.JoinRoom(roomUUID, delegate () { });
-                }
+                    Debug.LogFormat("Room Id: {0}", id);
+                });
+            } else if (roomUUID != null && roomUUID != "")
+            {
+                prosignServer.JoinRoom(roomUUID, delegate() { });
+            }            
 
-                sceneReference = prosignServer;
-                sceneReference.SubscribeToUpdates(OnSceneUpdate);
+            sceneReference = prosignServer;
+            sceneReference.SubscribeToUpdates(OnSceneUpdate);
 
-                nextButton.Subscribe(DisplayNextCar);
-                previousButton.Subscribe(DisplayPreviousCar);
+            nextButton.Subscribe(DisplayNextCar);
+            previousButton.Subscribe(DisplayPreviousCar);
 
-                CarManager
-                    .Instance()
-                    .SetGarage(ProjectFactory.BuildItemsFromCSV("Assets/Car_Dataset.csv", 7).SubArray(0, 25));
+            CarManager
+                .Instance()
+                .SetGarage(ProjectFactory.BuildItemsFromCSV("Assets/Car_Dataset.csv", 7).SubArray(0, 25));
 
-                CarManager
-                    .Instance()
-                    .OnMainCarChange += DisplayCar;
+            CarManager
+                .Instance()
+                .OnMainCarChange += DisplayCar;
 
-                DisplayNextCar();
-                new MiniCarSelectionBuilder(CarManager.Instance())
-                    .Build(new Vector3(3, 0.77f, 4.5f), Vector3.zero);
+            DisplayNextCar();
+            new MiniCarSelectionBuilder(CarManager.Instance())
+                .Build(new Vector3(3, 0.77f, 4.5f), Vector3.zero);
 
-                StartCoroutine(UpdatePlayerTransformOnServer());
+            StartCoroutine(UpdatePlayerTransformOnServer());
                 // graphControl.Initialize(this.PlotPointBuilder, cars);
             }
-        }
 
-       
-        void OnEnable()
-        {            
             if(!TVP && !Point_Click)BuildRadialConfig();
             if (Point_Click) BuildPointClickConfig();
-            if (TVP) BuildTVPConfig();
+            if (TVP)
+            {
+                if(headsetNullfix!= null)BuildTVPConfig();
+            }
+
+
         }
 
         private void OnSceneUpdate(Dictionary<string, object> update)
