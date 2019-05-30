@@ -4,8 +4,17 @@ using UnityEngine;
 
 namespace CAVS.ProjectOrganizer.Controls
 {
-    public abstract class PlayerControl
+    public abstract class PlayerControl : MonoBehaviour
     {
+
+        void Awake()
+        {
+            VRTK_SDKManager.instance.AddBehaviourToToggleOnLoadedSetupChange(this);
+        }
+        void OnDestroy()
+        {
+            VRTK_SDKManager.instance.RemoveBehaviourToToggleOnLoadedSetupChange(this);
+        }
 
         public abstract Action Build(VRTK_ControllerEvents hand);
 

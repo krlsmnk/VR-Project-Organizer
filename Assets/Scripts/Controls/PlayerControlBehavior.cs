@@ -84,9 +84,6 @@ namespace CAVS.ProjectOrganizer.Controls
             Destroy(hand.gameObject.GetComponentInChildren<VRTK_RadialMenu>());
 
             hand.gameObject.GetComponentInChildren<PlayerControlBehavior>().enabled = false;
-            //Destroy(hand.gameObject.GetComponentInChildren<PlayerControlBehavior>());
-
-            //Destroy(hand);
         }
 /// <summary>
 /// Rebuilds the radial menu to allow for control switching again

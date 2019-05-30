@@ -8,7 +8,23 @@ using CAVS.ProjectOrganizer.Scenes.Showcase;
 namespace CAVS.ProjectOrganizer.Controls
 {
     public class TVPPlayerControl : PlayerControl
-    {        
+    {
+        private Transform headsetTransform;
+
+        void Awake()
+        {
+            VRTK_SDKManager.instance.AddBehaviourToToggleOnLoadedSetupChange(this);
+        }
+        void OnDestroy()
+        {
+            VRTK_SDKManager.instance.RemoveBehaviourToToggleOnLoadedSetupChange(this);
+        }
+
+        void OnEnable()
+        {
+            headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
+        }
+
         public override Action Build(VRTK_ControllerEvents hand)
         {
             
@@ -16,11 +32,12 @@ namespace CAVS.ProjectOrganizer.Controls
             playerControlBehaviorScript.killRadialMenu();
             //hand = new VRTK_ControllerEvents();
 
-            var headset = VRTK_DeviceFinder.HeadsetTransform();
+            if(headsetTransform==null)headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
 
             var cameraToControl = KarlSmink.Teleporting.Util.BuildCamera(Vector3.zero, Quaternion.identity);
-            if (headset == null) headset = GameObject.FindObjectOfType<SceneManagerBehavior>().headsetNullfix;
-            var portal = KarlSmink.Teleporting.Util.BuildPortal(cameraToControl.GetComponentInChildren<Camera>(), headset.transform.position + (headset.forward * 8), Quaternion.identity);
+            //CNG if (headsetTransform == null) headsetTransform = GameObject.FindObjectOfType<SceneManagerBehavior>().headsetNullfix;
+            Debug.Log(headsetTransform.gameObject.name);
+            var portal = KarlSmink.Teleporting.Util.BuildPortal(cameraToControl.GetComponentInChildren<Camera>(), headsetTransform.transform.position + (headsetTransform.forward * 8), Quaternion.identity);
             var headsetCollision = UnityEngine.Object.FindObjectOfType<VRTK_HeadsetCollision>();
             var teleBehavior = TeleportBehavior.Initialize(headsetCollision, 1.7f, cameraToControl.transform, portal);
 

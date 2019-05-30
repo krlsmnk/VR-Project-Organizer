@@ -42,6 +42,9 @@ public class targetHUD : MonoBehaviour
 
     private void createCanvas()
     {
+        //CNG
+        /*
+
         GameObject myText;
         Text text;
         RectTransform rectTransform;
@@ -51,9 +54,12 @@ public class targetHUD : MonoBehaviour
         HUDGamObj.name = "HUDCanvas";
         HUDCanvas = HUDGamObj.AddComponent<Canvas>();
 
-        HUDCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        //CNG HUDCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        HUDCanvas.renderMode = RenderMode.WorldSpace;
         HUDGamObj.AddComponent<CanvasScaler>();
         HUDGamObj.AddComponent<GraphicRaycaster>();
+
+        //Panel?
 
         // Text
         myText = new GameObject();
@@ -67,7 +73,14 @@ public class targetHUD : MonoBehaviour
         rectTransform = text.GetComponent<RectTransform>();
         rectTransform.localPosition = new Vector3(0, 0, 0);
         rectTransform.sizeDelta = new Vector2(400, 200);
+        */
 
+        HUDGamObj = (GameObject)Instantiate(Resources.Load("HUDCanvas"));
+        HUDCanvas = HUDGamObj.GetComponentInChildren<Canvas>();
+        Text text = HUDGamObj.GetComponentInChildren<Text>();
+        text.text = "Current Target: " + nextTarget.nextMural.name;
+        Image image = HUDCanvas.GetComponent<Image>();
+        image.material = nextTarget.nextMural.GetComponentInChildren<Image>().material;
 
     }
 
@@ -79,11 +92,15 @@ public class targetHUD : MonoBehaviour
 
     internal void showTarget(GameObject nextMural)
     {
-        HUDGamObj.GetComponentInChildren<Text>().text = "Current Target: " + nextMural.name;
+        HUDGamObj.GetComponentInChildren<Text>().text = "Please Find: " + nextMural.name;
+        Image image = HUDCanvas.GetComponent<Image>();
+        image.material = nextMural.GetComponent<Material>();
     }
 
     internal void showGameOverMessage()
     {
         HUDGamObj.GetComponentInChildren<Text>().text = "All animals found. Test Over.";
+        Image image = HUDCanvas.GetComponent<Image>();
+        image.material = null;
     }
 }

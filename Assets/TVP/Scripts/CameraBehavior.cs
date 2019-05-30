@@ -22,7 +22,20 @@ namespace KarlSmink.Teleporting
 
         private Transform headset;
 
-        private static GameObject footstepOffset;
+        private static GameObject footstepOffset, headsetGameObj;
+
+        void Awake()
+        {
+            VRTK_SDKManager.instance.AddBehaviourToToggleOnLoadedSetupChange(this);
+        }
+        void OnDestroy()
+        {
+            VRTK_SDKManager.instance.RemoveBehaviourToToggleOnLoadedSetupChange(this);
+        }
+
+        void OnEnable() {
+            headsetGameObj = VRTK_DeviceFinder.HeadsetTransform().gameObject;
+        }
 
         public static CameraBehavior Initialize(GameObject cameraObj, float cameraSpeed, GameObject portal)
         {
@@ -30,8 +43,8 @@ namespace KarlSmink.Teleporting
 
             script.theFollowScript = portal.AddComponent<VRTK_TransformFollow>();            
             script.theFollowScript.gameObjectToChange = portal;
-            if (VRTK_DeviceFinder.HeadsetTransform().gameObject == null) script.theFollowScript.gameObjectToFollow = GameObject.FindObjectOfType<SceneManagerBehavior>().headsetNullfix.gameObject;
-            else script.theFollowScript.gameObjectToFollow = VRTK_DeviceFinder.HeadsetTransform().gameObject;            
+            //CNG if (VRTK_DeviceFinder.HeadsetTransform().gameObject == null) script.theFollowScript.gameObjectToFollow = GameObject.FindObjectOfType<SceneManagerBehavior>().headsetNullfix.gameObject;
+            script.theFollowScript.gameObjectToFollow = headsetGameObj;
             script.theFollowScript.followsRotation = true;
             script.theFollowScript.followsPosition = true;
             

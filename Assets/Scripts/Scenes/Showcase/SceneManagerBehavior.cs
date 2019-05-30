@@ -23,7 +23,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
     public class SceneManagerBehavior : MonoBehaviour
     {
         public bool skipShowcase = false;
-        public bool Point_Click, TVP = false;
+        public bool BezierTeleport, TVP, Select, Grab = false;
         public Transform headsetNullfix;
 
         [SerializeField]
@@ -98,7 +98,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         private INetworkRoom sceneReference;
 
-        GameObject player;
+        GameObject player;        
 
         /// <summary>
         /// The socket exists outside the main thread, and therefor can't 
@@ -151,13 +151,16 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
                 // graphControl.Initialize(this.PlotPointBuilder, cars);
             }
 
-            if(!TVP && !Point_Click)BuildRadialConfig();
+            BuildRadialConfig();
+            //CNG
+            /*
+            if (!TVP && !Point_Click)BuildRadialConfig();
             if (Point_Click) BuildPointClickConfig();
             if (TVP)
             {
                 if(headsetNullfix!= null)BuildTVPConfig();
             }
-
+            */
 
         }
 
@@ -389,13 +392,14 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         public void BuildRadialConfig()
         {
-            var config = new ControllerConfig(new List<PlayerControl>()
-            {
-                new GrabPlayerControl(),
-                new TeleportPlayerControl(),
-                new SelectPlayerControl(),
-                new TVPPlayerControl()
-            });
+            List<PlayerControl> startingControls = new List<PlayerControl>();
+
+            if (Grab) startingControls.Add(new GrabPlayerControl());
+            if (BezierTeleport) startingControls.Add(new TeleportPlayerControl());
+            if (Select) startingControls.Add(new SelectPlayerControl());
+            if (TVP) startingControls.Add(new TVPPlayerControl());
+
+            var config = new ControllerConfig(startingControls);
 
             config.Build(leftHand);
             config.Build(rightHand);
