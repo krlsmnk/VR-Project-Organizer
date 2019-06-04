@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using CAVS.ProjectOrganizer.Scenes.Showcase;
+using UnityEngine;
 using VRTK;
 
 namespace KarlSmink.Teleporting
@@ -10,6 +11,7 @@ namespace KarlSmink.Teleporting
         private VRTK_ControllerEvents hand;
 
         private CameraBehavior cameraToControl;
+        public bool heightAdjust;
 
         public static CameraControl Initialize(VRTK_ControllerEvents hand, CameraBehavior cameraToControl)
         {
@@ -46,7 +48,9 @@ namespace KarlSmink.Teleporting
         {
             if (hand.touchpadPressed)
             {
-                cameraToControl.Move(new Vector3(e.touchpadAxis.x, 0, e.touchpadAxis.y), Space.Self);
+                heightAdjust = GameObject.FindObjectOfType<SceneManagerBehavior>().allowHeightAdjustTVP;
+                if(!heightAdjust) cameraToControl.Move(new Vector3(e.touchpadAxis.x, 0, 0), Space.Self);
+                else cameraToControl.Move(new Vector3(e.touchpadAxis.x, 0, e.touchpadAxis.y), Space.Self);
             }
         }
 

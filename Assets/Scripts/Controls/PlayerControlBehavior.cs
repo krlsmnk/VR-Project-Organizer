@@ -78,11 +78,14 @@ namespace CAVS.ProjectOrganizer.Controls
             var icons = FindObjectsOfType<Texture2D>();
             foreach (Texture2D thisIcon in icons)
             {
-                Destroy(thisIcon);
+                //CNG 6/4
+                //Destroy(thisIcon);                
             }
-            Destroy(hand.gameObject.GetComponentInChildren<VRTK_RadialMenuController>());
-            Destroy(hand.gameObject.GetComponentInChildren<VRTK_RadialMenu>());
-
+            //CNG 6/4
+            //Destroy(hand.gameObject.GetComponentInChildren<VRTK_RadialMenuController>());
+            //Destroy(hand.gameObject.GetComponentInChildren<VRTK_RadialMenu>());
+            hand.gameObject.GetComponentInChildren<VRTK_RadialMenuController>().enabled = false;
+            hand.gameObject.GetComponentInChildren<VRTK_RadialMenu>().enabled = false;
             hand.gameObject.GetComponentInChildren<PlayerControlBehavior>().enabled = false;
         }
 /// <summary>
@@ -90,19 +93,11 @@ namespace CAVS.ProjectOrganizer.Controls
 /// </summary>
         public void rebuildMenu()
         {
-            hand.gameObject.GetComponentInChildren<PlayerControlBehavior>().enabled = true;
-            //Rebuild control selector
-            //CNG
-            /*
-            var config = new ControllerConfig(new List<PlayerControl>()
-            {
-                new GrabPlayerControl(),
-                new TeleportPlayerControl(),
-                new SelectPlayerControl(),
-                new TVPPlayerControl()
-            });
-            config.Build(hand);            
-            */
+            //CNG 6/4
+            hand.gameObject.GetComponentInChildren<VRTK_RadialMenuController>().enabled = true;
+            hand.gameObject.GetComponentInChildren<VRTK_RadialMenu>().enabled = true;
+
+            hand.gameObject.GetComponentInChildren<PlayerControlBehavior>().enabled = true;         
         }
 
 

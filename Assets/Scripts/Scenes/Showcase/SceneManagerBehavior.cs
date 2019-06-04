@@ -23,7 +23,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
     public class SceneManagerBehavior : MonoBehaviour
     {
         public bool skipShowcase = false;
-        public bool BezierTeleport, TVP, Select, Grab = false;
+        public bool BezierTeleport, TVP, Select, Grab = false, allowHeightAdjustTVP;
         public Transform headsetNullfix;
 
         [SerializeField]
@@ -152,16 +152,6 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             }
 
             BuildRadialConfig();
-            //CNG
-            /*
-            if (!TVP && !Point_Click)BuildRadialConfig();
-            if (Point_Click) BuildPointClickConfig();
-            if (TVP)
-            {
-                if(headsetNullfix!= null)BuildTVPConfig();
-            }
-            */
-
         }
 
         private void OnSceneUpdate(Dictionary<string, object> update)
@@ -368,7 +358,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
 
         private void OnApplicationQuit()
         {
-            sceneReference.CloseRoom();
+            if(!skipShowcase) sceneReference.CloseRoom();
         }
 
         /// <summary>

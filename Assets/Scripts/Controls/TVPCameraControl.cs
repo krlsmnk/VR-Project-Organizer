@@ -82,9 +82,6 @@ namespace CAVS.ProjectOrganizer.Controls
         private void Hand_GripPressed(object sender, ControllerInteractionEventArgs e)
         {
             cleaner.cleanup();
-            //CNG
-            //cleanupOldPortals();
-            //OnDestroy();
         }
 
         private void Hand_TouchpadPressed(object sender, ControllerInteractionEventArgs e)
@@ -117,7 +114,7 @@ namespace CAVS.ProjectOrganizer.Controls
         private void Hand_TriggerAxisChanged()
         {
             float triggerAxis = hand.GetTriggerAxis();
-            cameraToControl.Move((Vector3.forward).normalized, Space.Self, (triggerAxis * 4));
+            cameraToControl.Move((Vector3.forward).normalized, Space.Self, (triggerAxis * 8));
         }
 
 

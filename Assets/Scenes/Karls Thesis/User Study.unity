@@ -2757,7 +2757,7 @@ GameObject:
   - component: {fileID: 375840404}
   - component: {fileID: 375840403}
   - component: {fileID: 375840402}
-  m_Layer: 1
+  m_Layer: 8
   m_Name: ceiling
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5351,10 +5351,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skipShowcase: 1
-  BezierTeleport: 0
+  BezierTeleport: 1
   TVP: 1
-  Select: 1
+  Select: 0
   Grab: 0
+  allowHeightAdjustTVP: 0
   headsetNullfix: {fileID: 2014949224}
   rightHand: {fileID: 847116009}
   leftHand: {fileID: 847116010}
@@ -9141,7 +9142,7 @@ GameObject:
   - component: {fileID: 1244076004}
   - component: {fileID: 1244076003}
   - component: {fileID: 1244076002}
-  m_Layer: 1
+  m_Layer: 8
   m_Name: ceiling
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15070,7 +15071,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967293
+    m_Bits: 4294967037
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 8400000, guid: 55d11f661dcfaf546a82ed9ead61de77, type: 2}
   m_TargetDisplay: 0

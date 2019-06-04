@@ -35,6 +35,7 @@ namespace CAVS.ProjectOrganizer.Controls
             if(headsetTransform==null)headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
 
             var cameraToControl = KarlSmink.Teleporting.Util.BuildCamera(Vector3.zero, Quaternion.identity);
+            cameraToControl.GetComponentInChildren<Camera>().cullingMask ^= 1 << LayerMask.NameToLayer("Roof");
             //CNG if (headsetTransform == null) headsetTransform = GameObject.FindObjectOfType<SceneManagerBehavior>().headsetNullfix;
             Debug.Log(headsetTransform.gameObject.name);
             var portal = KarlSmink.Teleporting.Util.BuildPortal(cameraToControl.GetComponentInChildren<Camera>(), headsetTransform.transform.position + (headsetTransform.forward * 8), Quaternion.identity);

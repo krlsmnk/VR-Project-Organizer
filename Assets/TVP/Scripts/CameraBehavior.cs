@@ -24,6 +24,8 @@ namespace KarlSmink.Teleporting
 
         private static GameObject footstepOffset, headsetGameObj;
 
+        private bool allowHeightAdjust;
+
         void Awake()
         {
             VRTK_SDKManager.instance.AddBehaviourToToggleOnLoadedSetupChange(this);
@@ -75,6 +77,7 @@ namespace KarlSmink.Teleporting
         void Start()
         {
             rotatorScript = GetComponent<VRTK_TransformFollow>();
+            allowHeightAdjust = GameObject.FindObjectOfType<SceneManagerBehavior>().allowHeightAdjustTVP;
         }
 
     
@@ -106,11 +109,12 @@ namespace KarlSmink.Teleporting
         {
             cameraSpeed = newSpeed;
             moveDirection = direction;
+            if (!allowHeightAdjust) moveDirection.y = 0;
             this.relativeSpace = relativeSpace;
         }
 
         void Update()
-        {
+        {            
             transform.Translate(moveDirection.normalized * cameraSpeed * Time.deltaTime, relativeSpace);
         }
 
