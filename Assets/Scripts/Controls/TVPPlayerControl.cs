@@ -8,7 +8,7 @@ using CAVS.ProjectOrganizer.Scenes.Showcase;
 namespace CAVS.ProjectOrganizer.Controls
 {
     public class TVPPlayerControl : PlayerControl
-    {
+    {        
         private Transform headsetTransform;
 
         void Awake()
@@ -35,13 +35,14 @@ namespace CAVS.ProjectOrganizer.Controls
             if(headsetTransform==null)headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
 
             var cameraToControl = KarlSmink.Teleporting.Util.BuildCamera(Vector3.zero, Quaternion.identity);
-            cameraToControl.GetComponentInChildren<Camera>().cullingMask ^= 1 << LayerMask.NameToLayer("Roof");            
-           
+            cameraToControl.GetComponentInChildren<Camera>().cullingMask ^= 1 << LayerMask.NameToLayer("Roof");
+            cameraToControl.GetComponentInChildren<Camera>().cullingMask ^= 1 << LayerMask.NameToLayer("Water");
+
             var portal = KarlSmink.Teleporting.Util.BuildPortal(cameraToControl.GetComponentInChildren<Camera>(), headsetTransform.transform.position + (headsetTransform.forward * 8), Quaternion.identity);
             var headsetCollision = UnityEngine.Object.FindObjectOfType<VRTK_HeadsetCollision>();
             var teleBehavior = TeleportBehavior.Initialize(headsetCollision, 1.7f, cameraToControl.transform, portal);
 
-            var cameraBehavior = CameraBehavior.Initialize(cameraToControl, 2f, portal);
+            var cameraBehavior = CameraBehavior.Initialize(cameraToControl, FindObjectOfType<SceneManagerBehavior>().CameraSpeed, portal);
             cameraBehavior.transform.position = hand.transform.position + hand.transform.forward;
             cameraBehavior.transform.LookAt(hand.transform.position + (hand.transform.forward));
             var control = TVPCameraControl.Initialize(hand, cameraBehavior, this);
@@ -52,12 +53,7 @@ namespace CAVS.ProjectOrganizer.Controls
                 GameObject camBehaviorObj = FindObjectOfType<CameraBehavior>().gameObject.transform.parent.gameObject; //footstepoffset
 
                 //Set the camera's height to the user's height, then prevent it from moving at all
-                camBehaviorObj.transform.position = new Vector3(camBehaviorObj.transform.position.x, FindObjectOfType<SceneManagerBehavior>().userHeight, camBehaviorObj.transform.position.z);
-                Rigidbody cameraConstraints = camBehaviorObj.AddComponent<Rigidbody>();
-                camBehaviorObj.AddComponent<BoxCollider>();
-                cameraConstraints.isKinematic = false;
-                cameraConstraints.useGravity = false;
-                cameraConstraints.constraints = RigidbodyConstraints.FreezePositionY;
+                camBehaviorObj.transform.position = new Vector3(camBehaviorObj.transform.position.x, FindObjectOfType<SceneManagerBehavior>().userHeight, camBehaviorObj.transform.position.z); 
             }
 
             return delegate ()

@@ -36,7 +36,7 @@ public class mural : MonoBehaviour {
             if (correctPushOrder()) thisAudSrc.PlayOneShot(correct);
             else thisAudSrc.PlayOneShot(incorrect);
         }
-        else Debug.Log("Trigger of non-controller detected.");
+        //else Debug.Log("Trigger of non-controller detected.");
     }
 
     private bool correctPushOrder()

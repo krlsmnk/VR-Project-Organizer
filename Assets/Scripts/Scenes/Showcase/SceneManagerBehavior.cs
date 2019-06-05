@@ -25,6 +25,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         public bool skipShowcase = false;
         public bool BezierTeleport, TVP, Select, Grab = false, allowHeightAdjustTVP;
         public Transform headsetNullfix;
+        public float CameraSpeed;
 
         [SerializeField]
         private VRTK_ControllerEvents rightHand;
@@ -108,6 +109,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         /// </summary>
         int carChangeFromUpdate = -1;
         public float userHeight;
+        public bool cameraIgnoresCollision;
 
         private void Awake()
         {

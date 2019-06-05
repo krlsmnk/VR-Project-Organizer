@@ -12,6 +12,9 @@ TagManager:
   - TVPCamera
   - temporary
   - mural
+  - ExcludeTeleport
+  - structural
+  - footStepOffset
   layers:
   - Default
   - TransparentFX

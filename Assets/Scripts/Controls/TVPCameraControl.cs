@@ -110,8 +110,7 @@ namespace CAVS.ProjectOrganizer.Controls
             else if (!allowUpDown) {
                 if ((axis.y > 0.25f) && (-0.5f < axis.x && axis.x < 0.5f))
                 {
-                    //Debug.Log("Pan Up");
-                    Vector3 fixedForward = (Vector3.forward.x, 0, Vector3.forward.z); //Hold onto your butts
+                    //Debug.Log("Pan Up");                    
                     cameraToControl.Move((Vector3.forward).normalized, Space.Self);
                 }
                 else if ((axis.y < -0.25f) && (-0.5f < axis.x && axis.x < 0.5f))
@@ -160,16 +159,11 @@ namespace CAVS.ProjectOrganizer.Controls
             hand.GripPressed -= Hand_GripPressed;
             hand.TouchpadPressed -= Hand_TouchpadPressed;
             hand.TouchpadReleased -= Hand_TouchpadReleased;
-            hand.TriggerTouchEnd -= Hand_TriggerTouchEnd;                        
+            hand.TriggerTouchEnd -= Hand_TriggerTouchEnd;
 
-            var config = new ControllerConfig(new List<PlayerControl>()
-            {
-                new GrabPlayerControl(),
-                new TeleportPlayerControl(),
-                new SelectPlayerControl(),
-                new TVPPlayerControl()
-            });
-            config.Build(hand);
+            //CNG 6/5
+            SceneManagerBehavior SMB = FindObjectOfType<SceneManagerBehavior>();
+            SMB.BuildRadialConfig();
         }
 
         private static void cleanupOldPortals()
@@ -181,8 +175,7 @@ namespace CAVS.ProjectOrganizer.Controls
                 {
                     //UnityEngine.Object.Destroy(thisPortal);
                     thisPortal.SetActive(false);
-                }
-                //CNG
+                }                
                 oldPortals = GameObject.FindGameObjectsWithTag("broadcastPlane");
                 foreach (GameObject thisPortal in oldPortals)
                 {

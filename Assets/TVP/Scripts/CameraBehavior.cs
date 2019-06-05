@@ -24,7 +24,11 @@ namespace KarlSmink.Teleporting
 
         private static GameObject footstepOffset, headsetGameObj;
 
-        private bool allowHeightAdjust;
+        private bool allowHeightAdjust, collisionIgnore;
+
+        private static CharacterController myControl;
+
+        public static Rigidbody myRigidBody;
 
         void Awake()
         {
@@ -44,20 +48,21 @@ namespace KarlSmink.Teleporting
             var script = cameraObj.AddComponent<CameraBehavior>();
 
             script.theFollowScript = portal.AddComponent<VRTK_TransformFollow>();            
-            script.theFollowScript.gameObjectToChange = portal;
-            //CNG if (VRTK_DeviceFinder.HeadsetTransform().gameObject == null) script.theFollowScript.gameObjectToFollow = GameObject.FindObjectOfType<SceneManagerBehavior>().headsetNullfix.gameObject;
+            script.theFollowScript.gameObjectToChange = portal;            
             script.theFollowScript.gameObjectToFollow = headsetGameObj;
             script.theFollowScript.followsRotation = true;
             script.theFollowScript.followsPosition = true;
+            script.theFollowScript.followsScale = false;
             
             script.rotatorScript = cameraObj.AddComponent<VRTK_TransformFollow>();
             script.rotatorScript.gameObjectToChange = cameraObj;
             script.rotatorScript.gameObjectToFollow = script.theFollowScript.gameObjectToFollow;
             script.rotatorScript.followsRotation = true;
             script.rotatorScript.followsPosition = false;
+            script.rotatorScript.followsScale = false;
 
-            //CNG
             footstepOffset = new GameObject("FootstepOffset");
+            footstepOffset.layer = 2; 
             cameraObj.gameObject.transform.parent = footstepOffset.transform;
             footstepOffsetScript = footstepOffset.AddComponent<VRTK_TransformFollow>();
             footstepOffsetScript.gameObjectToFollow = script.theFollowScript.gameObjectToFollow;
@@ -65,6 +70,15 @@ namespace KarlSmink.Teleporting
             footstepOffsetScript.followsRotation = false;
             footstepOffsetScript.followsPosition = true;
 
+            myControl = cameraObj.gameObject.AddComponent<CharacterController>();           
+            myRigidBody = footstepOffset.AddComponent<Rigidbody>();
+            myRigidBody.constraints = RigidbodyConstraints.FreezePositionY;
+            myRigidBody.useGravity = false;
+            VRTK_ControllerEvents[] controllers = FindObjectsOfType<VRTK_ControllerEvents>();
+            foreach (VRTK_ControllerEvents thisController in controllers) {
+                thisController.gameObject.layer = 4; //puts all controllers on the water layer so they ignore collision with the camera
+            }
+            
 
             script.cameraSpeed = cameraSpeed;
             script.originalCameraSpeed = cameraSpeed;
@@ -78,6 +92,7 @@ namespace KarlSmink.Teleporting
         {
             rotatorScript = GetComponent<VRTK_TransformFollow>();
             allowHeightAdjust = GameObject.FindObjectOfType<SceneManagerBehavior>().allowHeightAdjustTVP;
+            collisionIgnore = GameObject.FindObjectOfType<SceneManagerBehavior>().cameraIgnoresCollision;
         }
 
     
@@ -106,7 +121,7 @@ namespace KarlSmink.Teleporting
             this.relativeSpace = relativeSpace;
         }
         public void Move(Vector3 direction, Space relativeSpace, float newSpeed)
-        {
+        {            
             cameraSpeed = newSpeed;
             moveDirection = direction;
             if (!allowHeightAdjust) moveDirection.y = 0;
@@ -114,10 +129,15 @@ namespace KarlSmink.Teleporting
         }
 
         void Update()
-        {            
-            transform.Translate(moveDirection.normalized * cameraSpeed * Time.deltaTime, relativeSpace);
+        {
+            if (!collisionIgnore) { 
+            Vector3 movement = Vector3.zero;
+            movement += transform.forward * moveDirection.z * cameraSpeed * Time.deltaTime;
+            movement += transform.right * moveDirection.x * cameraSpeed * Time.deltaTime;
+            myControl.Move(movement);
+            }
+            else transform.Translate(moveDirection.normalized * cameraSpeed * Time.deltaTime, relativeSpace);
         }
-
     }
 
 }
