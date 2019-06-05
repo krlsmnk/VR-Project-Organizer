@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using VRTK;
 using KarlSmink.Teleporting;
 using System.Linq;
+using CAVS.ProjectOrganizer.Scenes.Showcase;
 
 namespace CAVS.ProjectOrganizer.Controls
 {
@@ -60,7 +61,7 @@ namespace CAVS.ProjectOrganizer.Controls
         private void Hand_TriggerTouchEnd(object sender, ControllerInteractionEventArgs e)
         {
             //Debug.Log("TriggerTouchEnd");
-            //cameraToControl.Move((Vector3.zero).normalized, Space.World);
+            cameraToControl.Move((Vector3.zero).normalized, Space.World);
         }
         private void Hand_TriggerClicked(object sender, ControllerInteractionEventArgs e)
         {
@@ -81,25 +82,44 @@ namespace CAVS.ProjectOrganizer.Controls
         /// </summary>
         private void Hand_GripPressed(object sender, ControllerInteractionEventArgs e)
         {
-            cleaner.cleanup();
+            //CNG 6/5
+            //cleaner.cleanup();
         }
 
         private void Hand_TouchpadPressed(object sender, ControllerInteractionEventArgs e)
         {
+            bool allowUpDown = FindObjectOfType<SceneManagerBehavior>().allowHeightAdjustTVP;
+
             //Vector2 axis = controller.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0);
             Vector2 axis = hand.GetTouchpadAxis();
 
-            if ((axis.y > 0.25f) && (-0.5f < axis.x && axis.x < 0.5f))
+            //CNG 6/5
+            if (allowUpDown)
             {
-                //Debug.Log("Pan Up");
-                cameraToControl.Move((Vector3.up).normalized, Space.World);
+                if ((axis.y > 0.25f) && (-0.5f < axis.x && axis.x < 0.5f))
+                {
+                    //Debug.Log("Pan Up");
+                    cameraToControl.Move((Vector3.up).normalized, Space.World);
+                }
+                else if ((axis.y < -0.25f) && (-0.5f < axis.x && axis.x < 0.5f))
+                {
+                    //Debug.Log("Pan Down");
+                    cameraToControl.Move((Vector3.down).normalized, Space.World);
+                }
             }
-            else if ((axis.y < -0.25f) && (-0.5f < axis.x && axis.x < 0.5f))
-            {
-                //Debug.Log("Pan Down");
-                cameraToControl.Move((Vector3.down).normalized, Space.World);
+            else if (!allowUpDown) {
+                if ((axis.y > 0.25f) && (-0.5f < axis.x && axis.x < 0.5f))
+                {
+                    //Debug.Log("Pan Up");
+                    Vector3 fixedForward = (Vector3.forward.x, 0, Vector3.forward.z); //Hold onto your butts
+                    cameraToControl.Move((Vector3.forward).normalized, Space.Self);
+                }
+                else if ((axis.y < -0.25f) && (-0.5f < axis.x && axis.x < 0.5f))
+                {
+                    //Debug.Log("Pan Down");
+                    cameraToControl.Move((Vector3.back).normalized, Space.Self);
+                }
             }
-
             if ((axis.x > 0.25f) && (-0.5f < axis.y && axis.y < 0.5f))
             {
                 //Debug.Log("Pan Right");

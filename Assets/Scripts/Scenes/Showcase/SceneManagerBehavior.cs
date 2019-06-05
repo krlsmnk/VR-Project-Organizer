@@ -107,6 +107,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         /// it is the index to the car we want to display
         /// </summary>
         int carChangeFromUpdate = -1;
+        public float userHeight;
 
         private void Awake()
         {

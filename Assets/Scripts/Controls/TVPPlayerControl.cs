@@ -35,9 +35,8 @@ namespace CAVS.ProjectOrganizer.Controls
             if(headsetTransform==null)headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
 
             var cameraToControl = KarlSmink.Teleporting.Util.BuildCamera(Vector3.zero, Quaternion.identity);
-            cameraToControl.GetComponentInChildren<Camera>().cullingMask ^= 1 << LayerMask.NameToLayer("Roof");
-            //CNG if (headsetTransform == null) headsetTransform = GameObject.FindObjectOfType<SceneManagerBehavior>().headsetNullfix;
-            Debug.Log(headsetTransform.gameObject.name);
+            cameraToControl.GetComponentInChildren<Camera>().cullingMask ^= 1 << LayerMask.NameToLayer("Roof");            
+           
             var portal = KarlSmink.Teleporting.Util.BuildPortal(cameraToControl.GetComponentInChildren<Camera>(), headsetTransform.transform.position + (headsetTransform.forward * 8), Quaternion.identity);
             var headsetCollision = UnityEngine.Object.FindObjectOfType<VRTK_HeadsetCollision>();
             var teleBehavior = TeleportBehavior.Initialize(headsetCollision, 1.7f, cameraToControl.transform, portal);
@@ -46,7 +45,21 @@ namespace CAVS.ProjectOrganizer.Controls
             cameraBehavior.transform.position = hand.transform.position + hand.transform.forward;
             cameraBehavior.transform.LookAt(hand.transform.position + (hand.transform.forward));
             var control = TVPCameraControl.Initialize(hand, cameraBehavior, this);
-            
+
+            //CNG 6/5 - Keep the camera from changing heights
+            if (!FindObjectOfType<SceneManagerBehavior>().allowHeightAdjustTVP)
+            {
+                GameObject camBehaviorObj = FindObjectOfType<CameraBehavior>().gameObject.transform.parent.gameObject; //footstepoffset
+
+                //Set the camera's height to the user's height, then prevent it from moving at all
+                camBehaviorObj.transform.position = new Vector3(camBehaviorObj.transform.position.x, FindObjectOfType<SceneManagerBehavior>().userHeight, camBehaviorObj.transform.position.z);
+                Rigidbody cameraConstraints = camBehaviorObj.AddComponent<Rigidbody>();
+                camBehaviorObj.AddComponent<BoxCollider>();
+                cameraConstraints.isKinematic = false;
+                cameraConstraints.useGravity = false;
+                cameraConstraints.constraints = RigidbodyConstraints.FreezePositionY;
+            }
+
             return delegate ()
             {
                 UnityEngine.Object.Destroy(cameraToControl);

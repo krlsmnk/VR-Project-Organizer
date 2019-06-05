@@ -5372,6 +5372,7 @@ MonoBehaviour:
   graphControl: {fileID: 0}
   roomUUID: 
   createRoomOnStartup: 0
+  userHeight: 0
 --- !u!114 &764930385
 MonoBehaviour:
   m_ObjectHideFlags: 0
