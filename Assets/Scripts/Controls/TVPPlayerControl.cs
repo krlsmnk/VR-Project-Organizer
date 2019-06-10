@@ -4,12 +4,16 @@ using VRTK;
 using KarlSmink.Teleporting;
 using System.Collections.Generic;
 using CAVS.ProjectOrganizer.Scenes.Showcase;
+using static VRTK.VRTK_SDKObjectAlias;
 
 namespace CAVS.ProjectOrganizer.Controls
 {
     public class TVPPlayerControl : PlayerControl
     {        
         private Transform headsetTransform;
+        //CNG 6/10
+        public SDKObject sdkObject = SDKObject.Boundary;
+        protected VRTK_SDKManager sdkManager;
 
         void Awake()
         {
@@ -23,7 +27,59 @@ namespace CAVS.ProjectOrganizer.Controls
         void OnEnable()
         {
             headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
+
+//START CNG 6/10
+            sdkManager = VRTK_SDKManager.instance;
+            if (sdkManager != null)
+            {
+                sdkManager.LoadedSetupChanged += LoadedSetupChanged;
+            }
+            ChildToSDKObject();
+
         }
+        protected virtual void OnDisable()
+        {
+            if (sdkManager != null && !gameObject.activeSelf)
+            {
+                sdkManager.LoadedSetupChanged -= LoadedSetupChanged;
+            }
+        }
+        protected virtual void LoadedSetupChanged(VRTK_SDKManager sender, VRTK_SDKManager.LoadedSetupChangeEventArgs e)
+        {
+            if (sdkManager != null)
+            {
+                ChildToSDKObject();
+            }
+        }
+
+        protected virtual void ChildToSDKObject()
+        {
+            Vector3 currentPosition = transform.localPosition;
+            Quaternion currentRotation = transform.localRotation;
+            Vector3 currentScale = transform.localScale;
+            Transform newParent = null;
+
+            switch (sdkObject)
+            {
+                case SDKObject.Boundary:
+                    newParent = VRTK_DeviceFinder.PlayAreaTransform();
+                    break;
+                case SDKObject.Headset:
+                    newParent = VRTK_DeviceFinder.HeadsetTransform();
+                    headsetTransform = newParent;
+                    break;
+            }
+
+            transform.SetParent(newParent);
+            transform.localPosition = currentPosition;
+            transform.localRotation = currentRotation;
+            transform.localScale = currentScale;
+        }
+//END CNG 6/10
+        
+
+
+
 
         public override Action Build(VRTK_ControllerEvents hand)
         {
