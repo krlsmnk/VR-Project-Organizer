@@ -11,10 +11,17 @@ namespace CAVS.ProjectOrganizer.Controls
         private int currentControlIndex;
         public int currentWeaponIndex;
         private List<PlayerControl> controls;
-
         private Action cleanupCommand;
+        private VRTK_ControllerEvents hand;   
 
-        private VRTK_ControllerEvents hand;
+        void Start() { 
+             
+         }
+
+        private void PlayerRig_LoadedSetupChanged(VRTK_SDKManager sender, VRTK_SDKManager.LoadedSetupChangeEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
 
         public PlayerControlBehavior Initialize(VRTK_ControllerEvents hand, List<PlayerControl> controls)
         {
@@ -77,13 +84,9 @@ namespace CAVS.ProjectOrganizer.Controls
         {
             var icons = FindObjectsOfType<Texture2D>();
             foreach (Texture2D thisIcon in icons)
-            {
-                //CNG 6/4
-                //Destroy(thisIcon);                
+            {             
             }
             //CNG 6/4
-            //Destroy(hand.gameObject.GetComponentInChildren<VRTK_RadialMenuController>());
-            //Destroy(hand.gameObject.GetComponentInChildren<VRTK_RadialMenu>());
             hand.gameObject.GetComponentInChildren<VRTK_RadialMenuController>().enabled = false;
             hand.gameObject.GetComponentInChildren<VRTK_RadialMenu>().enabled = false;
             hand.gameObject.GetComponentInChildren<PlayerControlBehavior>().enabled = false;
@@ -96,7 +99,6 @@ namespace CAVS.ProjectOrganizer.Controls
             //CNG 6/4
             hand.gameObject.GetComponentInChildren<VRTK_RadialMenuController>().enabled = true;
             hand.gameObject.GetComponentInChildren<VRTK_RadialMenu>().enabled = true;
-
             hand.gameObject.GetComponentInChildren<PlayerControlBehavior>().enabled = true;         
         }
 

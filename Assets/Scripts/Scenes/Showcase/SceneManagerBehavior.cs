@@ -12,7 +12,7 @@ using CAVS.ProjectOrganizer.Controls;
 using CAVS.ProjectOrganizer.SourceControl;
 
 using VRTK;
-
+using System;
 
 namespace CAVS.ProjectOrganizer.Scenes.Showcase
 {
@@ -98,7 +98,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         private bool createRoomOnStartup;
 
         private INetworkRoom sceneReference;
-
+        private VRTK_SDKManager playerRig;
         GameObject player;        
 
         /// <summary>
@@ -153,7 +153,13 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             StartCoroutine(UpdatePlayerTransformOnServer());
                 // graphControl.Initialize(this.PlotPointBuilder, cars);
             }
+            playerRig = new VRTK_SDKManager();
+            playerRig.LoadedSetupChanged += PlayerRig_LoadedSetupChanged;  
+            
+        }
 
+        private void PlayerRig_LoadedSetupChanged(VRTK_SDKManager sender, VRTK_SDKManager.LoadedSetupChangeEventArgs e)
+        {
             BuildRadialConfig();
         }
 
@@ -397,29 +403,5 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             config.Build(leftHand);
             config.Build(rightHand);
         }
-        public void BuildTVPConfig()
-        {
-            var config = new ControllerConfig(new List<PlayerControl>()
-            {
-                new TVPPlayerControl()
-            });
-
-            config.Build(leftHand);
-            config.Build(rightHand);
-        }
-
-        public void BuildPointClickConfig()
-        {
-            var config = new ControllerConfig(new List<PlayerControl>()
-            {
-                new TeleportPlayerControl()
-            });
-
-            config.Build(leftHand);
-            config.Build(rightHand);
-        }
-
-
     }
-
 }

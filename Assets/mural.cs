@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using VRTK;
 
 public class mural : MonoBehaviour {
@@ -44,6 +45,7 @@ public class mural : MonoBehaviour {
         pushOrder muralTracker = FindObjectOfType<pushOrder>();
         if (muralTracker.nextMural == this.gameObject)
         {
+            gameObject.GetComponent<Image>().sprite = (Sprite)Resources.Load("CheckMark.png");                        
             muralTracker.advanceMural();            
             return true;
         }
