@@ -133,7 +133,7 @@ namespace CAVS.ProjectOrganizer.Controls
         private void Hand_TriggerAxisChanged()
         {
             float triggerAxis = hand.GetTriggerAxis();
-            cameraToControl.Move((Vector3.forward).normalized, Space.Self, (triggerAxis * 8));
+            cameraToControl.Move((Vector3.forward).normalized, Space.Self, (triggerAxis * UnityEngine.Object.FindObjectOfType<SceneManagerBehavior>().CameraSpeed));
         }
 
 

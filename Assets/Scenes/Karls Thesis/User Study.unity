@@ -5549,12 +5549,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skipShowcase: 1
   BezierTeleport: 1
+  TouchToMove: 1
   TVP: 1
   Select: 0
   Grab: 0
   allowHeightAdjustTVP: 0
   headsetNullfix: {fileID: 2014949224}
-  CameraSpeed: 4.5
+  CameraSpeed: 6
   rightHand: {fileID: 847116009}
   leftHand: {fileID: 847116010}
   carImageScreens:
@@ -12837,7 +12838,7 @@ MonoBehaviour:
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: f42156f23b708a14983e691832fae4c9, type: 2}
+  m_Material: {fileID: 2100000, guid: 91d6e1d50b2facc488353c97085b11e1, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:

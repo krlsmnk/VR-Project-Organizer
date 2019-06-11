@@ -23,7 +23,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
     public class SceneManagerBehavior : MonoBehaviour
     {
         public bool skipShowcase = false;
-        public bool BezierTeleport, TVP, Select, Grab = false, allowHeightAdjustTVP;
+        public bool BezierTeleport, TouchToMove, TVP, Select, Grab, allowHeightAdjustTVP;
         public Transform headsetNullfix;
         public float CameraSpeed;
 
@@ -397,6 +397,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             if (BezierTeleport) startingControls.Add(new TeleportPlayerControl());
             if (Select) startingControls.Add(new SelectPlayerControl());
             if (TVP) startingControls.Add(new TVPPlayerControl());
+            if(TouchToMove) startingControls.Add(new TouchToMoveControl());
 
             var config = new ControllerConfig(startingControls);
 
