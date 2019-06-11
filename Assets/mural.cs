@@ -45,7 +45,8 @@ public class mural : MonoBehaviour {
         pushOrder muralTracker = FindObjectOfType<pushOrder>();
         if (muralTracker.nextMural == this.gameObject)
         {
-            gameObject.GetComponent<Image>().sprite = (Sprite)Resources.Load("CheckMark.png");                        
+            gameObject.GetComponent<SpriteRenderer>().color = Color.green;
+            //gameObject.GetComponent<SpriteRenderer>().sprite = (Sprite)Resources.Load("CheckMark.png");                        
             muralTracker.advanceMural();            
             return true;
         }

@@ -5,6 +5,7 @@ using KarlSmink.Teleporting;
 using System.Collections.Generic;
 using CAVS.ProjectOrganizer.Scenes.Showcase;
 using static VRTK.VRTK_SDKObjectAlias;
+using System.Diagnostics;
 
 namespace CAVS.ProjectOrganizer.Controls
 {
@@ -26,7 +27,8 @@ namespace CAVS.ProjectOrganizer.Controls
 
         void OnEnable()
         {
-            headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
+            while(headsetTransform == null) headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
+            //headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
 
 //START CNG 6/10
             sdkManager = VRTK_SDKManager.instance;
@@ -94,6 +96,11 @@ namespace CAVS.ProjectOrganizer.Controls
             cameraToControl.GetComponentInChildren<Camera>().cullingMask ^= 1 << LayerMask.NameToLayer("Roof");
             cameraToControl.GetComponentInChildren<Camera>().cullingMask ^= 1 << LayerMask.NameToLayer("Water");
 
+
+            //CNG 6/11
+            //getTheDamnHeadsetTransform();
+            
+
             var portal = KarlSmink.Teleporting.Util.BuildPortal(cameraToControl.GetComponentInChildren<Camera>(), headsetTransform.transform.position + (headsetTransform.forward * 8), Quaternion.identity);
             var headsetCollision = UnityEngine.Object.FindObjectOfType<VRTK_HeadsetCollision>();
             var teleBehavior = TeleportBehavior.Initialize(headsetCollision, 1.7f, cameraToControl.transform, portal);
@@ -120,7 +127,47 @@ namespace CAVS.ProjectOrganizer.Controls
                 UnityEngine.Object.Destroy(teleBehavior);
                 playerControlBehaviorScript.rebuildMenu();
             };
-        }        
+        }
+
+        private void getTheDamnHeadsetTransform()
+        {
+            headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
+            if(headsetTransform== null) System.Threading.Thread.Sleep(5000);
+            headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
+            if(headsetTransform== null) System.Threading.Thread.Sleep(5000);
+            headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
+            if(headsetTransform== null) System.Threading.Thread.Sleep(5000);
+            headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
+            if(headsetTransform== null) System.Threading.Thread.Sleep(5000);
+            headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
+            if(headsetTransform== null) System.Threading.Thread.Sleep(5000);
+            headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
+            if(headsetTransform== null) System.Threading.Thread.Sleep(5000);
+            headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
+            /*
+            Stopwatch sw = new Stopwatch(); // sw cotructor
+            sw.Start(); // starts the stopwatch
+             for (int i = 0; ; i++) 
+              {
+                if (i % 100000 == 0) // if in 100000th iteration (could be any other large number
+                // depending on how often you want the time to be checked) 
+                {
+                  sw.Stop(); // stop the time measurement
+                  if (sw.ElapsedMilliseconds > 5000) // check if desired period of time has elapsed
+                  {
+                    headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
+                    if(headsetTransform != null) break; // if more than 5000 milliseconds have passed, and the condition has been met, stop looping and return
+                    // to the existing code                    
+                  }
+                  else
+                  {
+                    sw.Start(); // if less than 5000 milliseconds have elapsed, continue looping
+                    // and resume time measurement
+                  }
+                }
+             }
+             */
+        }
 
         public override Texture2D GetIcon()
         {

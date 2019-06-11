@@ -11,8 +11,7 @@ public class pushOrder : MonoBehaviour {
     int muralNum;
     private GameObject HUDGamObj;
     private Canvas HUDCanvas;
-    private Text HUDText;
-    private Image HUDImage;
+    private Text HUDText;   
 
     void Awake()
     {
@@ -44,8 +43,7 @@ public class pushOrder : MonoBehaviour {
         HUDCanvas = HUDGamObj.GetComponent<Canvas>();
         HUDText = HUDGamObj.GetComponentInChildren<Text>();
         HUDText.text = "Current Target: " + nextMural.name;
-        HUDImage = HUDGamObj.GetComponentInChildren<Image>();
-        HUDImage.material = nextMural.GetComponent<Image>().material;
+        HUDGamObj.GetComponentInChildren<Image>().material = (Material)Resources.Load(nextMural.name);
 
     }
 	
@@ -73,12 +71,12 @@ public class pushOrder : MonoBehaviour {
     internal void showTarget(GameObject nextMural)
     {
         HUDText.text = "Please Find: " + nextMural.name;
-        HUDImage.material = nextMural.GetComponent<Image>().material;
+        HUDGamObj.GetComponentInChildren<Image>().material = (Material)Resources.Load(nextMural.name);
     }
 
     internal void showGameOverMessage()
     {
         HUDText.text = "All animals found. Test Over.";
-        HUDImage.material = null;
+        HUDGamObj.GetComponentInChildren<Image>().material = (Material)Resources.Load("CheckMark");
     }
 }

@@ -153,9 +153,9 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
             StartCoroutine(UpdatePlayerTransformOnServer());
                 // graphControl.Initialize(this.PlotPointBuilder, cars);
             }
-            playerRig = new VRTK_SDKManager();
-            playerRig.LoadedSetupChanged += PlayerRig_LoadedSetupChanged;  
-            
+            //playerRig = VRTK_SDKManager.instance;
+            //playerRig.LoadedSetupChanged += PlayerRig_LoadedSetupChanged;  
+            BuildRadialConfig();
         }
 
         private void PlayerRig_LoadedSetupChanged(VRTK_SDKManager sender, VRTK_SDKManager.LoadedSetupChangeEventArgs e)
