@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 using VRTK;
 
 namespace CAVS.ProjectOrganizer.Controls
@@ -90,6 +92,8 @@ namespace CAVS.ProjectOrganizer.Controls
             hand.gameObject.GetComponentInChildren<VRTK_RadialMenuController>().enabled = false;
             hand.gameObject.GetComponentInChildren<VRTK_RadialMenu>().enabled = false;
             hand.gameObject.GetComponentInChildren<PlayerControlBehavior>().enabled = false;
+
+            cleanupWheel();
         }
 /// <summary>
 /// Rebuilds the radial menu to allow for control switching again
@@ -102,6 +106,31 @@ namespace CAVS.ProjectOrganizer.Controls
             hand.gameObject.GetComponentInChildren<PlayerControlBehavior>().enabled = true;         
         }
 
+
+        //this actually visually removes the wheel, the kill function breaks its functionality
+        private static void cleanupWheel()
+        {
+            var objects = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == "RadialMenu(Clone)");
+            foreach (var thisObject in objects)
+            {
+                UnityEngine.Object.Destroy(thisObject);
+            }
+            Sprite[] icons = FindObjectsOfType<Sprite>();
+            foreach (Sprite thisIcon in icons)
+            {
+                UnityEngine.Object.Destroy(thisIcon);
+            }
+            Button[] buttons = FindObjectsOfType<Button>();
+            foreach (Button thisIcon in buttons)
+            {
+                UnityEngine.Object.Destroy(thisIcon);
+            }
+            Texture2D[] textures = FindObjectsOfType<Texture2D>();
+            foreach (Texture2D thisIcon in textures)
+            {
+                UnityEngine.Object.Destroy(thisIcon);
+            }
+        }
 
     }
 
