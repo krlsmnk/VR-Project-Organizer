@@ -14,6 +14,7 @@ public class recordAndPlayManager : MonoBehaviour {
         public GameObject headset;
         public GameObject controllerLeft, controllerRight;
         private GameObject[] subjects;
+        string nameOfRecording;
 
 
         void Start()
@@ -25,7 +26,7 @@ public class recordAndPlayManager : MonoBehaviour {
 
         }
 
-        public void setupRecorder() { 
+        public void setupRecorder(string recordingName) { 
             headset = VRTK_DeviceFinder.HeadsetTransform().gameObject;
             subjects[0] = headset;
             controllerLeft = VRTK_DeviceFinder.GetControllerLeftHand();
@@ -39,16 +40,14 @@ public class recordAndPlayManager : MonoBehaviour {
             SubjectBehavior SBCLeft = SubjectBehavior.Build(controllerLeft, recorder, 30, "Left Controller", metaData, .001f);
             SubjectBehavior SBCRight = SubjectBehavior.Build(controllerRight, recorder, 30, "Right Controller", metaData, .001f);
             SubjectBehavior SBHeadset = SubjectBehavior.Build(headset, recorder, 30, "Headset", metaData, .001f);
+            
+            nameOfRecording = recordingName;
 
             recorder.Start();
         }
 
         private void OnGUI()
         {
-            string nameOfRecording;
-            //CNG
-            nameOfRecording = "NameOfRecording";
-
             if (GUILayout.Button("Save"))
             {
                 recorder.Finish().SaveToAssets(nameOfRecording);

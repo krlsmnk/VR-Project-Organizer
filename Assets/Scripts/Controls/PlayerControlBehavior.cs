@@ -70,12 +70,12 @@ namespace CAVS.ProjectOrganizer.Controls
             };
         }
 
-        public void FireRAP()
+        public void FireRAP(string recordingName)
         {
             if(RAPManagerScript == null)
             {
                RAPManagerScript = GameObject.FindObjectOfType<recordAndPlayManager>();
-               RAPManagerScript.setupRecorder();
+               RAPManagerScript.setupRecorder(recordingName);
             }
         }                
 

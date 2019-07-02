@@ -85,7 +85,9 @@ namespace CAVS.ProjectOrganizer.Controls
 
         public override Action Build(VRTK_ControllerEvents hand)
         {
-            GameObject.FindObjectOfType<PlayerControlBehavior>().FireRAP(); // CNG
+            DateTime thisDay = DateTime.Today;
+            string recordingName = thisDay.ToString() + " : TVP";
+            GameObject.FindObjectOfType<PlayerControlBehavior>().FireRAP(recordingName); // CNG
 
             var playerControlBehaviorScript = UnityEngine.Object.FindObjectOfType<PlayerControlBehavior>();
             playerControlBehaviorScript.killRadialMenu();
