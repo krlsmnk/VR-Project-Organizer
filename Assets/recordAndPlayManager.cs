@@ -48,12 +48,13 @@ public class recordAndPlayManager : MonoBehaviour {
 
         private void OnGUI()
         {
-            if (GUILayout.Button("Save"))
-            {
-                recorder.Finish().SaveToAssets(nameOfRecording);
-            }                
+            if (recorder.CurrentlyRecording()) { 
+                if (GUILayout.Button("Save"))
+                {
+                    recorder.Finish().SaveToAssets(nameOfRecording);
+                }                
+            }
         }
-
         public void LogCustomEvent(string NameOfEvent, string DataToCapture)
             {
                 recorder.CaptureCustomEvent(NameOfEvent, DataToCapture);

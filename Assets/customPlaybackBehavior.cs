@@ -45,7 +45,15 @@ public class customPlaybackBehavior : MonoBehaviour, IActorBuilder, IPlaybackCus
   // that occurred to the subject (not shown here).
   public Actor Build(int subjectId, string subjectName, Dictionary<string, string> metadata)
   {
-    return new Actor(GameObject.CreatePrimitive(PrimitiveType.Sphere));
+    GameObject instance;
+    if(subjectName == "Headset"){ 
+        instance = Instantiate(Resources.Load("Vive Headset Model", typeof(GameObject))) as GameObject;            
+    }     
+    else if(subjectName.Contains("Controller")){
+        instance = Instantiate(Resources.Load("Vive Controller Model", typeof(GameObject))) as GameObject;            
+    }
+    else instance = (GameObject.CreatePrimitive(PrimitiveType.Sphere));
+    return new Actor(instance);
   }
  
   // This method satisfies the IPlaybackCustomEventHandler interface. This
