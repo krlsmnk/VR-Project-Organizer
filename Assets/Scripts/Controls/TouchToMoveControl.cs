@@ -26,6 +26,10 @@ namespace CAVS.ProjectOrganizer.Controls
             //VRTK_HeadsetCollisionFade fadingScript = cameraRig.AddComponent<VRTK_HeadsetCollisionFade>();
             
 
+            DateTime thisDay = DateTime.Today;
+            string recordingName = thisDay.ToString() + " : Touch to Move";
+            GameObject.FindObjectOfType<PlayerControlBehavior>().FireRAP(recordingName); // CNG
+
             return delegate ()
             {
                 UnityEngine.Debug.Log("TouchToMove Delegate Triggered.");

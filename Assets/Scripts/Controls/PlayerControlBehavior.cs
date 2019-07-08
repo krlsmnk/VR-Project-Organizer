@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using VRTK;
+using VRTK.RecordAndPlay.Demo;
 
 namespace CAVS.ProjectOrganizer.Controls
 {    
@@ -15,6 +16,7 @@ namespace CAVS.ProjectOrganizer.Controls
         private List<PlayerControl> controls;
         private Action cleanupCommand;
         private VRTK_ControllerEvents hand;   
+        recordAndPlayManager RAPManagerScript;
 
         void Start() { 
              
@@ -56,18 +58,26 @@ namespace CAVS.ProjectOrganizer.Controls
             }
 
             newScript.SwitchToControl(0);
-
             return newScript;
         }
 
         private UnityAction BuildWeaponChangeCallback(int weaponIndex)
-        {
+        { 
             currentWeaponIndex = weaponIndex;
             return delegate ()
             {
-                SwitchToControl(weaponIndex);
+                SwitchToControl(weaponIndex);                
             };
         }
+
+        public void FireRAP(string recordingName)
+        {
+            if(RAPManagerScript == null)
+            {
+               RAPManagerScript = GameObject.FindObjectOfType<recordAndPlayManager>();
+               RAPManagerScript.setupRecorder(recordingName);
+            }
+        }                
 
         public void SwitchToControl(int weaponIndex)
         {
