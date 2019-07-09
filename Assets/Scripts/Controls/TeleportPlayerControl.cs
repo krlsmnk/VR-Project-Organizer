@@ -22,10 +22,6 @@ namespace CAVS.ProjectOrganizer.Controls
             pointer.selectionButton = VRTK_ControllerEvents.ButtonAlias.TriggerPress;
             pointer.pointerRenderer = renderer;
 
-            DateTime thisDay = DateTime.Today;
-            string recordingName = thisDay.ToString() + " : Point & Click";
-            GameObject.FindObjectOfType<PlayerControlBehavior>().FireRAP(recordingName); // CNG
-
             return delegate ()
             {
                 UnityEngine.Object.Destroy(pointer);

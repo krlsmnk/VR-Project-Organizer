@@ -26,12 +26,12 @@ public class recordAndPlayManager : MonoBehaviour {
 
         }
 
-        public void setupRecorder(string recordingName) { 
-            headset = VRTK_DeviceFinder.HeadsetTransform().gameObject;
+        public void setupRecorder(string recordingName) {                
+            if(headset == null) headset = VRTK_DeviceFinder.HeadsetTransform().gameObject;
             subjects[0] = headset;
-            controllerLeft = VRTK_DeviceFinder.GetControllerLeftHand();
+            if(controllerLeft == null) controllerLeft = VRTK_DeviceFinder.GetControllerLeftHand();
             subjects[1] = controllerLeft;
-            controllerRight = VRTK_DeviceFinder.GetControllerRightHand();
+            if(controllerRight == null )controllerRight = VRTK_DeviceFinder.GetControllerRightHand();
             subjects[2] = controllerRight;
 
             var subjectTransform = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -43,7 +43,7 @@ public class recordAndPlayManager : MonoBehaviour {
             
             nameOfRecording = recordingName;
 
-            recorder.Start();
+            if (!recorder.CurrentlyRecording())recorder.Start();
         }
 
         private void OnGUI()

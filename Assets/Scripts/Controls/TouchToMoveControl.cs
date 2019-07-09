@@ -23,12 +23,7 @@ namespace CAVS.ProjectOrganizer.Controls
             VRTK_TouchpadWalking tpWalkScript = cameraRig.AddComponent<VRTK_TouchpadWalking>();
             tpWalkScript.maxWalkSpeed = GameObject.FindObjectOfType<SceneManagerBehavior>().CameraSpeed;
             tpWalkScript.moveOnButtonPress = VRTK_ControllerEvents.ButtonAlias.TouchpadPress;
-            //VRTK_HeadsetCollisionFade fadingScript = cameraRig.AddComponent<VRTK_HeadsetCollisionFade>();
-            
-
-            DateTime thisDay = DateTime.Today;
-            string recordingName = thisDay.ToString() + " : Touch to Move";
-            GameObject.FindObjectOfType<PlayerControlBehavior>().FireRAP(recordingName); // CNG
+            //VRTK_HeadsetCollisionFade fadingScript = cameraRig.AddComponent<VRTK_HeadsetCollisionFade>();           
 
             return delegate ()
             {
