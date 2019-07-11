@@ -75,20 +75,13 @@ namespace CAVS.ProjectOrganizer.Controls
         {
             if(RAPManagerScript == null)
             {
-               RAPManagerScript = GameObject.FindObjectOfType<recordAndPlayManager>();
-               RAPManagerScript.setupRecorder(recordingName);
+               RAPManagerScript = GameObject.FindObjectOfType<recordAndPlayManager>();               
             }
+            RAPManagerScript.setupRecorder(recordingName);
         }                
 
         public void SwitchToControl(int weaponIndex)
-        {
-            if (GameObject.FindObjectOfType<SceneManagerBehavior>().Recording)
-            {
-                DateTime thisDay = DateTime.Today;
-                string recordingName = "Control: " + weaponIndex + "; Date: " +  thisDay.ToString();
-                GameObject.FindObjectOfType<PlayerControlBehavior>().FireRAP(recordingName); // CNG
-            }
-
+        {            
             if (currentControlIndex > -1)
             {
                 cleanupCommand();

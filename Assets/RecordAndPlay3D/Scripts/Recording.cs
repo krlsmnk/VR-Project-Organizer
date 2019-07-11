@@ -196,10 +196,13 @@ namespace EliCDavis.RecordAndPlay
         {
             if (path == "")
             {
-                path = "Assets";
+                path = "Assets/";
             }
 
             string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath(Path.Combine(path, string.Format("{0}.asset", name)));
+
+            Debug.Log(assetPathAndName);
+
 
             AssetDatabase.CreateAsset(this, assetPathAndName);
             AssetDatabase.SaveAssets();

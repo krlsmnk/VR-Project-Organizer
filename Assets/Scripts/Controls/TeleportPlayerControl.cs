@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CAVS.ProjectOrganizer.Scenes.Showcase;
+using System;
 using UnityEngine;
 using VRTK;
 
@@ -21,6 +22,19 @@ namespace CAVS.ProjectOrganizer.Controls
             pointer.activationButton = VRTK_ControllerEvents.ButtonAlias.GripPress;
             pointer.selectionButton = VRTK_ControllerEvents.ButtonAlias.TriggerPress;
             pointer.pointerRenderer = renderer;
+
+            //RAP
+            if (GameObject.FindObjectOfType<SceneManagerBehavior>().Recording)
+            {
+                DateTime thisDay = DateTime.Today;
+                Debug.Log(thisDay.ToString());
+                
+                string recordingName = "Control__" + this.GetType().Name + "__Date__" +  thisDay.ToString();
+
+                Debug.Log(recordingName);
+
+                GameObject.FindObjectOfType<PlayerControlBehavior>().FireRAP(recordingName); // CNG
+            }
 
             return delegate ()
             {
