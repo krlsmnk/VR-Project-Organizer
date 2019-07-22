@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CAVS.ProjectOrganizer.Scenes.Showcase;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -16,7 +17,7 @@ namespace CAVS.ProjectOrganizer.Controls
         private List<PlayerControl> controls;
         private Action cleanupCommand;
         private VRTK_ControllerEvents hand;   
-        recordAndPlayManager RAPManagerScript;
+        recordAndPlayManager RAPManagerScript;        
 
         void Start() { 
              
@@ -74,13 +75,13 @@ namespace CAVS.ProjectOrganizer.Controls
         {
             if(RAPManagerScript == null)
             {
-               RAPManagerScript = GameObject.FindObjectOfType<recordAndPlayManager>();
-               RAPManagerScript.setupRecorder(recordingName);
+               RAPManagerScript = GameObject.FindObjectOfType<recordAndPlayManager>();               
             }
+            RAPManagerScript.setupRecorder(recordingName);
         }                
 
         public void SwitchToControl(int weaponIndex)
-        {
+        {            
             if (currentControlIndex > -1)
             {
                 cleanupCommand();

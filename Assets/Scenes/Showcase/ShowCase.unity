@@ -3925,7 +3925,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.0000009220466, y: 0.000020443571}
+  m_AnchoredPosition: {x: -0.0000009220466, y: 0.000032526736}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &543881782
@@ -4041,6 +4041,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23d328aaa64f79a48a0946f3154c3780, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  skipShowcase: 0
+  BezierTeleport: 1
+  TouchToMove: 0
+  TVP: 0
+  Select: 1
+  Grab: 1
+  allowHeightAdjustTVP: 0
+  headsetNullfix: {fileID: 0}
+  CameraSpeed: 1.5
   rightHand: {fileID: 847116009}
   leftHand: {fileID: 847116010}
   carImageScreens:
@@ -4056,6 +4065,9 @@ MonoBehaviour:
   graphControl: {fileID: 0}
   roomUUID: 
   createRoomOnStartup: 0
+  userHeight: 1.8
+  cameraIgnoresCollision: 0
+  Recording: 0
 --- !u!114 &764930385
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8055,7 +8067,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2025932664}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.99999994
+  m_Size: 0.9999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

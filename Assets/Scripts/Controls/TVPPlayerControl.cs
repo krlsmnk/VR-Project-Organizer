@@ -1,11 +1,13 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Diagnostics;
 using VRTK;
 using KarlSmink.Teleporting;
 using System.Collections.Generic;
 using CAVS.ProjectOrganizer.Scenes.Showcase;
 using static VRTK.VRTK_SDKObjectAlias;
 using System.Diagnostics;
+using Debug = UnityEngine.Debug;
 
 namespace CAVS.ProjectOrganizer.Controls
 {
@@ -85,10 +87,6 @@ namespace CAVS.ProjectOrganizer.Controls
 
         public override Action Build(VRTK_ControllerEvents hand)
         {
-            DateTime thisDay = DateTime.Today;
-            string recordingName = thisDay.ToString() + " : TVP";
-            GameObject.FindObjectOfType<PlayerControlBehavior>().FireRAP(recordingName); // CNG
-
             var playerControlBehaviorScript = UnityEngine.Object.FindObjectOfType<PlayerControlBehavior>();
             playerControlBehaviorScript.killRadialMenu();
             //hand = new VRTK_ControllerEvents();
@@ -121,6 +119,20 @@ namespace CAVS.ProjectOrganizer.Controls
                 //Set the camera's height to the user's height, then prevent it from moving at all
                 camBehaviorObj.transform.position = new Vector3(camBehaviorObj.transform.position.x, FindObjectOfType<SceneManagerBehavior>().userHeight, camBehaviorObj.transform.position.z); 
             }
+
+            //RAP
+            if (GameObject.FindObjectOfType<SceneManagerBehavior>().Recording)
+            {
+                DateTime thisDay = DateTime.Today;
+                Debug.Log(thisDay.ToString());
+                
+                string recordingName = "Control__" + this.GetType().Name + "__Date__" +  thisDay.ToString();
+
+                Debug.Log(recordingName);
+
+                GameObject.FindObjectOfType<PlayerControlBehavior>().FireRAP(recordingName); // CNG
+            }
+
 
             return delegate ()
             {

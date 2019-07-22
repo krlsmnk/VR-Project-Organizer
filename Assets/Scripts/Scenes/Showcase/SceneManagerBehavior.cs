@@ -110,6 +110,7 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         int carChangeFromUpdate = -1;
         public float userHeight;
         public bool cameraIgnoresCollision;
+        public bool Recording;
 
         private void Awake()
         {

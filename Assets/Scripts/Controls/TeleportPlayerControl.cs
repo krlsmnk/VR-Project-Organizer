@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CAVS.ProjectOrganizer.Scenes.Showcase;
+using System;
 using UnityEngine;
 using VRTK;
 
@@ -22,9 +23,18 @@ namespace CAVS.ProjectOrganizer.Controls
             pointer.selectionButton = VRTK_ControllerEvents.ButtonAlias.TriggerPress;
             pointer.pointerRenderer = renderer;
 
-            DateTime thisDay = DateTime.Today;
-            string recordingName = thisDay.ToString() + " : Point & Click";
-            GameObject.FindObjectOfType<PlayerControlBehavior>().FireRAP(recordingName); // CNG
+            //RAP
+            if (GameObject.FindObjectOfType<SceneManagerBehavior>().Recording)
+            {
+                DateTime thisDay = DateTime.Today;
+                Debug.Log(thisDay.ToString());
+                
+                string recordingName = "Control__" + this.GetType().Name + "__Date__" +  thisDay.ToString();
+
+                Debug.Log(recordingName);
+
+                GameObject.FindObjectOfType<PlayerControlBehavior>().FireRAP(recordingName); // CNG
+            }
 
             return delegate ()
             {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using EliCDavis.RecordAndPlay.Record;
 using VRTK;
+using System;
 
 namespace VRTK { 
 namespace RecordAndPlay.Demo
@@ -26,12 +27,12 @@ public class recordAndPlayManager : MonoBehaviour {
 
         }
 
-        public void setupRecorder(string recordingName) { 
-            headset = VRTK_DeviceFinder.HeadsetTransform().gameObject;
+        public void setupRecorder(string recordingName) {                
+            if(headset == null) headset = VRTK_DeviceFinder.HeadsetTransform().gameObject;
             subjects[0] = headset;
-            controllerLeft = VRTK_DeviceFinder.GetControllerLeftHand();
+            if(controllerLeft == null) controllerLeft = VRTK_DeviceFinder.GetControllerLeftHand();
             subjects[1] = controllerLeft;
-            controllerRight = VRTK_DeviceFinder.GetControllerRightHand();
+            if(controllerRight == null )controllerRight = VRTK_DeviceFinder.GetControllerRightHand();
             subjects[2] = controllerRight;
 
             var subjectTransform = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -43,7 +44,8 @@ public class recordAndPlayManager : MonoBehaviour {
             
             nameOfRecording = recordingName;
 
-            recorder.Start();
+            if (!recorder.CurrentlyRecording())recorder.Start();
+            //else if(recorder.CurrentlyRecording())recorder.(); //CNG WAY TO STOP
         }
 
         private void OnGUI()
@@ -51,7 +53,12 @@ public class recordAndPlayManager : MonoBehaviour {
             if (recorder.CurrentlyRecording()) { 
                 if (GUILayout.Button("Save"))
                 {
-                    recorder.Finish().SaveToAssets(nameOfRecording);
+                    //Sanitize Filename
+                    var invalids = System.IO.Path.GetInvalidFileNameChars();
+                    string newName = String.Join("_", nameOfRecording.Split(invalids, StringSplitOptions.RemoveEmptyEntries) ).TrimEnd('.');
+
+                    Debug.Log("New Name: " + newName);
+                    recorder.Finish().SaveToAssets(newName, "");
                 }                
             }
         }

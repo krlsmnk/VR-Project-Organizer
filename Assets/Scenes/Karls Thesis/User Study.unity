@@ -1354,6 +1354,11 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 120677426}
   m_Mesh: {fileID: 4300000, guid: 8cd63305292c8ae4a9cea1dbdcb6c411, type: 3}
+--- !u!1 &128431327 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1212442714771988, guid: d4a01d01d33b0f745a34bfc5ea4e52ed,
+    type: 2}
+  m_PrefabInternal: {fileID: 847116008}
 --- !u!1 &138581137
 GameObject:
   m_ObjectHideFlags: 0
@@ -1443,6 +1448,11 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 138581137}
   m_Mesh: {fileID: 4300000, guid: 5af461872fb908f40a3af4511de9d4e0, type: 3}
+--- !u!1 &153564262 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1352370104749986, guid: d4a01d01d33b0f745a34bfc5ea4e52ed,
+    type: 2}
+  m_PrefabInternal: {fileID: 847116008}
 --- !u!1 &154213327
 GameObject:
   m_ObjectHideFlags: 0
@@ -5446,9 +5456,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1679ce23478b16f419ab8031a0a97d1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  headset: {fileID: 0}
-  controllerLeft: {fileID: 0}
-  controllerRight: {fileID: 0}
+  headset: {fileID: 153564262}
+  controllerLeft: {fileID: 128431327}
+  controllerRight: {fileID: 1006694641}
 --- !u!4 &764930383
 Transform:
   m_ObjectHideFlags: 0
@@ -5499,6 +5509,7 @@ MonoBehaviour:
   createRoomOnStartup: 0
   userHeight: 1.7
   cameraIgnoresCollision: 0
+  Recording: 1
 --- !u!114 &764930385
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6136,7 +6147,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1132249932825634, guid: d4a01d01d33b0f745a34bfc5ea4e52ed, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d4a01d01d33b0f745a34bfc5ea4e52ed, type: 2}
@@ -7339,6 +7350,11 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1001092258}
   m_Mesh: {fileID: 4300000, guid: 5af461872fb908f40a3af4511de9d4e0, type: 3}
+--- !u!1 &1006694641 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1550954284282104, guid: d4a01d01d33b0f745a34bfc5ea4e52ed,
+    type: 2}
+  m_PrefabInternal: {fileID: 847116008}
 --- !u!1 &1018919702
 GameObject:
   m_ObjectHideFlags: 0
@@ -15412,7 +15428,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2042486868
 MonoBehaviour:
   m_ObjectHideFlags: 0
