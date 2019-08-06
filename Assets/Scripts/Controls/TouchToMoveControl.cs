@@ -7,6 +7,7 @@ using CAVS.ProjectOrganizer.Scenes.Showcase;
 using static VRTK.VRTK_SDKObjectAlias;
 using System.Diagnostics;
 using Debug = UnityEngine.Debug;
+using VRTK.RecordAndPlay.Demo;
 
 namespace CAVS.ProjectOrganizer.Controls
 {
@@ -25,19 +26,7 @@ namespace CAVS.ProjectOrganizer.Controls
             tpWalkScript.maxWalkSpeed = GameObject.FindObjectOfType<SceneManagerBehavior>().CameraSpeed;
             tpWalkScript.moveOnButtonPress = VRTK_ControllerEvents.ButtonAlias.TouchpadPress;
             //VRTK_HeadsetCollisionFade fadingScript = cameraRig.AddComponent<VRTK_HeadsetCollisionFade>();           
-
-            //RAP
-            if (GameObject.FindObjectOfType<SceneManagerBehavior>().Recording)
-            {
-                DateTime thisDay = DateTime.Today;
-                Debug.Log(thisDay.ToString());
-                
-                string recordingName = "Control__" + this.GetType().Name + "__Date__" +  thisDay.ToString();
-
-                Debug.Log(recordingName);
-
-                GameObject.FindObjectOfType<PlayerControlBehavior>().FireRAP(recordingName); // CNG
-            }
+ 
 
             return delegate ()
             {
@@ -48,6 +37,29 @@ namespace CAVS.ProjectOrganizer.Controls
         public override Texture2D GetIcon()
         {
             return Resources.Load<Texture2D>("PlayerControl/touch-to-move-icon");
+        }
+
+         void Update()
+        {
+            if(Input.GetKey(KeyCode.R)) startRAP();
+            if(Input.GetKey(KeyCode.S)) GameObject.FindObjectOfType<recordAndPlayManager>().saveRecording();
+        }
+
+        public void startRAP() { 
+        //RAP
+        Debug.Log("RAP Started");
+            if (GameObject.FindObjectOfType<SceneManagerBehavior>().Recording)
+            {
+                DateTime thisDay = DateTime.Today;
+                Debug.Log(thisDay.ToString());
+                
+                string recordingName = "Control__" + this.GetType().Name + "__Date__" +  thisDay.ToString();
+
+                Debug.Log(recordingName);
+
+                GameObject.FindObjectOfType<PlayerControlBehavior>().FireRAP(recordingName); // CNG
+            }    
+            
         }
     }
 
