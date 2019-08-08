@@ -394,6 +394,9 @@ namespace CAVS.ProjectOrganizer.Scenes.Showcase
         {
             List<PlayerControl> startingControls = new List<PlayerControl>();
 
+            //Dummy control to prevent shit from firing at start
+            startingControls.Add(new DummyControl());
+
             if (Grab) startingControls.Add(new GrabPlayerControl());
             if (BezierTeleport) startingControls.Add(new TeleportPlayerControl());
             if (Select) startingControls.Add(new SelectPlayerControl());

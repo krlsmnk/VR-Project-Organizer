@@ -27,13 +27,6 @@ namespace CAVS.ProjectOrganizer.Controls
         {
             VRTK_SDKManager.instance.RemoveBehaviourToToggleOnLoadedSetupChange(this);
         }
-        
-         void Update()
-        {
-            Debug.Log("Update");
-            if(Input.GetKey(KeyCode.R)) startRAP();
-            if(Input.GetKey(KeyCode.S)) GameObject.FindObjectOfType<recordAndPlayManager>().saveRecording();
-        }
 
         void OnEnable()
         {
@@ -101,7 +94,7 @@ namespace CAVS.ProjectOrganizer.Controls
 
             if(headsetTransform==null)headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
 
-            var cameraToControl = KarlSmink.Teleporting.Util.BuildCamera(Vector3.zero, Quaternion.identity);
+            var cameraToControl = KarlSmink.Teleporting.Util.BuildCamera(new Vector3(0, -1, 0), Quaternion.identity);
             cameraToControl.GetComponentInChildren<Camera>().cullingMask ^= 1 << LayerMask.NameToLayer("Roof");
             cameraToControl.GetComponentInChildren<Camera>().cullingMask ^= 1 << LayerMask.NameToLayer("Water");
 
@@ -152,25 +145,6 @@ namespace CAVS.ProjectOrganizer.Controls
             //playerControlBehaviorScript.SwitchToControl(playerControlBehaviorScript.currentWeaponIndex);
             playerControlBehaviorScript.SwitchToControl(-1);
         }
-
-
-        public void startRAP() { 
-        //RAP
-        Debug.Log("RAP Started");
-            if (GameObject.FindObjectOfType<SceneManagerBehavior>().Recording)
-            {
-                DateTime thisDay = DateTime.Today;
-                Debug.Log(thisDay.ToString());
-                
-                string recordingName = "Control__" + this.GetType().Name + "__Date__" +  thisDay.ToString();
-
-                Debug.Log(recordingName);
-
-                GameObject.FindObjectOfType<PlayerControlBehavior>().FireRAP(recordingName); // CNG
-            }    
-            
-        }
-
 
     }
 

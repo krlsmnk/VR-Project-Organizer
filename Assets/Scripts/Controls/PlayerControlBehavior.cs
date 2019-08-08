@@ -81,13 +81,40 @@ namespace CAVS.ProjectOrganizer.Controls
         }                
 
         public void SwitchToControl(int weaponIndex)
-        {            
+        {                     
             if (currentControlIndex > -1)
             {
                 cleanupCommand();
             }
             currentControlIndex = weaponIndex;
             cleanupCommand = controls[currentControlIndex].Build(hand);
+
+            Debug.Log("My control index is: " + weaponIndex);
+            //Bezier = 1
+            //TVP = 2
+            //TTM = 3
+            if(weaponIndex != 0) { 
+                if(weaponIndex == 1) startRAP("Bezier");
+                if(weaponIndex == 2) startRAP("TVP");
+                if(weaponIndex == 3) startRAP("TouchToMove");
+                
+            }
+        }
+
+        private void startRAP(string controlName)
+        {
+            Debug.Log("RAP Started");
+            if (GameObject.FindObjectOfType<SceneManagerBehavior>().Recording)
+            {
+                DateTime thisDay = DateTime.Today;
+                Debug.Log(thisDay.ToString());
+                
+                string recordingName = "Control__" + controlName + "__Date__" +  thisDay.ToString();
+
+                Debug.Log("Recording Name: " + recordingName);
+
+                GameObject.FindObjectOfType<PlayerControlBehavior>().FireRAP(recordingName); // CNG
+            }    
         }
 
         /// <summary>

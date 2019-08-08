@@ -39,28 +39,6 @@ namespace CAVS.ProjectOrganizer.Controls
             return Resources.Load<Texture2D>("PlayerControl/touch-to-move-icon");
         }
 
-         void Update()
-        {
-            if(Input.GetKey(KeyCode.R)) startRAP();
-            if(Input.GetKey(KeyCode.S)) GameObject.FindObjectOfType<recordAndPlayManager>().saveRecording();
-        }
-
-        public void startRAP() { 
-        //RAP
-        Debug.Log("RAP Started");
-            if (GameObject.FindObjectOfType<SceneManagerBehavior>().Recording)
-            {
-                DateTime thisDay = DateTime.Today;
-                Debug.Log(thisDay.ToString());
-                
-                string recordingName = "Control__" + this.GetType().Name + "__Date__" +  thisDay.ToString();
-
-                Debug.Log(recordingName);
-
-                GameObject.FindObjectOfType<PlayerControlBehavior>().FireRAP(recordingName); // CNG
-            }    
-            
-        }
     }
 
 }

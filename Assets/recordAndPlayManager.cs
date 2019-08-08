@@ -27,6 +27,12 @@ public class recordAndPlayManager : MonoBehaviour {
 
         }
 
+        void Update()
+        {
+            //if(Input.GetKey(KeyCode.R)) startRAP();
+            if(Input.GetKey(KeyCode.S)) saveRecording();
+        }
+
         public void setupRecorder(string recordingName) {                
             if(headset == null) headset = VRTK_DeviceFinder.HeadsetTransform().gameObject;
             subjects[0] = headset;
@@ -48,15 +54,15 @@ public class recordAndPlayManager : MonoBehaviour {
             //else if(recorder.CurrentlyRecording())recorder.(); //CNG WAY TO STOP
         }
 
+            /*
         private void OnGUI()
-        {
-            if (recorder.CurrentlyRecording()) { 
+        {                      
                 if (GUILayout.Button("Save"))
                 {
                     saveRecording();
-                }                
-            }
+                }                         
         }
+        */
         public void LogCustomEvent(string NameOfEvent, string DataToCapture)
             {
                 recorder.CaptureCustomEvent(NameOfEvent, DataToCapture);
@@ -65,12 +71,16 @@ public class recordAndPlayManager : MonoBehaviour {
 
             public void saveRecording()
             {
+                //check if recording
+                if (recorder.CurrentlyRecording()) { 
+
                 //Sanitize Filename
                     var invalids = System.IO.Path.GetInvalidFileNameChars();
                     string newName = String.Join("_", nameOfRecording.Split(invalids, StringSplitOptions.RemoveEmptyEntries) ).TrimEnd('.');
 
                     Debug.Log("New Name: " + newName);
                     recorder.Finish().SaveToAssets(newName, "");
+                }
             }
 
 }

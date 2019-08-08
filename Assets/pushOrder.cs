@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using VRTK;
+using VRTK.RecordAndPlay.Demo;
 
 public class pushOrder : MonoBehaviour {
     public GameObject nextMural;
@@ -66,6 +67,7 @@ public class pushOrder : MonoBehaviour {
     {
         Debug.Log("Completion Time: " + Time.realtimeSinceStartup);
         showGameOverMessage();
+        GameObject.FindObjectOfType<recordAndPlayManager>().saveRecording();
     }
 
     internal void showTarget(GameObject nextMural)

@@ -19,9 +19,11 @@ namespace CAVS.ProjectOrganizer.Controls
         private Valve.VR.EVRButtonId touchpad = Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad;
         private Valve.VR.EVRButtonId trigger = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
         //private SteamVR_Controller.Device controller { get { return SteamVR_Controller.Input((int)trackedObj.index); } }
+        static bool allowUpDown;
 
         public static TVPCameraControl Initialize(VRTK_ControllerEvents hand, CameraBehavior cameraToControl, TVPPlayerControl cleanup)
         {
+            allowUpDown = FindObjectOfType<SceneManagerBehavior>().allowHeightAdjustTVP;
             cleaner = cleanup;
             cleanupWheel();            
 
@@ -87,9 +89,7 @@ namespace CAVS.ProjectOrganizer.Controls
         }
 
         private void Hand_TouchpadPressed(object sender, ControllerInteractionEventArgs e)
-        {
-            bool allowUpDown = FindObjectOfType<SceneManagerBehavior>().allowHeightAdjustTVP;
-
+        {            
             //Vector2 axis = controller.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0);
             Vector2 axis = hand.GetTouchpadAxis();
 

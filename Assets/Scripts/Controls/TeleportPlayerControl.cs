@@ -12,6 +12,9 @@ namespace CAVS.ProjectOrganizer.Controls
 
         public override Action Build(VRTK_ControllerEvents hand)
         {
+            var playerControlBehaviorScript = UnityEngine.Object.FindObjectOfType<PlayerControlBehavior>();
+            playerControlBehaviorScript.killRadialMenu();
+
             var renderer = hand.gameObject.AddComponent<VRTK_BezierPointerRenderer>();
             var pointer = hand.gameObject.AddComponent<VRTK_Pointer>();
             var teleport = hand.gameObject.AddComponent<VRTK_HeightAdjustTeleport>();
@@ -33,30 +36,7 @@ namespace CAVS.ProjectOrganizer.Controls
             };
         }
 
-         void Update()
-        {
-            if(Input.GetKey(KeyCode.R)) startRAP();
-            if(Input.GetKey(KeyCode.S)) GameObject.FindObjectOfType<recordAndPlayManager>().saveRecording();
-        }
-
-        public void startRAP() { 
-        //RAP
-
-            Debug.Log("RAP Started");
-            if (GameObject.FindObjectOfType<SceneManagerBehavior>().Recording)
-            {
-                DateTime thisDay = DateTime.Today;
-                Debug.Log(thisDay.ToString());
-                
-                string recordingName = "Control__" + this.GetType().Name + "__Date__" +  thisDay.ToString();
-
-                Debug.Log(recordingName);
-
-                GameObject.FindObjectOfType<PlayerControlBehavior>().FireRAP(recordingName); // CNG
-            }    
-            
-        }
-
+       
         public override Texture2D GetIcon()
         {
             return Resources.Load<Texture2D>("PlayerControl/Teleport-icon");
