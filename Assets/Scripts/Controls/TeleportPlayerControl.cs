@@ -2,6 +2,7 @@
 using System;
 using UnityEngine;
 using VRTK;
+using VRTK.RecordAndPlay.Demo;
 
 namespace CAVS.ProjectOrganizer.Controls
 {
@@ -23,7 +24,25 @@ namespace CAVS.ProjectOrganizer.Controls
             pointer.selectionButton = VRTK_ControllerEvents.ButtonAlias.TriggerPress;
             pointer.pointerRenderer = renderer;
 
-            //RAP
+
+            return delegate ()
+            {
+                UnityEngine.Object.Destroy(pointer);
+                UnityEngine.Object.Destroy(renderer);
+                UnityEngine.Object.Destroy(teleport);
+            };
+        }
+
+         void Update()
+        {
+            if(Input.GetKey(KeyCode.R)) startRAP();
+            if(Input.GetKey(KeyCode.S)) GameObject.FindObjectOfType<recordAndPlayManager>().saveRecording();
+        }
+
+        public void startRAP() { 
+        //RAP
+
+            Debug.Log("RAP Started");
             if (GameObject.FindObjectOfType<SceneManagerBehavior>().Recording)
             {
                 DateTime thisDay = DateTime.Today;
@@ -34,14 +53,8 @@ namespace CAVS.ProjectOrganizer.Controls
                 Debug.Log(recordingName);
 
                 GameObject.FindObjectOfType<PlayerControlBehavior>().FireRAP(recordingName); // CNG
-            }
-
-            return delegate ()
-            {
-                UnityEngine.Object.Destroy(pointer);
-                UnityEngine.Object.Destroy(renderer);
-                UnityEngine.Object.Destroy(teleport);
-            };
+            }    
+            
         }
 
         public override Texture2D GetIcon()
