@@ -53,7 +53,12 @@ public class recordAndPlayManager : MonoBehaviour {
             if (recorder.CurrentlyRecording()) { 
                 if (GUILayout.Button("Save"))
                 {
-                    saveRecording();
+                    //Sanitize Filename
+                    var invalids = System.IO.Path.GetInvalidFileNameChars();
+                    string newName = String.Join("_", nameOfRecording.Split(invalids, StringSplitOptions.RemoveEmptyEntries) ).TrimEnd('.');
+
+                    Debug.Log("New Name: " + newName);
+                    recorder.Finish().SaveToAssets(newName, "");
                 }                
             }
         }
@@ -61,16 +66,6 @@ public class recordAndPlayManager : MonoBehaviour {
             {
                 recorder.CaptureCustomEvent(NameOfEvent, DataToCapture);
                 //recorder.SetMetaData("KeyValue", "InformationToSet");
-            }
-
-            public void saveRecording()
-            {
-                //Sanitize Filename
-                    var invalids = System.IO.Path.GetInvalidFileNameChars();
-                    string newName = String.Join("_", nameOfRecording.Split(invalids, StringSplitOptions.RemoveEmptyEntries) ).TrimEnd('.');
-
-                    Debug.Log("New Name: " + newName);
-                    recorder.Finish().SaveToAssets(newName, "");
             }
 
 }

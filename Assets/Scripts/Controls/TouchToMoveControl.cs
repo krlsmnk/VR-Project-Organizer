@@ -7,7 +7,6 @@ using CAVS.ProjectOrganizer.Scenes.Showcase;
 using static VRTK.VRTK_SDKObjectAlias;
 using System.Diagnostics;
 using Debug = UnityEngine.Debug;
-using VRTK.RecordAndPlay.Demo;
 
 namespace CAVS.ProjectOrganizer.Controls
 {
@@ -26,28 +25,8 @@ namespace CAVS.ProjectOrganizer.Controls
             tpWalkScript.maxWalkSpeed = GameObject.FindObjectOfType<SceneManagerBehavior>().CameraSpeed;
             tpWalkScript.moveOnButtonPress = VRTK_ControllerEvents.ButtonAlias.TouchpadPress;
             //VRTK_HeadsetCollisionFade fadingScript = cameraRig.AddComponent<VRTK_HeadsetCollisionFade>();           
- 
 
-            return delegate ()
-            {
-                UnityEngine.Debug.Log("TouchToMove Delegate Triggered.");
-            };
-        }       
-
-        public override Texture2D GetIcon()
-        {
-            return Resources.Load<Texture2D>("PlayerControl/touch-to-move-icon");
-        }
-
-         void Update()
-        {
-            if(Input.GetKey(KeyCode.R)) startRAP();
-            if(Input.GetKey(KeyCode.S)) GameObject.FindObjectOfType<recordAndPlayManager>().saveRecording();
-        }
-
-        public void startRAP() { 
-        //RAP
-        Debug.Log("RAP Started");
+            //RAP
             if (GameObject.FindObjectOfType<SceneManagerBehavior>().Recording)
             {
                 DateTime thisDay = DateTime.Today;
@@ -58,8 +37,17 @@ namespace CAVS.ProjectOrganizer.Controls
                 Debug.Log(recordingName);
 
                 GameObject.FindObjectOfType<PlayerControlBehavior>().FireRAP(recordingName); // CNG
-            }    
-            
+            }
+
+            return delegate ()
+            {
+                UnityEngine.Debug.Log("TouchToMove Delegate Triggered.");
+            };
+        }       
+
+        public override Texture2D GetIcon()
+        {
+            return Resources.Load<Texture2D>("PlayerControl/touch-to-move-icon");
         }
     }
 

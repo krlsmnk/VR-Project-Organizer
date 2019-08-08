@@ -8,7 +8,6 @@ using CAVS.ProjectOrganizer.Scenes.Showcase;
 using static VRTK.VRTK_SDKObjectAlias;
 using System.Diagnostics;
 using Debug = UnityEngine.Debug;
-using VRTK.RecordAndPlay.Demo;
 
 namespace CAVS.ProjectOrganizer.Controls
 {
@@ -26,13 +25,6 @@ namespace CAVS.ProjectOrganizer.Controls
         void OnDestroy()
         {
             VRTK_SDKManager.instance.RemoveBehaviourToToggleOnLoadedSetupChange(this);
-        }
-        
-         void Update()
-        {
-            Debug.Log("Update");
-            if(Input.GetKey(KeyCode.R)) startRAP();
-            if(Input.GetKey(KeyCode.S)) GameObject.FindObjectOfType<recordAndPlayManager>().saveRecording();
         }
 
         void OnEnable()
@@ -126,7 +118,20 @@ namespace CAVS.ProjectOrganizer.Controls
 
                 //Set the camera's height to the user's height, then prevent it from moving at all
                 camBehaviorObj.transform.position = new Vector3(camBehaviorObj.transform.position.x, FindObjectOfType<SceneManagerBehavior>().userHeight, camBehaviorObj.transform.position.z); 
-            }            
+            }
+
+            //RAP
+            if (GameObject.FindObjectOfType<SceneManagerBehavior>().Recording)
+            {
+                DateTime thisDay = DateTime.Today;
+                Debug.Log(thisDay.ToString());
+                
+                string recordingName = "Control__" + this.GetType().Name + "__Date__" +  thisDay.ToString();
+
+                Debug.Log(recordingName);
+
+                GameObject.FindObjectOfType<PlayerControlBehavior>().FireRAP(recordingName); // CNG
+            }
 
 
             return delegate ()
@@ -139,7 +144,45 @@ namespace CAVS.ProjectOrganizer.Controls
             };
         }
 
-       
+        private void getTheDamnHeadsetTransform()
+        {
+            headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
+            if(headsetTransform== null) System.Threading.Thread.Sleep(5000);
+            headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
+            if(headsetTransform== null) System.Threading.Thread.Sleep(5000);
+            headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
+            if(headsetTransform== null) System.Threading.Thread.Sleep(5000);
+            headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
+            if(headsetTransform== null) System.Threading.Thread.Sleep(5000);
+            headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
+            if(headsetTransform== null) System.Threading.Thread.Sleep(5000);
+            headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
+            if(headsetTransform== null) System.Threading.Thread.Sleep(5000);
+            headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
+            /*
+            Stopwatch sw = new Stopwatch(); // sw cotructor
+            sw.Start(); // starts the stopwatch
+             for (int i = 0; ; i++) 
+              {
+                if (i % 100000 == 0) // if in 100000th iteration (could be any other large number
+                // depending on how often you want the time to be checked) 
+                {
+                  sw.Stop(); // stop the time measurement
+                  if (sw.ElapsedMilliseconds > 5000) // check if desired period of time has elapsed
+                  {
+                    headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
+                    if(headsetTransform != null) break; // if more than 5000 milliseconds have passed, and the condition has been met, stop looping and return
+                    // to the existing code                    
+                  }
+                  else
+                  {
+                    sw.Start(); // if less than 5000 milliseconds have elapsed, continue looping
+                    // and resume time measurement
+                  }
+                }
+             }
+             */
+        }
 
         public override Texture2D GetIcon()
         {
@@ -152,26 +195,6 @@ namespace CAVS.ProjectOrganizer.Controls
             //playerControlBehaviorScript.SwitchToControl(playerControlBehaviorScript.currentWeaponIndex);
             playerControlBehaviorScript.SwitchToControl(-1);
         }
-
-
-        public void startRAP() { 
-        //RAP
-        Debug.Log("RAP Started");
-            if (GameObject.FindObjectOfType<SceneManagerBehavior>().Recording)
-            {
-                DateTime thisDay = DateTime.Today;
-                Debug.Log(thisDay.ToString());
-                
-                string recordingName = "Control__" + this.GetType().Name + "__Date__" +  thisDay.ToString();
-
-                Debug.Log(recordingName);
-
-                GameObject.FindObjectOfType<PlayerControlBehavior>().FireRAP(recordingName); // CNG
-            }    
-            
-        }
-
-
     }
 
 }
