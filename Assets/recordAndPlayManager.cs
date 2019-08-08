@@ -4,6 +4,7 @@ using UnityEngine;
 using EliCDavis.RecordAndPlay.Record;
 using VRTK;
 using System;
+using CAVS.ProjectOrganizer.Controls;
 
 namespace VRTK { 
 namespace RecordAndPlay.Demo
@@ -14,18 +15,26 @@ public class recordAndPlayManager : MonoBehaviour {
         private Recorder recorder;
         public GameObject headset;
         public GameObject controllerLeft, controllerRight;
+        public GameObject tvpCameraGO;
         private GameObject[] subjects;
         string nameOfRecording;
+        bool tvp;
 
 
         void Start()
-        {
+        {           
             recorder = ScriptableObject.CreateInstance<Recorder>();
-
-            int numberOfSubjects = 3;
+            int numberOfSubjects = 3;         
             subjects = new GameObject[numberOfSubjects];
 
         }
+
+        public void ifTVP()
+        {
+            tvp = true;
+            int numberOfSubjects = 4;         
+            subjects = new GameObject[numberOfSubjects];
+        }        
 
         void Update()
         {
@@ -41,6 +50,12 @@ public class recordAndPlayManager : MonoBehaviour {
             if(controllerRight == null )controllerRight = VRTK_DeviceFinder.GetControllerRightHand();
             subjects[2] = controllerRight;
 
+            if(tvp){    
+                 tvpCameraGO = GameObject.FindGameObjectWithTag("TVPCamera");
+                    try{subjects[3] = tvpCameraGO; }
+                    catch {Debug.Log("no camera found");}
+                }
+
             var subjectTransform = GameObject.CreatePrimitive(PrimitiveType.Cube);
             //int frameRate, string name, Dictionary<string, string> metadata, float minimumDelta
             Dictionary<string, string> metaData = new Dictionary<string, string>();
@@ -48,6 +63,10 @@ public class recordAndPlayManager : MonoBehaviour {
             SubjectBehavior SBCRight = SubjectBehavior.Build(controllerRight, recorder, 30, "Right Controller", metaData, .001f);
             SubjectBehavior SBHeadset = SubjectBehavior.Build(headset, recorder, 30, "Headset", metaData, .001f);
             
+           if(tvp) { 
+            SubjectBehavior SBCamera = SubjectBehavior.Build(tvpCameraGO, recorder, 30, "TVPCamera", metaData, .001f);
+           }
+
             nameOfRecording = recordingName;
 
             if (!recorder.CurrentlyRecording())recorder.Start();

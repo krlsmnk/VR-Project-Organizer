@@ -18,6 +18,7 @@ namespace CAVS.ProjectOrganizer.Controls
         //CNG 6/10
         public SDKObject sdkObject = SDKObject.Boundary;
         protected VRTK_SDKManager sdkManager;
+        public GameObject TVPCamera;
 
         void Awake()
         {
@@ -87,14 +88,15 @@ namespace CAVS.ProjectOrganizer.Controls
 
 
         public override Action Build(VRTK_ControllerEvents hand)
-        {
+        {            
             var playerControlBehaviorScript = UnityEngine.Object.FindObjectOfType<PlayerControlBehavior>();
             playerControlBehaviorScript.killRadialMenu();
             //hand = new VRTK_ControllerEvents();
 
             if(headsetTransform==null)headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
 
-            var cameraToControl = KarlSmink.Teleporting.Util.BuildCamera(new Vector3(0, -1, 0), Quaternion.identity);
+            var cameraToControl = KarlSmink.Teleporting.Util.BuildCamera(new Vector3(0, -2, 0), Quaternion.identity);
+            TVPCamera = cameraToControl.GetComponentInChildren<Camera>().gameObject;
             cameraToControl.GetComponentInChildren<Camera>().cullingMask ^= 1 << LayerMask.NameToLayer("Roof");
             cameraToControl.GetComponentInChildren<Camera>().cullingMask ^= 1 << LayerMask.NameToLayer("Water");
 
@@ -121,6 +123,7 @@ namespace CAVS.ProjectOrganizer.Controls
                 camBehaviorObj.transform.position = new Vector3(camBehaviorObj.transform.position.x, FindObjectOfType<SceneManagerBehavior>().userHeight, camBehaviorObj.transform.position.z); 
             }            
 
+            GameObject.FindObjectOfType<recordAndPlayManager>().ifTVP();
 
             return delegate ()
             {

@@ -52,6 +52,9 @@ public class customPlaybackBehavior : MonoBehaviour, IActorBuilder, IPlaybackCus
     else if(subjectName.Contains("Controller")){
         instance = Instantiate(Resources.Load("Vive Controller Model", typeof(GameObject))) as GameObject;            
     }
+    else if(subjectName == "TVPCamera"){
+        instance = Instantiate(Resources.Load("Big Car", typeof(GameObject))) as GameObject;
+    }
     else instance = (GameObject.CreatePrimitive(PrimitiveType.Sphere));
     return new Actor(instance);
   }
