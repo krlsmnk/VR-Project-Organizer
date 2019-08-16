@@ -107,7 +107,7 @@ namespace CAVS.ProjectOrganizer.Controls
 
             var portal = KarlSmink.Teleporting.Util.BuildPortal(cameraToControl.GetComponentInChildren<Camera>(), headsetTransform.transform.position + (headsetTransform.forward * 8), Quaternion.identity);
             var headsetCollision = UnityEngine.Object.FindObjectOfType<VRTK_HeadsetCollision>();
-            var teleBehavior = TeleportBehavior.Initialize(headsetCollision, 1.7f, cameraToControl.transform, portal);
+            var teleBehavior = TeleportBehavior.Initialize(headsetCollision, GameObject.FindObjectOfType<SceneManagerBehavior>().userHeight, cameraToControl.transform, portal);
 
             var cameraBehavior = CameraBehavior.Initialize(cameraToControl, FindObjectOfType<SceneManagerBehavior>().CameraSpeed, portal);
             cameraBehavior.transform.position = hand.transform.position + hand.transform.forward;
@@ -120,7 +120,7 @@ namespace CAVS.ProjectOrganizer.Controls
                 GameObject camBehaviorObj = FindObjectOfType<CameraBehavior>().gameObject.transform.parent.gameObject; //footstepoffset
 
                 //Set the camera's height to the user's height, then prevent it from moving at all
-                camBehaviorObj.transform.position = new Vector3(camBehaviorObj.transform.position.x, FindObjectOfType<SceneManagerBehavior>().userHeight, camBehaviorObj.transform.position.z); 
+                camBehaviorObj.transform.position = new Vector3(camBehaviorObj.transform.position.x, FindObjectOfType<SceneManagerBehavior>().userHeight, camBehaviorObj.transform.position.z);                 
             }            
 
             GameObject.FindObjectOfType<recordAndPlayManager>().ifTVP();

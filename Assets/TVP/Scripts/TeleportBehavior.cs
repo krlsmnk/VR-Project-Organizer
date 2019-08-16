@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using CAVS.ProjectOrganizer.Scenes.Showcase;
+using UnityEngine;
 using VRTK;
 
 namespace KarlSmink.Teleporting
@@ -62,7 +63,9 @@ namespace KarlSmink.Teleporting
                 portal.transform.position = cameraBeingControlled.position - (headForwardCleaned.normalized);
                 portal.transform.LookAt(cameraBeingControlled.position - (headForwardCleaned.normalized * 4)); // 4 means nothing, we just have to go further than it's position
 
-                var newHeadsetPosition = cameraBeingControlled.position + cameraBeingControlled.forward;
+                Vector3 newHeadsetPosition = cameraBeingControlled.position + cameraBeingControlled.forward;
+                //If we're not allowing height adjust, make sure the user doesn't end up in or above the floor
+                if(!GameObject.FindObjectOfType<SceneManagerBehavior>().allowHeightAdjustTVP)newHeadsetPosition = new Vector3(newHeadsetPosition.x, GameObject.FindObjectOfType<SceneManagerBehavior>().userHeight, newHeadsetPosition.z);
 
                 cameraBeingControlled.position = headset.position;
                 cameraBeingControlled.rotation = headset.rotation;

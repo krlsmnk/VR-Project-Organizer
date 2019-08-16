@@ -25,6 +25,8 @@ public class customPlaybackBehavior : MonoBehaviour, IActorBuilder, IPlaybackCus
   // A class scoped reference to PlaybackBehavior that is in control of 
   // animating the playback of the recording.
   PlaybackBehavior playbackBehavior;
+
+  public bool renderTrail;  
  
   void Start()
   {
@@ -47,7 +49,24 @@ public class customPlaybackBehavior : MonoBehaviour, IActorBuilder, IPlaybackCus
   {
     GameObject instance;
     if(subjectName == "Headset"){ 
-        instance = Instantiate(Resources.Load("Vive Headset Model", typeof(GameObject))) as GameObject;            
+        instance = Instantiate(Resources.Load("Vive Headset Model", typeof(GameObject))) as GameObject;
+
+            //trail renderer
+            if (renderTrail) { 
+                
+                TrailRenderer trailRend = instance.AddComponent<TrailRenderer>();
+                trailRend.receiveShadows = false;
+                trailRend.startColor = Color.red;
+                trailRend.endColor = Color.green; //new Color32( 143 , 0 , 254, 1 ); // Purple
+                trailRend.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                trailRend.time = 600; //10 minutes
+                trailRend.minVertexDistance = 0.1f;
+                trailRend.startWidth = 1;
+                trailRend.endWidth = 1;
+                trailRend.material = GameObject.FindObjectOfType<headsetTrail>().gameObject.GetComponent<MeshRenderer>().material;
+                
+            }
+
     }     
     else if(subjectName.Contains("Controller")){
         instance = Instantiate(Resources.Load("Vive Controller Model", typeof(GameObject))) as GameObject;            

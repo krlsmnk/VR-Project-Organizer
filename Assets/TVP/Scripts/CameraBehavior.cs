@@ -115,16 +115,17 @@ namespace KarlSmink.Teleporting
         Space relativeSpace = Space.Self;
 
         public void Move(Vector3 direction, Space relativeSpace)
-        {
+        {            
             cameraSpeed = originalCameraSpeed;
-            moveDirection = direction;
+            if(allowHeightAdjust) moveDirection = direction;
+            else moveDirection = new Vector3(moveDirection.x, 0, moveDirection.z);
             this.relativeSpace = relativeSpace;
         }
         public void Move(Vector3 direction, Space relativeSpace, float newSpeed)
         {            
             cameraSpeed = newSpeed;
-            moveDirection = direction;
-            if (!allowHeightAdjust) moveDirection.y = 0;
+            if(allowHeightAdjust) moveDirection = direction;
+            else moveDirection = new Vector3(moveDirection.x, 0, moveDirection.z);          
             this.relativeSpace = relativeSpace;
         }
 
@@ -134,7 +135,8 @@ namespace KarlSmink.Teleporting
             Vector3 movement = Vector3.zero;
             movement += transform.forward * moveDirection.z * cameraSpeed * Time.deltaTime;
             movement += transform.right * moveDirection.x * cameraSpeed * Time.deltaTime;
-            myControl.Move(movement);
+            if(allowHeightAdjust) myControl.Move(movement);
+            else myControl.Move(new Vector3(movement.x, 0, movement.z));             
             }
             else transform.Translate(moveDirection.normalized * cameraSpeed * Time.deltaTime, relativeSpace);
         }
