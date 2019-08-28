@@ -66,8 +66,8 @@ public class pushOrder : MonoBehaviour {
     private void endSimulation()
     {
         Debug.Log("Completion Time: " + Time.realtimeSinceStartup);
-        showGameOverMessage();
         GameObject.FindObjectOfType<recordAndPlayManager>().saveRecording();
+        showGameOverMessage();
     }
 
     internal void showTarget(GameObject nextMural)
@@ -80,5 +80,6 @@ public class pushOrder : MonoBehaviour {
     {
         HUDText.text = "All animals found. Test Over.";
         HUDGamObj.GetComponentInChildren<Image>().material = (Material)Resources.Load("CheckMark");
+        UnityEditor.EditorApplication.isPlaying = false;
     }
 }

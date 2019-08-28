@@ -5,6 +5,7 @@ using EliCDavis.RecordAndPlay.Record;
 using VRTK;
 using System;
 using CAVS.ProjectOrganizer.Controls;
+using CAVS.ProjectOrganizer.Scenes.Showcase;
 
 namespace VRTK { 
 namespace RecordAndPlay.Demo
@@ -42,7 +43,9 @@ public class recordAndPlayManager : MonoBehaviour {
             if(Input.GetKey(KeyCode.S)) saveRecording();
         }
 
-        public void setupRecorder(string recordingName) {                
+        public void setupRecorder(string recordingName) {
+         if(GameObject.FindObjectOfType<SceneManagerBehavior>().Recording)
+         { 
             if(headset == null) headset = VRTK_DeviceFinder.HeadsetTransform().gameObject;
             subjects[0] = headset;
             if(controllerLeft == null) controllerLeft = VRTK_DeviceFinder.GetControllerLeftHand();
@@ -70,7 +73,16 @@ public class recordAndPlayManager : MonoBehaviour {
             nameOfRecording = recordingName;
 
             if (!recorder.CurrentlyRecording())recorder.Start();
-            //else if(recorder.CurrentlyRecording())recorder.(); //CNG WAY TO STOP
+                    //else if(recorder.CurrentlyRecording())recorder.(); //CNG WAY TO STOP
+         }
+         else{
+             Debug.Log("Not recording!!");
+             }
+
+            //Get rid of random cube
+            GameObject randomCube = GameObject.Find("Cube");
+                if(randomCube.transform.position.x == 0) Destroy(randomCube);
+
         }
 
             /*
@@ -99,7 +111,10 @@ public class recordAndPlayManager : MonoBehaviour {
 
                     Debug.Log("New Name: " + newName);
                     recorder.Finish().SaveToAssets(newName, "");
+
+                    //UnityEditor.EditorApplication.isPlaying = false;
                 }
+
             }
 
 }
