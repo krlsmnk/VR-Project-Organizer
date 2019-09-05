@@ -59,7 +59,7 @@ public class recordAndPlayManager : MonoBehaviour {
                     catch {Debug.Log("no camera found");}
                 }
 
-            var subjectTransform = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            //CNG var subjectTransform = GameObject.CreatePrimitive(PrimitiveType.Cube);
             //int frameRate, string name, Dictionary<string, string> metadata, float minimumDelta
             Dictionary<string, string> metaData = new Dictionary<string, string>();
             SubjectBehavior SBCLeft = SubjectBehavior.Build(controllerLeft, recorder, 30, "Left Controller", metaData, .001f);
@@ -79,10 +79,9 @@ public class recordAndPlayManager : MonoBehaviour {
              Debug.Log("Not recording!!");
              }
 
-            //Get rid of random cube
-            GameObject randomCube = GameObject.Find("Cube");
+           //Get rid of random cube
+                GameObject randomCube = GameObject.Find("Cube");
                 if(randomCube.transform.position.x == 0) Destroy(randomCube);
-
         }
 
             /*

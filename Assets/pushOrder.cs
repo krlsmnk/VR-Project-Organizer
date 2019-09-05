@@ -51,6 +51,10 @@ public class pushOrder : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		
+        //Get rid of random cube
+                GameObject randomCube = GameObject.Find("Cube");
+                if(randomCube!=null && randomCube.transform.position.x == 0) Destroy(randomCube);
+
 	}
 
     internal void advanceMural()

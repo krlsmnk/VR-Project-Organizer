@@ -89,7 +89,6 @@ namespace CAVS.ProjectOrganizer.Controls
 
         public override Action Build(VRTK_ControllerEvents hand)
         {            
-            Debug.Log("Build");
             var playerControlBehaviorScript = UnityEngine.Object.FindObjectOfType<PlayerControlBehavior>();
             playerControlBehaviorScript.killRadialMenu();
             //hand = new VRTK_ControllerEvents();
@@ -124,7 +123,8 @@ namespace CAVS.ProjectOrganizer.Controls
                 camBehaviorObj.transform.position = new Vector3(camBehaviorObj.transform.position.x, FindObjectOfType<SceneManagerBehavior>().userHeight, camBehaviorObj.transform.position.z);                 
             }            
 
-            GameObject.FindObjectOfType<recordAndPlayManager>().ifTVP();
+            GameObject.FindObjectOfType<recordAndPlayManager>().ifTVP();            
+                
 
             return delegate ()
             {
@@ -134,6 +134,8 @@ namespace CAVS.ProjectOrganizer.Controls
                 UnityEngine.Object.Destroy(teleBehavior);
                 playerControlBehaviorScript.rebuildMenu();
             };
+
+             
         }
 
        
