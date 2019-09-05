@@ -95,7 +95,7 @@ namespace CAVS.ProjectOrganizer.Controls
 
             if(headsetTransform==null)headsetTransform = VRTK_DeviceFinder.HeadsetTransform();
 
-            var cameraToControl = KarlSmink.Teleporting.Util.BuildCamera(new Vector3(0, -2, 0), Quaternion.identity);
+            var cameraToControl = KarlSmink.Teleporting.Util.BuildCamera(new Vector3(0, 0, 0), Quaternion.identity);
             TVPCamera = cameraToControl.GetComponentInChildren<Camera>().gameObject;
             cameraToControl.GetComponentInChildren<Camera>().cullingMask ^= 1 << LayerMask.NameToLayer("Roof");
             cameraToControl.GetComponentInChildren<Camera>().cullingMask ^= 1 << LayerMask.NameToLayer("Water");
@@ -120,7 +120,10 @@ namespace CAVS.ProjectOrganizer.Controls
                 GameObject camBehaviorObj = FindObjectOfType<CameraBehavior>().gameObject.transform.parent.gameObject; //footstepoffset
 
                 //Set the camera's height to the user's height, then prevent it from moving at all
-                camBehaviorObj.transform.position = new Vector3(camBehaviorObj.transform.position.x, FindObjectOfType<SceneManagerBehavior>().userHeight, camBehaviorObj.transform.position.z);                 
+                //FindObjectOfType<SceneManagerBehavior>().userHeight -0.3f
+                //camBehaviorObj.transform.position = new Vector3(camBehaviorObj.transform.position.x, 0.6f, camBehaviorObj.transform.position.z);                 
+                FindObjectOfType<CameraBehavior>().gameObject.transform.position = new Vector3(0,0,0);
+                //camBehaviorObj.transform.position = new Vector3(0,0,0);                 
             }            
 
             GameObject.FindObjectOfType<recordAndPlayManager>().ifTVP();            
