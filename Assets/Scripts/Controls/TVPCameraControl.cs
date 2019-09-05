@@ -23,6 +23,7 @@ namespace CAVS.ProjectOrganizer.Controls
 
         public static TVPCameraControl Initialize(VRTK_ControllerEvents hand, CameraBehavior cameraToControl, TVPPlayerControl cleanup)
         {
+
             allowUpDown = FindObjectOfType<SceneManagerBehavior>().allowHeightAdjustTVP;
             cleaner = cleanup;
             cleanupWheel();            
@@ -90,6 +91,7 @@ namespace CAVS.ProjectOrganizer.Controls
 
         private void Hand_TouchpadPressed(object sender, ControllerInteractionEventArgs e)
         {            
+
             //Vector2 axis = controller.GetAxis(Valve.VR.EVRButtonId.k_EButton_Axis0);
             Vector2 axis = hand.GetTouchpadAxis();
 
@@ -110,23 +112,24 @@ namespace CAVS.ProjectOrganizer.Controls
             else if (!allowUpDown) {
                 if ((axis.y > 0.25f) && (-0.5f < axis.x && axis.x < 0.5f))
                 {
-                    //Debug.Log("Pan Up");                    
+                    Debug.Log("Pan Forward");                    
                     cameraToControl.Move((Vector3.forward).normalized, Space.Self);
                 }
                 else if ((axis.y < -0.25f) && (-0.5f < axis.x && axis.x < 0.5f))
                 {
-                    //Debug.Log("Pan Down");
+                    Debug.Log("Pan Back");
                     cameraToControl.Move((Vector3.back).normalized, Space.Self);
+                    Debug.Log(cameraToControl.gameObject.name);
                 }
             }
             if ((axis.x > 0.25f) && (-0.5f < axis.y && axis.y < 0.5f))
             {
-                //Debug.Log("Pan Right");
+                Debug.Log("Pan Right");
                 cameraToControl.Move((Vector3.right).normalized, Space.Self);
             }
             else if ((axis.x < -0.25f) && (-0.5f < axis.y && axis.y < 0.5f))
             {
-                //Debug.Log("Pan Left");
+                Debug.Log("Pan Left");
                 cameraToControl.Move((Vector3.left).normalized, Space.Self);
             }
         }

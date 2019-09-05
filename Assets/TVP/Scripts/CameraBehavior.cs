@@ -39,7 +39,8 @@ namespace KarlSmink.Teleporting
             VRTK_SDKManager.instance.RemoveBehaviourToToggleOnLoadedSetupChange(this);
         }
 
-        void OnEnable() {
+        void OnEnable()
+        {
             headsetGameObj = VRTK_DeviceFinder.HeadsetTransform().gameObject;
         }
 
@@ -47,13 +48,13 @@ namespace KarlSmink.Teleporting
         {
             var script = cameraObj.AddComponent<CameraBehavior>();
 
-            script.theFollowScript = portal.AddComponent<VRTK_TransformFollow>();            
-            script.theFollowScript.gameObjectToChange = portal;            
+            script.theFollowScript = portal.AddComponent<VRTK_TransformFollow>();
+            script.theFollowScript.gameObjectToChange = portal;
             script.theFollowScript.gameObjectToFollow = headsetGameObj;
             script.theFollowScript.followsRotation = true;
             script.theFollowScript.followsPosition = true;
             script.theFollowScript.followsScale = false;
-            
+
             script.rotatorScript = cameraObj.AddComponent<VRTK_TransformFollow>();
             script.rotatorScript.gameObjectToChange = cameraObj;
             script.rotatorScript.gameObjectToFollow = script.theFollowScript.gameObjectToFollow;
@@ -62,7 +63,7 @@ namespace KarlSmink.Teleporting
             script.rotatorScript.followsScale = false;
 
             footstepOffset = new GameObject("FootstepOffset");
-            footstepOffset.layer = 2; 
+            footstepOffset.layer = 2;
             cameraObj.gameObject.transform.parent = footstepOffset.transform;
             footstepOffsetScript = footstepOffset.AddComponent<VRTK_TransformFollow>();
             footstepOffsetScript.gameObjectToFollow = script.theFollowScript.gameObjectToFollow;
@@ -70,15 +71,16 @@ namespace KarlSmink.Teleporting
             footstepOffsetScript.followsRotation = false;
             footstepOffsetScript.followsPosition = true;
 
-            myControl = cameraObj.gameObject.AddComponent<CharacterController>();           
+            myControl = cameraObj.gameObject.AddComponent<CharacterController>();
             myRigidBody = footstepOffset.AddComponent<Rigidbody>();
             myRigidBody.constraints = RigidbodyConstraints.FreezePositionY;
             myRigidBody.useGravity = false;
             VRTK_ControllerEvents[] controllers = FindObjectsOfType<VRTK_ControllerEvents>();
-            foreach (VRTK_ControllerEvents thisController in controllers) {
+            foreach (VRTK_ControllerEvents thisController in controllers)
+            {
                 thisController.gameObject.layer = 4; //puts all controllers on the water layer so they ignore collision with the camera
             }
-            
+
 
             script.cameraSpeed = cameraSpeed;
             script.originalCameraSpeed = cameraSpeed;
@@ -95,7 +97,7 @@ namespace KarlSmink.Teleporting
             collisionIgnore = GameObject.FindObjectOfType<SceneManagerBehavior>().cameraIgnoresCollision;
         }
 
-    
+
         public bool ToggleLock()
         {
             Util.PlaySoundEffect(theFollowScript.enabled ? lockSound : unlockSound, transform.position);
@@ -114,29 +116,45 @@ namespace KarlSmink.Teleporting
 
         Space relativeSpace = Space.Self;
 
+
+        /**
+         * Changed moveDirection to direction to fix movement of virtual window
+         * Changed on 9/5/19 by chris and karl
+         * */
         public void Move(Vector3 direction, Space relativeSpace)
-        {            
+        {
             cameraSpeed = originalCameraSpeed;
-            if(allowHeightAdjust) moveDirection = direction;
-            else moveDirection = new Vector3(moveDirection.x, 0, moveDirection.z);
+            if (allowHeightAdjust) moveDirection = direction;
+            else moveDirection = new Vector3(direction.x, 0, direction.z);
+            //else moveDirection = new Vector3(moveDirection.x, 0, moveDirection.z);
             this.relativeSpace = relativeSpace;
         }
+
+        /**
+         * Changed moveDirection to direction to fix movement of virtual window
+         * Changed on 9/5/19 by chris and karl
+         * */
         public void Move(Vector3 direction, Space relativeSpace, float newSpeed)
-        {            
+        {
             cameraSpeed = newSpeed;
-            if(allowHeightAdjust) moveDirection = direction;
-            else moveDirection = new Vector3(moveDirection.x, 0, moveDirection.z);          
+            if (allowHeightAdjust) moveDirection = direction;
+            else moveDirection = new Vector3(direction.x, 0, direction.z);
+            //else moveDirection = new Vector3(moveDirection.x, 0, moveDirection.z);
             this.relativeSpace = relativeSpace;
         }
 
         void Update()
         {
-            if (!collisionIgnore) { 
-            Vector3 movement = Vector3.zero;
-            movement += transform.forward * moveDirection.z * cameraSpeed * Time.deltaTime;
-            movement += transform.right * moveDirection.x * cameraSpeed * Time.deltaTime;
-            if(allowHeightAdjust) myControl.Move(movement);
-            else myControl.Move(new Vector3(movement.x, 0, movement.z));             
+
+            if (!collisionIgnore)
+            {
+                Vector3 movement = Vector3.zero;
+
+                movement += transform.forward * moveDirection.z * cameraSpeed * Time.deltaTime;
+                movement += transform.right * moveDirection.x * cameraSpeed * Time.deltaTime;
+
+                if (allowHeightAdjust) myControl.Move(movement);
+                else myControl.Move(new Vector3(movement.x, 0, movement.z));
             }
             else transform.Translate(moveDirection.normalized * cameraSpeed * Time.deltaTime, relativeSpace);
         }

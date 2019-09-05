@@ -89,6 +89,7 @@ namespace CAVS.ProjectOrganizer.Controls
 
         public override Action Build(VRTK_ControllerEvents hand)
         {            
+            Debug.Log("Build");
             var playerControlBehaviorScript = UnityEngine.Object.FindObjectOfType<PlayerControlBehavior>();
             playerControlBehaviorScript.killRadialMenu();
             //hand = new VRTK_ControllerEvents();
