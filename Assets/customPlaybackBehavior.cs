@@ -26,6 +26,7 @@ public class customPlaybackBehavior : MonoBehaviour, IActorBuilder, IPlaybackCus
   // animating the playback of the recording.
   PlaybackBehavior playbackBehavior;
 
+  private headsetBacktrack backtrackScript;
   public bool renderTrail;  
  
   void Start()
@@ -35,7 +36,7 @@ public class customPlaybackBehavior : MonoBehaviour, IActorBuilder, IPlaybackCus
     // tell it to use this class for both creating the actors that
     // will represent the subjects recorded, and to use this class
     // for responding to custom events in the recording.
-    playbackBehavior = PlaybackBehavior.Build(recording, this, this, true);
+    playbackBehavior = PlaybackBehavior.Build(recording, this, this, false);
   }
  
   // This method satisfies the IActorBuilder interface. The function takes 
@@ -50,6 +51,10 @@ public class customPlaybackBehavior : MonoBehaviour, IActorBuilder, IPlaybackCus
     GameObject instance;
     if(subjectName == "Headset"){ 
         instance = Instantiate(Resources.Load("Vive Headset Model", typeof(GameObject))) as GameObject;
+        
+        //backtracking data    
+        backtrackScript = instance.AddComponent<headsetBacktrack>();
+        backtrackScript.Setup(recording.RecordingName);
 
             //trail renderer
             if (renderTrail) { 
@@ -69,10 +74,18 @@ public class customPlaybackBehavior : MonoBehaviour, IActorBuilder, IPlaybackCus
 
     }     
     else if(subjectName.Contains("Controller")){
-        instance = Instantiate(Resources.Load("Vive Controller Model", typeof(GameObject))) as GameObject;            
+        instance = Instantiate(Resources.Load("Vive Controller Model", typeof(GameObject))) as GameObject;
+        instance.AddComponent<controllerTracking>();
     }
     else if(subjectName == "TVPCamera"){
         instance = Instantiate(Resources.Load("Big Car", typeof(GameObject))) as GameObject;
+        
+        //try to remove tracking from headset
+        Destroy(GameObject.FindObjectOfType<headsetBacktrack>().GetComponent<headsetBacktrack>());
+        //backtracking data    
+        backtrackScript = instance.AddComponent<headsetBacktrack>();
+        backtrackScript.Setup(recording.RecordingName);
+
     }
     else instance = (GameObject.CreatePrimitive(PrimitiveType.Sphere));
     return new Actor(instance);
@@ -101,7 +114,7 @@ public class customPlaybackBehavior : MonoBehaviour, IActorBuilder, IPlaybackCus
     if (playbackBehavior.CurrentlyStopped())
     {
       if (GUILayout.Button("Play"))
-      {
+      {        
         playbackBehavior.Play();
       }
     }
@@ -114,6 +127,8 @@ public class customPlaybackBehavior : MonoBehaviour, IActorBuilder, IPlaybackCus
       if (GUILayout.Button("Stop"))
       {
         playbackBehavior.Stop();
+        headsetBacktrack bt = GameObject.FindObjectOfType<headsetBacktrack>();
+        if(bt!=null)bt.DoneRun();
       }
     }
     else if (playbackBehavior.CurrentlyPaused())
@@ -125,8 +140,10 @@ public class customPlaybackBehavior : MonoBehaviour, IActorBuilder, IPlaybackCus
       if (GUILayout.Button("Stop"))
       {
         playbackBehavior.Stop();
+        headsetBacktrack bt = GameObject.FindObjectOfType<headsetBacktrack>();
+        if(bt!=null)bt.DoneRun();
       }
     }
   }
- 
+   
 }

@@ -255,7 +255,13 @@ namespace VRTK
                     //Rotate icons all vertically if desired
                     if (!rotateIcons)
                     {
+                        try { 
                         buttonIcon.transform.eulerAngles = GetComponentInParent<Canvas>().transform.eulerAngles;
+                            }
+                        catch
+                        {
+                            Debug.Log("icon rotation catch");
+                        }
                     }
                 }
                 menuButtons.Add(newButton);
