@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -41,7 +42,7 @@ public class pathCalculator : MonoBehaviour {
                 if(line != "Walrus") { 
                 currPathLeg+=1; //correct target reached, go to next leg of path
                 whichTarget += 1; //looking for next target
-                Debug.Log("currPathLeg:" + currPathLeg + ". whichTar: " + whichTarget);
+                //Debug.Log("currPathLeg:" + currPathLeg + ". whichTar: " + whichTarget);
                 }
             }
                 
@@ -54,12 +55,36 @@ public class pathCalculator : MonoBehaviour {
                 //Debug.Log("Leg #" + i + " :" + (currentPath[i] - shortestPaths[i]));
                 pathRow += (currentPath[i] - shortestPaths[i]) + ",";
             }
-            File.AppendAllText(pathDiffFilePath, "\n" + pathRow);
-
+            //File.AppendAllText(pathDiffFilePath, "\n" + pathRow);
         //sort path
         //count duplicates
             string cellsRow = "";
             cellsTraversed.Sort();
+            
+
+
+
+
+
+
+
+
+            //process empty
+            IEnumerable<string> enumList = cellsTraversed;
+            RunningTotal(cellsTraversed);
+
+
+
+
+
+
+
+
+
+
+
+
+
             string[] cellsTraversedArray = cellsTraversed.ToArray();
             string currentCell = "";
             int currentCount = 0;
@@ -72,8 +97,53 @@ public class pathCalculator : MonoBehaviour {
                 }
                 else currentCount +=1;
             }   cellsRow += (currentCell + ": " + currentCount) + ","; //remember to print last cell
-            File.AppendAllText(pathCellsTravlFile, "\n" + cellsRow);    
+            //File.AppendAllText(pathCellsTravlFile, "\n" + cellsRow);    
 
     }//end of start()
 
+
+  
+    public static void RunningTotal(IEnumerable<string> source)
+{
+    var counter = new Dictionary<string, int>();
+        string[] firstKey = {"A","B","C","D","E","F","G","H","I"};
+        string[] secKey = {"1","2","3","4","5","6","7","8","9"};
+        addKeys(firstKey, secKey, counter);
+        
+        
+
+    foreach(var s in source)
+    {
+        if(counter.ContainsKey(s))
+        {
+            counter[s]++;
+        }
+        else
+        {
+            counter.Add(s, 1);
+        }               
+        //yield return Tuple.Create(s, counter[s]);
+    }
+
+    string totalPath = "";
+    foreach (KeyValuePair<string, int> kvp in counter)
+    {
+        //textBox3.Text += ("Key = {0}, Value = {1}", kvp.Key, kvp.Value);
+        Debug.Log(kvp.Key + ": " + kvp.Value);
+        totalPath += kvp.Value.ToString() + ",";
+    }
+    Debug.Log(totalPath);
+        ^Dis what rite 2 file instead of Othur
+}
+
+    private static void addKeys(string[] firstKey, string[] secKey, Dictionary<string, int> counter)
+    {
+        for (int i = 0; i < firstKey.Length; i++)
+        {
+            for (int j = 0; j < secKey.Length; j++)
+            {
+                counter.Add(firstKey[i] + secKey[j], 0);
+            }            
+        }        
+    }
 }

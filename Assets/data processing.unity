@@ -113,6 +113,90 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &303899272
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 303899274}
+  - component: {fileID: 303899273}
+  m_Layer: 0
+  m_Name: process path and cell data
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &303899273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 303899272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12a20d3d78d6d0647bb9a3646e9eb07e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cellsVisitedFile: {fileID: 4900000, guid: 0aec41526d82dd041b356b56d87e74e5, type: 3}
+  outputCellsVisited: {fileID: 4900000, guid: 5f139f813363be747be367e2a5479922, type: 3}
+--- !u!4 &303899274
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 303899272}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.6214142, y: 6.8125, z: -5.4648438}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &721796495
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 721796497}
+  - component: {fileID: 721796496}
+  m_Layer: 0
+  m_Name: Trials
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &721796496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 721796495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4a0a01bd5b48a04cacb9b73c9da1e5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  completionTime: 0
+  pathDifferential: 0000000000000000000000000000000000000000000000000000000000000000
+--- !u!4 &721796497
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 721796495}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.6214142, y: 6.8125, z: -5.4648438}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &893152310
 GameObject:
   m_ObjectHideFlags: 0
@@ -123,7 +207,7 @@ GameObject:
   - component: {fileID: 893152312}
   - component: {fileID: 893152311}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: Turn recording printout -> cells/path data
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -140,9 +224,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d9c3a60d94afa2409284100c6a58727, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pathFile: {fileID: 4900000, guid: 915871d560381f54e999cd40b92e9e7b, type: 3}
+  pathFile: {fileID: 4900000, guid: f7e49c40b26712a43b07a6f98f238140, type: 3}
   pathDifferenceFile: {fileID: 4900000, guid: e2891bd219faeec47aee1025abdc9bd7, type: 3}
-  cellsTravelledFile: {fileID: 4900000, guid: 759d822eba108dc499bca10dc60f1603, type: 3}
+  cellsTravelledFile: {fileID: 4900000, guid: 0aec41526d82dd041b356b56d87e74e5, type: 3}
 --- !u!4 &893152312
 Transform:
   m_ObjectHideFlags: 0
