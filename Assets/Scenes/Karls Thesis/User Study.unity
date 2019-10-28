@@ -19453,7 +19453,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5b90e6528154334e9f052b972f0c93b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  recording: {fileID: 11400000, guid: 202aa246e58230645b249ee0bd1f581d, type: 2}
+  recording: {fileID: 11400000, guid: 9a9b37c6b3048ae438422c783041b433, type: 2}
   renderTrail: 1
 --- !u!4 &2042486869
 Transform:
