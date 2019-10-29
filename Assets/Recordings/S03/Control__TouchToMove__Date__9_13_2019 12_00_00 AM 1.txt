@@ -22,6 +22,7 @@ I4
 I5
 I6
 I7
+Monkey
 H7
 pictobox(Simple) (2)
 H5
@@ -39,6 +40,7 @@ A7
 A8
 A9
 B9
+Bird
 A9
 A7
 A6
@@ -68,6 +70,7 @@ B4
 C4
 D5
 E6
+Frog
 E6
 pictobox(Simple) (3)
 D7
@@ -76,3 +79,4 @@ D6
 C5
 B5
 A6
+Walrus

@@ -31,6 +31,7 @@ D5
 E5
 F5
 H5
+Horse
 G5
 G6
 F7
@@ -56,6 +57,7 @@ A1
 C1
 D1
 E1
+Elephant
 F1
 G1
 G2
@@ -92,9 +94,11 @@ E3
 D3
 C3
 B3
+Turtle
 C4
 D5
 E6
+Frog
 E6
 D7
 pictobox(Simple) (5)
@@ -116,3 +120,4 @@ A3
 A4
 A5
 A6
+Walrus

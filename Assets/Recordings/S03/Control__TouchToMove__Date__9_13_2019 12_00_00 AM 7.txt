@@ -5,6 +5,7 @@ F7
 pictobox(Simple) (4)
 H8
 H8
+Monkey
 H7
 pictobox(Simple) (2)
 H6
@@ -19,6 +20,7 @@ D7
 C8
 C8
 C9
+Bird
 B9
 A9
 A8
@@ -70,3 +72,4 @@ D6
 C6
 pictobox(Simple) (2)
 B6
+Walrus

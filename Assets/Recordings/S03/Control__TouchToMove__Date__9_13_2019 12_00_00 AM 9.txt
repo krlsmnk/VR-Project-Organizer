@@ -49,8 +49,10 @@ B4
 C5
 D5
 E6
+Frog
 pictobox(Simple) (3)
 D6
 C6
 pictobox(Simple) (2)
 B6
+Walrus

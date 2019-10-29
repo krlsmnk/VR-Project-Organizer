@@ -3290,7 +3290,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 3a55201bca87c7d4aa47bc37193a5e54, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.013
+  m_Volume: 0.095
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -19453,7 +19453,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5b90e6528154334e9f052b972f0c93b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  recording: {fileID: 11400000, guid: 319a331501dcc23479df916f71d9ed20, type: 2}
+  recording: {fileID: 11400000, guid: fe05ac461cb97e9448fe64de9789f623, type: 2}
   renderTrail: 1
 --- !u!4 &2042486869
 Transform:

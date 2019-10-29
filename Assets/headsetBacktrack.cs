@@ -11,7 +11,8 @@ public class headsetBacktrack : MonoBehaviour {
 	void Start () {
 		this.gameObject.AddComponent<CapsuleCollider>();
         this.gameObject.GetComponent<CapsuleCollider>().isTrigger = true;
-        this.gameObject.GetComponent<CapsuleCollider>().radius = 1f;
+        if(this.gameObject.name == "Headset")this.gameObject.GetComponent<CapsuleCollider>().radius = 20f;
+        else this.gameObject.GetComponent<CapsuleCollider>().radius = 2f;
         this.gameObject.GetComponent<CapsuleCollider>().height = 3f;
 
         if(this.gameObject.GetComponent<Rigidbody>()==null) this.gameObject.AddComponent<Rigidbody>();
