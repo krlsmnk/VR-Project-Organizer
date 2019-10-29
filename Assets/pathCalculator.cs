@@ -55,7 +55,7 @@ public class pathCalculator : MonoBehaviour {
                 //Debug.Log("Leg #" + i + " :" + (currentPath[i] - shortestPaths[i]));
                 pathRow += (currentPath[i] - shortestPaths[i]) + ",";
             }
-            //File.AppendAllText(pathDiffFilePath, "\n" + pathRow);
+            File.AppendAllText(pathDiffFilePath, "\n" + pathRow);
         //sort path
         //count duplicates
             string cellsRow = "";
@@ -71,8 +71,8 @@ public class pathCalculator : MonoBehaviour {
 
             //process empty
             IEnumerable<string> enumList = cellsTraversed;
-            RunningTotal(cellsTraversed);
-
+            string totalPath = RunningTotal(cellsTraversed);
+            File.AppendAllText(pathCellsTravlFile, totalPath + "\n");
 
 
 
@@ -96,14 +96,13 @@ public class pathCalculator : MonoBehaviour {
                     currentCount = 1;
                 }
                 else currentCount +=1;
-            }   cellsRow += (currentCell + ": " + currentCount) + ","; //remember to print last cell
-            //File.AppendAllText(pathCellsTravlFile, "\n" + cellsRow);    
+            }   cellsRow += (currentCell + ": " + currentCount) + ","; //remember to print last cell              
 
     }//end of start()
 
 
   
-    public static void RunningTotal(IEnumerable<string> source)
+    public static string RunningTotal(IEnumerable<string> source)
 {
     var counter = new Dictionary<string, int>();
         string[] firstKey = {"A","B","C","D","E","F","G","H","I"};
@@ -132,8 +131,8 @@ public class pathCalculator : MonoBehaviour {
         Debug.Log(kvp.Key + ": " + kvp.Value);
         totalPath += kvp.Value.ToString() + ",";
     }
-    Debug.Log(totalPath);
-        ^Dis what rite 2 file instead of Othur
+        //Debug.Log(totalPath);        
+        return totalPath;
 }
 
     private static void addKeys(string[] firstKey, string[] secKey, Dictionary<string, int> counter)

@@ -260,7 +260,7 @@ namespace VRTK
                             }
                         catch
                         {
-                            Debug.Log("icon rotation catch");
+                            //Debug.Log("icon rotation catch");
                         }
                     }
                 }

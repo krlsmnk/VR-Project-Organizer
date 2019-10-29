@@ -1,0 +1,58 @@
+D5
+pictobox(Simple) (3)
+C6
+C7
+pictobox(Simple) (4)
+B8
+Bird
+B9
+C8
+D7
+G8
+pictobox(Simple) (4)
+H8
+Monkey
+I8
+I7
+pictobox(Simple) (2)
+H6
+H5
+Horse
+pictobox(Simple)
+H4
+G4
+pictobox(Simple) (1)
+F5
+E6
+pictobox(Simple) (5)
+D8
+C9
+pictobox(Simple) (4)
+Bird
+B8
+C5
+C4
+D3
+pictobox(Simple) (7)
+Elephant
+E2
+pictobox(Simple) (7)
+pictobox(Simple) (6)
+Giraffe
+H2
+H3
+G3
+F3
+pictobox(Simple)
+Turtle
+B4
+C5
+D5
+E6
+pictobox(Simple) (3)
+Frog
+E7
+D7
+C6
+pictobox(Simple) (2)
+B6

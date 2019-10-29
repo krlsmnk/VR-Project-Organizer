@@ -11,6 +11,11 @@ public class headsetBacktrack : MonoBehaviour {
 	void Start () {
 		this.gameObject.AddComponent<CapsuleCollider>();
         this.gameObject.GetComponent<CapsuleCollider>().isTrigger = true;
+        this.gameObject.GetComponent<CapsuleCollider>().radius = 1f;
+        this.gameObject.GetComponent<CapsuleCollider>().height = 3f;
+
+        if(this.gameObject.GetComponent<Rigidbody>()==null) this.gameObject.AddComponent<Rigidbody>();
+        this.gameObject.GetComponent<Rigidbody>().useGravity = false;
 	}
 	
 	// Update is called once per frame

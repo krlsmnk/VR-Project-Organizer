@@ -49,13 +49,33 @@ public class customPlaybackBehavior : MonoBehaviour, IActorBuilder, IPlaybackCus
   public Actor Build(int subjectId, string subjectName, Dictionary<string, string> metadata)
   {
     GameObject instance;
-    if(subjectName == "Headset"){ 
-        instance = Instantiate(Resources.Load("Vive Headset Model", typeof(GameObject))) as GameObject;
-        
+    if(subjectName == "TVPCamera"){
+        instance = Instantiate(Resources.Load("Big Car", typeof(GameObject))) as GameObject;
+
+            //try to remove tracking from headset
+            if (backtrackScript != null)
+            {
+                headsetBacktrack headset = GameObject.FindObjectOfType<headsetBacktrack>();
+                headset.DoneRun();
+                Destroy(headset);
+            }        
         //backtracking data    
         backtrackScript = instance.AddComponent<headsetBacktrack>();
         backtrackScript.Setup(recording.RecordingName);
-
+        Destroy(backtrackScript.gameObject.GetComponentInChildren<MeshCollider>());               
+    }
+    else if(subjectName == "Headset"){ 
+        
+        instance = Instantiate(Resources.Load("Vive Headset Model", typeof(GameObject))) as GameObject;
+        
+        
+        //backtracking data    
+        if(backtrackScript == null)
+            {
+                backtrackScript = instance.AddComponent<headsetBacktrack>();
+                backtrackScript.Setup(recording.RecordingName);
+            }
+                    
             //trail renderer
             if (renderTrail) { 
                 
@@ -76,17 +96,7 @@ public class customPlaybackBehavior : MonoBehaviour, IActorBuilder, IPlaybackCus
     else if(subjectName.Contains("Controller")){
         instance = Instantiate(Resources.Load("Vive Controller Model", typeof(GameObject))) as GameObject;
         instance.AddComponent<controllerTracking>();
-    }
-    else if(subjectName == "TVPCamera"){
-        instance = Instantiate(Resources.Load("Big Car", typeof(GameObject))) as GameObject;
-        
-        //try to remove tracking from headset
-        Destroy(GameObject.FindObjectOfType<headsetBacktrack>().GetComponent<headsetBacktrack>());
-        //backtracking data    
-        backtrackScript = instance.AddComponent<headsetBacktrack>();
-        backtrackScript.Setup(recording.RecordingName);
-
-    }
+    }    
     else instance = (GameObject.CreatePrimitive(PrimitiveType.Sphere));
     return new Actor(instance);
   }
