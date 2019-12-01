@@ -1,0 +1,383 @@
+E5
+D5
+Floor
+Floor
+F5
+Floor
+D5
+E6
+E7
+Floor
+Floor
+Floor
+Floor
+Floor
+Floor
+Floor
+D7
+pictobox(Simple) (3)
+C7
+pictobox(Simple) (2)
+B7
+B6
+Walrus
+A6
+A7
+B7
+A7
+A7
+A7
+B7
+B7
+pictobox(Simple) (2)
+Walrus
+A6
+A5
+pictobox(Simple)
+A4
+B4
+Turtle
+A3
+B3
+pictobox(Simple) (6)
+A2
+B2
+A1
+B1
+B2
+A1
+C1
+D1
+pictobox(Simple) (7)
+E1
+Elephant
+Floor
+E2
+pictobox(Simple) (7)
+F1
+F2
+Floor
+G2
+G3
+F3
+pictobox(Simple) (1)
+F4
+G4
+G5
+pictobox(Simple) (3)
+G6
+G7
+G8
+pictobox(Simple) (5)
+G9
+H9
+pictobox(Simple) (4)
+H8
+Floor
+G8
+Floor
+G9
+Floor
+Floor
+Floor
+pictobox(Simple) (5)
+F8
+F9
+E8
+E9
+pictobox(Simple) (5)
+D8
+D9
+C8
+Floor
+C7
+C6
+C5
+C4
+C3
+C2
+C1
+pictobox(Simple) (6)
+B1
+B1
+D1
+E1
+Floor
+Floor
+F1
+Floor
+G1
+pictobox(Simple) (7)
+G2
+F2
+pictobox(Simple) (6)
+Giraffe
+H2
+I2
+I1
+pictobox(Simple) (6)
+I3
+Floor
+I4
+I5
+I6
+pictobox(Simple) (2)
+I7
+H7
+pictobox(Simple) (4)
+Monkey
+H8
+G8
+G7
+G6
+pictobox(Simple) (2)
+H6
+H5
+Horse
+pictobox(Simple)
+H4
+I4
+H3
+I3
+pictobox(Simple) (6)
+I2
+pictobox(Simple) (6)
+I1
+Giraffe
+H1
+pictobox(Simple) (6)
+G1
+G2
+pictobox(Simple) (7)
+F2
+F3
+E3
+E2
+Floor
+D3
+C3
+pictobox(Simple) (1)
+C4
+C5
+C6
+C7
+Floor
+C8
+pictobox(Simple) (4)
+B8
+Bird
+B9
+Floor
+A8
+B7
+A7
+pictobox(Simple) (2)
+Walrus
+B6
+A6
+Floor
+B5
+C5
+D5
+pictobox(Simple) (3)
+E5
+Floor
+E4
+E3
+E2
+pictobox(Simple) (7)
+Elephant
+D2
+E1
+Floor
+pictobox(Simple) (7)
+Elephant
+D2
+C2
+C3
+Floor
+C4
+Floor
+pictobox(Simple)
+B4
+B5
+C4
+Floor
+pictobox(Simple) (1)
+D4
+E4
+Floor
+E3
+pictobox(Simple) (1)
+F3
+G3
+H3
+I3
+pictobox(Simple) (6)
+I2
+pictobox(Simple) (6)
+Giraffe
+H2
+Floor
+I2
+H3
+I3
+pictobox(Simple)
+I4
+H4
+Horse
+H5
+G4
+G5
+pictobox(Simple) (1)
+G3
+F3
+E3
+Floor
+D3
+pictobox(Simple) (1)
+C3
+pictobox(Simple)
+B3
+Turtle
+B4
+A4
+A5
+A6
+pictobox(Simple) (2)
+Walrus
+A7
+pictobox(Simple) (4)
+A8
+A9
+pictobox(Simple) (4)
+Bird
+B9
+C9
+C8
+pictobox(Simple) (5)
+D9
+D8
+Floor
+D7
+E7
+Floor
+pictobox(Simple) (5)
+F7
+G7
+G6
+G5
+G4
+G3
+G2
+G1
+Floor
+F1
+E1
+Floor
+D1
+Floor
+C1
+B1
+A1
+pictobox(Simple) (6)
+A2
+A3
+A4
+pictobox(Simple)
+A5
+A4
+A6
+A7
+A8
+A9
+pictobox(Simple) (4)
+B9
+C9
+D9
+E9
+pictobox(Simple) (5)
+E8
+Floor
+pictobox(Simple) (5)
+F8
+F7
+G7
+G6
+G5
+G4
+G3
+F3
+E3
+Floor
+Floor
+D3
+pictobox(Simple) (1)
+F3
+Floor
+G3
+G4
+pictobox(Simple)
+H4
+I4
+Horse
+Floor
+Horse
+I3
+Floor
+Floor
+I1
+H1
+pictobox(Simple) (6)
+Giraffe
+H2
+G2
+G3
+F3
+E3
+Floor
+pictobox(Simple) (7)
+Elephant
+D3
+D2
+C3
+B3
+pictobox(Simple)
+Turtle
+B4
+A4
+A5
+A4
+pictobox(Simple)
+B4
+Floor
+Floor
+Floor
+C5
+Floor
+D5
+pictobox(Simple) (3)
+E5
+E6
+Floor
+pictobox(Simple) (3)
+Frog
+F6
+F7
+Frog
+F6
+G6
+G5
+H5
+Floor
+G5
+F5
+E5
+Floor
+D5
+C5
+B5
+A5
+pictobox(Simple) (2)
+Walrus
+A6

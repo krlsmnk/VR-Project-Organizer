@@ -1,0 +1,257 @@
+Floor
+D5
+E5
+Floor
+F5
+H5
+pictobox(Simple) (2)
+pictobox(Simple) (2)
+pictobox(Simple) (2)
+I5
+I6
+I7
+pictobox(Simple) (4)
+I8
+Monkey
+H8
+I7
+I6
+pictobox(Simple) (2)
+I5
+H5
+Horse
+pictobox(Simple)
+H4
+H5
+G5
+F6
+F7
+pictobox(Simple) (3)
+pictobox(Simple) (5)
+E8
+Floor
+pictobox(Simple) (5)
+E9
+D9
+D8
+C9
+C8
+B9
+B8
+pictobox(Simple) (4)
+Bird
+C9
+C8
+D9
+pictobox(Simple) (5)
+C8
+D8
+C7
+C6
+C5
+pictobox(Simple) (3)
+D5
+pictobox(Simple) (1)
+C4
+D3
+C3
+pictobox(Simple) (1)
+E3
+Floor
+F3
+G3
+F3
+F3
+pictobox(Simple) (7)
+E2
+Floor
+pictobox(Simple) (7)
+Elephant
+D2
+D2
+Floor
+F2
+F1
+pictobox(Simple) (7)
+G1
+pictobox(Simple) (6)
+Giraffe
+H1
+H2
+G1
+G2
+G3
+E3
+D3
+Floor
+C3
+pictobox(Simple)
+Turtle
+B3
+B4
+pictobox(Simple)
+Turtle
+C4
+B4
+D5
+pictobox(Simple) (1)
+D4
+E6
+Floor
+E5
+pictobox(Simple) (3)
+Frog
+Floor
+pictobox(Simple) (3)
+Frog
+F6
+E7
+Floor
+D7
+C8
+C9
+pictobox(Simple) (4)
+Bird
+B8
+B9
+B9
+A9
+B8
+A9
+A8
+B7
+A7
+A5
+B5
+Turtle
+A4
+pictobox(Simple)
+B4
+pictobox(Simple) (6)
+A2
+B2
+A1
+B1
+pictobox(Simple) (6)
+C1
+E1
+pictobox(Simple) (7)
+D1
+Elephant
+Floor
+pictobox(Simple) (7)
+F1
+F2
+G1
+H1
+pictobox(Simple) (6)
+Giraffe
+I2
+I3
+pictobox(Simple)
+I4
+I5
+pictobox(Simple) (2)
+I6
+I7
+Monkey
+H8
+I8
+pictobox(Simple) (4)
+I9
+H9
+G9
+pictobox(Simple) (5)
+G8
+F9
+E8
+E9
+D9
+pictobox(Simple) (5)
+Floor
+C9
+C8
+pictobox(Simple) (4)
+Bird
+B9
+A9
+B8
+A8
+B8
+A7
+A6
+B6
+Walrus
+pictobox(Simple) (2)
+A5
+B5
+pictobox(Simple) (6)
+A3
+A2
+B2
+B1
+A1
+pictobox(Simple) (6)
+pictobox(Simple) (6)
+C2
+C3
+C2
+D3
+pictobox(Simple) (1)
+E4
+Floor
+Floor
+pictobox(Simple) (1)
+F5
+pictobox(Simple) (3)
+F6
+G6
+H7
+I8
+pictobox(Simple) (4)
+Monkey
+H8
+Monkey
+pictobox(Simple) (4)
+H8
+I9
+H8
+H9
+H8
+I8
+Floor
+I7
+H7
+pictobox(Simple) (2)
+I6
+I5
+I4
+I3
+I2
+pictobox(Simple) (6)
+I1
+Giraffe
+H1
+H2
+pictobox(Simple) (6)
+Giraffe
+pictobox(Simple) (6)
+G1
+pictobox(Simple) (7)
+F1
+Floor
+E1
+D1
+pictobox(Simple) (7)
+C1
+B1
+pictobox(Simple) (6)
+A1
+pictobox(Simple) (6)
+A2
+A3
+A5
+B6
+pictobox(Simple) (2)
+Walrus
+A6
