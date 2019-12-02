@@ -281,3 +281,4 @@ A4
 pictobox(Simple)
 Floor
 Floor
+Walrus

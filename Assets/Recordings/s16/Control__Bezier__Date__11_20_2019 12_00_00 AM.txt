@@ -222,6 +222,7 @@ C6
 C6
 pictobox(Simple) (2)
 B7
+Bird
 pictobox(Simple) (3)
 C6
 pictobox(Simple) (1)
@@ -345,6 +346,7 @@ G3
 pictobox(Simple) (7)
 G2
 G1
+Giraffe
 F1
 E1
 Floor
@@ -398,3 +400,4 @@ Turtle
 B4
 A4
 A5
+Walrus

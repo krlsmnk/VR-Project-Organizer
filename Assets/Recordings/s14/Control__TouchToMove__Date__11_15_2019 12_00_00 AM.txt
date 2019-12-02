@@ -440,5 +440,3 @@ pictobox(Simple) (2)
 B6
 B7
 Walrus
-A6
-B6

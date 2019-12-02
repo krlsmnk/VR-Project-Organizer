@@ -155,5 +155,3 @@ pictobox(Simple) (4)
 A7
 A6
 Walrus
-pictobox(Simple) (2)
-B6

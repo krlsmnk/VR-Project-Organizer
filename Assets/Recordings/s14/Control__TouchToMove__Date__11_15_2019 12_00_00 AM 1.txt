@@ -251,4 +251,3 @@ B7
 B6
 C6
 Walrus
-A6

@@ -1,16 +1,15 @@
-D5
 Floor
+D5
 E5
 pictobox(Simple) (3)
-G5
 F5
 H5
+G5
 pictobox(Simple) (2)
-H6
 I6
+H6
 pictobox(Simple) (2)
 I7
-H7
 pictobox(Simple) (4)
 Monkey
 I8
@@ -18,13 +17,13 @@ H8
 H9
 Floor
 H8
-H7
 I7
+H7
 pictobox(Simple) (2)
 I6
 H6
-H5
 I5
+H5
 Floor
 Horse
 pictobox(Simple)
@@ -39,21 +38,18 @@ G7
 G8
 pictobox(Simple) (5)
 G9
-F8
 F9
 pictobox(Simple) (5)
 pictobox(Simple) (5)
-D9
-pictobox(Simple) (5)
 E9
-Bird
-B9
-C8
 C9
+C8
+B9
 pictobox(Simple) (4)
-B8
-A9
+Bird
 A8
+A9
+B8
 Floor
 A9
 Floor
@@ -66,15 +62,15 @@ B8
 C8
 C9
 Floor
-pictobox(Simple) (5)
 D9
 D8
-E9
+pictobox(Simple) (5)
 E8
+E9
 Floor
+F8
 pictobox(Simple) (5)
 F9
-F8
 G9
 G8
 G7
@@ -84,7 +80,6 @@ G4
 G3
 F2
 pictobox(Simple) (7)
-G2
 Floor
 G2
 G1
@@ -93,9 +88,9 @@ E1
 Floor
 Floor
 E2
+D2
 Elephant
 pictobox(Simple) (7)
-D2
 E2
 Floor
 Floor
@@ -118,14 +113,14 @@ E4
 pictobox(Simple) (1)
 E3
 pictobox(Simple) (1)
+D4
 D5
 pictobox(Simple) (1)
 Floor
 D4
 D5
-C6
-pictobox(Simple) (3)
 C5
+C6
 pictobox(Simple) (3)
 Floor
 C7
@@ -136,31 +131,31 @@ C6
 Floor
 C7
 D7
-E7
 pictobox(Simple) (5)
 E8
-F9
+pictobox(Simple) (5)
 E9
+F9
 Floor
 pictobox(Simple) (5)
 E9
 E8
 E8
 pictobox(Simple) (5)
-D7
-E7
 pictobox(Simple) (5)
-pictobox(Simple) (3)
+E7
+D7
 C6
 C5
 B5
+B4
 A4
 pictobox(Simple)
-B4
 pictobox(Simple)
-B3
 Turtle
 A3
+B4
+B3
 pictobox(Simple) (6)
 B2
 C2
@@ -172,11 +167,11 @@ pictobox(Simple) (7)
 D2
 Elephant
 E2
+F3
 E3
 pictobox(Simple) (7)
-F3
-pictobox(Simple) (1)
 F4
+pictobox(Simple) (1)
 G4
 G5
 G6
@@ -187,12 +182,12 @@ G8
 G8
 G9
 pictobox(Simple) (5)
+F8
 F9
 F8
-F8
-E8
 E9
 pictobox(Simple) (5)
+E8
 E7
 F7
 pictobox(Simple) (3)
@@ -207,6 +202,7 @@ H5
 G5
 G4
 pictobox(Simple)
+Horse
 H4
 Floor
 pictobox(Simple)
@@ -241,34 +237,33 @@ B4
 B4
 A4
 B3
-D3
+C3
+C4
 pictobox(Simple) (1)
+D3
 E3
 E4
 E5
-pictobox(Simple) (3)
-E6
-Frog
-F7
-E7
-pictobox(Simple) (5)
-F8
-Floor
-E8
-F7
 E6
 pictobox(Simple) (3)
 Frog
 F6
+pictobox(Simple) (5)
+F7
+F8
+Floor
+E8
+F7
+pictobox(Simple) (3)
+Frog
+F6
+E6
 Floor
 E6
 E6
-D7
-pictobox(Simple) (3)
+C7
 B7
 A7
-B6
+A6
 pictobox(Simple) (2)
 Walrus
-A6
-Floor

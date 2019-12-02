@@ -346,4 +346,3 @@ pictobox(Simple) (3)
 A6
 B6
 Walrus
-pictobox(Simple) (2)

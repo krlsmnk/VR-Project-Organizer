@@ -371,8 +371,3 @@ B7
 A6
 pictobox(Simple) (2)
 Walrus
-B6
-B6
-Floor
-B6
-A7

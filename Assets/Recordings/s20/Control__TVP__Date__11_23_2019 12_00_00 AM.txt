@@ -734,28 +734,3 @@ A7
 A8
 pictobox(Simple) (2)
 Walrus
-pictobox(Simple) (4)
-B8
-C7
-pictobox(Simple) (2)
-B6
-C6
-B6
-pictobox(Simple) (3)
-D6
-D7
-D6
-D6
-E7
-D6
-E6
-pictobox(Simple) (3)
-F7
-pictobox(Simple) (3)
-F7
-pictobox(Simple) (5)
-Floor
-F8
-E8
-Floor
-E8

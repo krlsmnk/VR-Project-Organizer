@@ -196,4 +196,3 @@ pictobox(Simple) (2)
 B6
 A6
 Walrus
-Floor

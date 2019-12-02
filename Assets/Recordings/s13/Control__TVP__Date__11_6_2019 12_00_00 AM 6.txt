@@ -363,5 +363,3 @@ E6
 A6
 B6
 Walrus
-C6
-pictobox(Simple) (2)

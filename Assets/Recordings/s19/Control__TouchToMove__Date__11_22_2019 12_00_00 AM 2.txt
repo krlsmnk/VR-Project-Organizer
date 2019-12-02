@@ -380,4 +380,3 @@ A5
 pictobox(Simple) (2)
 A6
 Walrus
-B6

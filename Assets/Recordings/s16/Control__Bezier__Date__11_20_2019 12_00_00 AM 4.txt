@@ -156,6 +156,3 @@ A9
 A8
 A7
 Walrus
-A6
-pictobox(Simple) (2)
-B6

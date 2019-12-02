@@ -930,5 +930,3 @@ C6
 B6
 A6
 Walrus
-C6
-B5

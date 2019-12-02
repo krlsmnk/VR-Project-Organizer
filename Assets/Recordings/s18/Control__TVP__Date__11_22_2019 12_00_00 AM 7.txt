@@ -454,8 +454,3 @@ E6
 Floor
 C6
 Walrus
-A6
-pictobox(Simple) (2)
-B5
-B6
-B5

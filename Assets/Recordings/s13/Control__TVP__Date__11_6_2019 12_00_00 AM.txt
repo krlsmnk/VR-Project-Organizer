@@ -610,7 +610,3 @@ A8
 pictobox(Simple) (2)
 A6
 Walrus
-B6
-B7
-B6
-B6

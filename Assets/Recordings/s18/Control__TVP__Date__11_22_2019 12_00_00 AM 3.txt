@@ -528,4 +528,3 @@ Floor
 pictobox(Simple) (2)
 B6
 Walrus
-A6

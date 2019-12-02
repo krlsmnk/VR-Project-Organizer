@@ -1,0 +1,294 @@
+D5
+Floor
+E5
+Floor
+Floor
+Floor
+Floor
+D5
+C5
+B5
+A5
+pictobox(Simple) (2)
+B5
+Floor
+Floor
+Floor
+B5
+C5
+D5
+E5
+Floor
+F5
+G5
+H5
+pictobox(Simple) (2)
+I5
+pictobox(Simple) (2)
+H5
+I6
+H6
+I7
+H7
+pictobox(Simple) (4)
+Monkey
+I8
+H8
+Monkey
+H9
+I8
+I7
+I6
+I5
+H5
+pictobox(Simple)
+Horse
+H4
+H5
+Floor
+H4
+Floor
+Horse
+pictobox(Simple)
+pictobox(Simple) (2)
+I5
+I6
+H6
+H7
+I7
+H8
+I8
+pictobox(Simple) (4)
+Monkey
+Floor
+I9
+H9
+Monkey
+H8
+I8
+Floor
+I7
+I6
+I5
+I4
+I3
+pictobox(Simple) (6)
+I2
+Floor
+H2
+I1
+Giraffe
+H2
+H1
+pictobox(Simple) (6)
+Giraffe
+H2
+Floor
+I1
+I2
+I3
+Floor
+H4
+pictobox(Simple)
+I4
+Horse
+Floor
+I5
+H5
+Floor
+pictobox(Simple) (2)
+H6
+I6
+Floor
+H7
+I7
+Floor
+pictobox(Simple) (4)
+Monkey
+H8
+I8
+I9
+H9
+H8
+H9
+Floor
+G8
+G9
+pictobox(Simple) (5)
+F8
+F9
+E8
+E9
+pictobox(Simple) (5)
+Floor
+Floor
+D9
+pictobox(Simple) (5)
+D8
+C9
+C9
+C8
+pictobox(Simple) (4)
+Bird
+B8
+B9
+A9
+A8
+B8
+C9
+C8
+C8
+C9
+C8
+C8
+pictobox(Simple) (4)
+pictobox(Simple) (4)
+pictobox(Simple) (4)
+B8
+Bird
+B9
+A8
+A9
+pictobox(Simple) (4)
+Bird
+B8
+A7
+A8
+B7
+B7
+pictobox(Simple) (2)
+Floor
+Walrus
+B6
+A6
+Floor
+B5
+A5
+pictobox(Simple)
+Floor
+Floor
+A4
+B5
+B4
+Turtle
+B3
+A3
+pictobox(Simple) (6)
+Floor
+C3
+C3
+pictobox(Simple) (6)
+A3
+pictobox(Simple) (6)
+B3
+Floor
+B3
+B3
+C3
+Floor
+Floor
+D3
+Floor
+E3
+Floor
+Floor
+Floor
+E2
+pictobox(Simple) (7)
+Elephant
+D2
+Floor
+Floor
+Floor
+Floor
+pictobox(Simple) (7)
+F2
+F1
+G1
+G2
+G1
+pictobox(Simple) (6)
+Giraffe
+H1
+H2
+I2
+Floor
+Floor
+I2
+H1
+I1
+Floor
+pictobox(Simple) (6)
+Giraffe
+G1
+G2
+G3
+pictobox(Simple) (7)
+F3
+F2
+F2
+E3
+Floor
+Floor
+D3
+C3
+B3
+pictobox(Simple)
+Turtle
+B4
+A4
+B3
+Floor
+Floor
+C4
+C5
+D5
+pictobox(Simple) (3)
+E6
+Floor
+Frog
+pictobox(Simple) (3)
+F6
+F6
+Floor
+pictobox(Simple) (3)
+Frog
+F6
+E6
+Floor
+Floor
+Floor
+Floor
+D6
+pictobox(Simple) (3)
+D7
+C7
+B7
+pictobox(Simple) (2)
+B6
+Floor
+A7
+pictobox(Simple) (4)
+C8
+C7
+C9
+pictobox(Simple) (5)
+D9
+pictobox(Simple) (5)
+C8
+D8
+Floor
+B9
+B8
+pictobox(Simple) (4)
+Bird
+A8
+A9
+B7
+A7
+pictobox(Simple) (2)
+Walrus
+A6
+B6
+Floor
+A7
