@@ -398,5 +398,3 @@ B5
 A6
 pictobox(Simple) (2)
 Walrus
-B5
-B6

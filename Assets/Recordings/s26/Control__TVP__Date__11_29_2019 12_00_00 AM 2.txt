@@ -486,5 +486,3 @@ Walrus
 B6
 A6
 Walrus
-B6
-B7

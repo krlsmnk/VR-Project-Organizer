@@ -1095,10 +1095,3 @@ A4
 B5
 A6
 Walrus
-B6
-pictobox(Simple) (2)
-B7
-A7
-pictobox(Simple) (2)
-A6
-Floor

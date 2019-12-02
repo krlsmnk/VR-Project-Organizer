@@ -430,5 +430,3 @@ C6
 A5
 A6
 Walrus
-pictobox(Simple) (2)
-B6

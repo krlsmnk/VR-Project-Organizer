@@ -178,7 +178,3 @@ A5
 B5
 pictobox(Simple) (2)
 Walrus
-A6
-B6
-B5
-B6
