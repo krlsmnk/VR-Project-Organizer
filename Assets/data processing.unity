@@ -171,7 +171,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &893152311
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,4 +198,60 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1812833241
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1812833243}
+  - component: {fileID: 1812833242}
+  m_Layer: 0
+  m_Name: PathModify
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1812833242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1812833241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ccda5aee3ebdac4ca018a179262bc41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  newPathDifferenceFile: {fileID: 4900000, guid: 35da1cc6f3312a24cbe5e94257f68187,
+    type: 3}
+  cellsTravelledInOrder: {fileID: 4900000, guid: 71a47c694f1616a48b8a2e19360077c6,
+    type: 3}
+  docsToReturn:
+  - {fileID: 4900000, guid: a960f615b33bf15499ab74da2a7ce3a0, type: 3}
+  - {fileID: 4900000, guid: 126b94481b22d0149b99a825286495b4, type: 3}
+  - {fileID: 4900000, guid: 26cfd2e57a51dbc4487555735c74110c, type: 3}
+  - {fileID: 4900000, guid: d6a3a88ad9239154f9bf6db42f45f5b2, type: 3}
+  - {fileID: 4900000, guid: b6e64bf5e5c28ca43a803d798632170d, type: 3}
+  - {fileID: 4900000, guid: 3704100a05eadb647a3584f532ddc3f5, type: 3}
+  - {fileID: 4900000, guid: 03831928c19b6224f96a86fc893b6e7a, type: 3}
+  - {fileID: 4900000, guid: cbd3858bca419cb4ebb1c1efb457d323, type: 3}
+  - {fileID: 4900000, guid: f08bd4665d572954090d049fab1a5936, type: 3}
+  - {fileID: 4900000, guid: 0e4494d0ba42309478df8e7cdbbd0a6f, type: 3}
+  SubjectNumber: S26
+--- !u!4 &1812833243
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1812833241}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.60260063, y: 4.008997, z: -7.447975}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
