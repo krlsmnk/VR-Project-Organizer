@@ -1,3 +1,8 @@
+From Karl,
+TL:DR Project summary:
+https://docs.google.com/document/d/1ZYpwPfoBfvaWEUcYutrBCyOvJmR2O5xqYySL_zyZAeM/edit?usp=sharing
+
+From Eli,
 # Dear whoever is taking over the project
 
 I will try to give an understanding of the innerworkings of this project, and explain the reasoning behind the design decisions made. Before I get into that, you will need to bring yourself up to speed on some very crucial topics of Object Orriented Programming, how C# works, and other Software Engineering Topics to have a full understanding of the codebase. I will list out some of these topics and their importance, and then it is up to you to educate yourself.
